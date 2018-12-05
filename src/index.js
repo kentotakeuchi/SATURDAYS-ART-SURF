@@ -3,15 +3,16 @@ import $ from 'jquery';
 import 'bootstrap';
 
 // import文を使ってSassファイルを読み込む。
-import './style.scss';
+import './sass/style.scss';
 
 import API from './model/apiTest';
 
 const state = {};
 
-$('document').ready(function() {
+$('document').ready(() => {
 
     state.api = new API();
 
     state.api.getResults();
+
 });

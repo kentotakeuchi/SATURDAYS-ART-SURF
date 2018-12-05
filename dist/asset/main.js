@@ -15811,6 +15811,20 @@ module.exports = function (module) {
 
 /***/ }),
 
+/***/ "./src/config.js":
+/*!***********************!*\
+  !*** ./src/config.js ***!
+  \***********************/
+/*! exports provided: proxy */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "proxy", function() { return proxy; });
+var proxy = 'https://cors-anywhere.herokuapp.com/';
+
+/***/ }),
+
 /***/ "./src/index.js":
 /*!**********************!*\
   !*** ./src/index.js ***!
@@ -15820,21 +15834,118 @@ module.exports = function (module) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var bootstrap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.js");
-/* harmony import */ var bootstrap__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(bootstrap__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _style_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./style.scss */ "./src/style.scss");
-/* harmony import */ var _style_scss__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_style_scss__WEBPACK_IMPORTED_MODULE_1__);
-// BootstrapのJavaScript側の機能を読み込む
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var bootstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.js");
+/* harmony import */ var bootstrap__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(bootstrap__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _sass_style_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./sass/style.scss */ "./src/sass/style.scss");
+/* harmony import */ var _sass_style_scss__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_sass_style_scss__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _model_apiTest__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./model/apiTest */ "./src/model/apiTest.js");
+ // BootstrapのJavaScript側の機能を読み込む
+
  // import文を使ってSassファイルを読み込む。
 
 
 
+var state = {};
+jquery__WEBPACK_IMPORTED_MODULE_0___default()('document').ready(function () {
+  state.api = new _model_apiTest__WEBPACK_IMPORTED_MODULE_3__["default"]();
+  state.api.getResults();
+});
+
 /***/ }),
 
-/***/ "./src/style.scss":
-/*!************************!*\
-  !*** ./src/style.scss ***!
-  \************************/
+/***/ "./src/model/apiTest.js":
+/*!******************************!*\
+  !*** ./src/model/apiTest.js ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return API; });
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config */ "./src/config.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+
+function formatDate(date) {
+  var day = date.getDate();
+  var month = date.getMonth();
+  var year = date.getFullYear();
+  return "".concat(year, "-").concat(month + 1, "-0").concat(day);
+}
+
+;
+
+var API =
+/*#__PURE__*/
+function () {
+  function API() {
+    _classCallCheck(this, API);
+  }
+
+  _createClass(API, [{
+    key: "getResults",
+    value: function getResults() {
+      var date = formatDate(new Date());
+      jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
+        method: "GET",
+        url: "https://collectionapi.metmuseum.org/public/collection/v1/objects?metadataDate=".concat(date),
+        success: function success(data) {
+          console.log('data', data);
+          console.log('data.objectIDs', data.objectIDs);
+          var ids = data.objectIDs;
+
+          for (var i = 0; i < 5; i++) {
+            var index = Math.floor(Math.random() * ids.length);
+            console.log("index", index);
+            var id = ids[index];
+            console.log("id", id);
+            jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
+              method: "GET",
+              url: "https://collectionapi.metmuseum.org/public/collection/v1/objects/".concat(id),
+              success: function success(data) {
+                console.log('data', data);
+
+                if (data.primaryImage !== "") {
+                  var markup = "\n                                    <img src=\"".concat(data.primaryImage, "\" class=\"item\"></img>\n                                ");
+                  jquery__WEBPACK_IMPORTED_MODULE_0___default()(".items").append(markup);
+                }
+              },
+              error: function error(err) {
+                console.log("err", err);
+              }
+            });
+          }
+        },
+        error: function error(err) {
+          console.log(err);
+        }
+      });
+    }
+  }]);
+
+  return API;
+}();
+
+
+;
+
+/***/ }),
+
+/***/ "./src/sass/style.scss":
+/*!*****************************!*\
+  !*** ./src/sass/style.scss ***!
+  \*****************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 

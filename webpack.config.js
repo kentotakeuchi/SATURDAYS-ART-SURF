@@ -19,9 +19,9 @@ module.exports = {
     // ファイルの出力設定
     output: {
         //  出力ファイルのディレクトリ名
-        path: `${__dirname}/dist`,
+        path: `${__dirname}/dist/asset`,
         // 出力ファイル名
-        filename: 'main.js'
+        filename: 'bundle.js'
     },
 
     // ローカル開発用環境を立ち上げる
@@ -39,17 +39,17 @@ module.exports = {
                 // 拡張子 .js の場合
                 test: /\.js$/,
                 use: [
-                {
-                    // Babel を利用する
-                    loader: 'babel-loader',
-                    // Babel のオプションを指定する
-                    options: {
-                    presets: [
-                        // プリセットを指定することで、ES2018 を ES5 に変換
-                        '@babel/preset-env',
-                    ]
+                    {
+                        // Babel を利用する
+                        loader: 'babel-loader',
+                        // Babel のオプションを指定する
+                        options: {
+                            presets: [
+                                // プリセットを指定することで、ES2018 を ES5 に変換
+                                '@babel/preset-env',
+                            ]
+                        }
                     }
-                }
                 ]
             },
 
@@ -61,14 +61,14 @@ module.exports = {
                 {
                     loader: 'css-loader',
                     options: {
-                    // オプションでCSS内のurl()メソッドの取り込まない
-                    url: false,
-                    // ソースマップの利用有無
-                    sourceMap: enabledSourceMap,
-                    // 空白文字やコメントを削除する
-                    minimize: true,
-                    // Sass+PostCSSの場合は2を指定
-                    importLoaders: 2
+                        // オプションでCSS内のurl()メソッドの取り込まない
+                        url: false,
+                        // ソースマップの利用有無
+                        sourceMap: enabledSourceMap,
+                        // 空白文字やコメントを削除する
+                        minimize: true,
+                        // Sass+PostCSSの場合は2を指定
+                        importLoaders: 2
                     },
                 },
 

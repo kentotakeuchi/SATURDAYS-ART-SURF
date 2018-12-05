@@ -6198,4 +6198,14 @@ body {
   -webkit-font-feature-settings: "palt";
           font-feature-settings: "palt"; }
 
+.items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-gap: 60px;
+  justify-content: space-between;
+  margin: 30px; }
+
+.item {
+  height: 200px; }
+
 /*# sourceMappingURL=style.css.map*/

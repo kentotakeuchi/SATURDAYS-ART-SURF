@@ -4,10 +4,13 @@ const MODE = 'development';
 
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+const nodeExternals = require('webpack-node-externals');
+
 // ソースマップの利用有無(productionのときはソースマップを利用しない)
 const enabledSourceMap = (MODE === 'development');
 
-module.exports = {
+// FRONTEND
+const frontConfig = {
     // モード値を production に設定すると最適化された状態で、
     // development に設定するとソースマップ有効でJSファイルが出力される
     mode: MODE,
@@ -15,13 +18,13 @@ module.exports = {
     devtool: 'source-map',
 
     // メインとなるJavaScriptファイル（エントリーポイント）
-    entry: './src/index.js',
+    entry: './src/client/index.js',
     // ファイルの出力設定
     output: {
         //  出力ファイルのディレクトリ名
         path: `${__dirname}/dist/asset`,
         // 出力ファイル名
-        filename: 'bundle.js'
+        filename: 'bundle-front.js'
     },
 
     // ローカル開発用環境を立ち上げる
@@ -105,3 +108,20 @@ module.exports = {
         new ExtractTextPlugin('style.css'),
     ],
 };
+
+
+// BACKEND
+const backConfig = {
+  mode: MODE,
+  target: "node",
+  entry: './src/server/back.js',
+  output: {
+    path: `${__dirname}/dist/asset`,
+    filename: "bundle-back.js"
+  },
+  externals: [nodeExternals()],
+};
+
+
+// Combined 'module.exports'
+module.exports = [ frontConfig, backConfig ];

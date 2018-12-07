@@ -7,7 +7,7 @@ function formatDate(date) {
     const month = date.getMonth();
     const year = date.getFullYear();
 
-    return `${year}-${month + 1}-0${day}`;
+    return `${year}-${month + 1}-0${day-1}`;
 };
 
 
@@ -28,7 +28,7 @@ export default class API {
 
                 const ids = data.objectIDs;
 
-                for(let i = 0; i < 5; i++) {
+                for(let i = 0; i < 10; i++) {
                     const index = Math.floor(Math.random() * ids.length);
                     console.log(`index`, index);
 
@@ -60,3 +60,8 @@ export default class API {
         });
     }
 };
+
+
+
+
+

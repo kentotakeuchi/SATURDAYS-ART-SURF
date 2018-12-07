@@ -1,0 +1,52 @@
+.form {
+
+    &__group {
+        margin-bottom: .2rem;
+
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    &__input {
+        font-size: 1.5rem;
+        font-family: inherit;
+        color: inherit;
+        padding: .5rem .5rem;
+        border: 1px solid $color-black;
+        width: 90%;
+        transition: all .3s;
+
+        @include respond(tab-port) {
+            width: 80%;
+        }
+
+        &:focus {
+            outline: none;
+            box-shadow: 0 1rem 2rem rgba($color-black, .1);
+            border-bottom: 3px solid $color-success;
+        }
+
+        &:focus:invalid {
+            border-bottom: 3px solid $color-red;
+        }
+
+        &::-webkit-input-placeholder {
+            color: $color-grey-dark-2;
+        }
+    }
+
+
+    &__label {
+        font-size: 1.2rem;
+        font-weight: 700;
+        transition: all .3s;
+    }
+
+    &__input:placeholder-shown + &__label {
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-2rem);
+    }
+
+}

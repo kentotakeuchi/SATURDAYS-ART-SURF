@@ -8,10 +8,10 @@
         height: 7rem;
         width: 7rem;
         position: fixed;
-        top: 3.5rem;
+        top: 3.8rem;
         right: 3.5rem;
         border-radius: 50%;
-        z-index: 2000;
+        z-index: 200;
         box-shadow: 0 1rem 3rem rgba($color-black, .1);
         text-align: center;
         cursor: pointer;
@@ -27,6 +27,37 @@
         }
     }
 
+    &__top {
+        background-color: $color-transparent;
+        height: 2rem;
+        width: 2rem;
+        position: fixed;
+        bottom: 6rem;
+        right: 6.5rem;
+        z-index: 200;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    &__top--icon {
+        color: $color-grey-dark;
+
+        font-size: 2rem;
+        font-weight: 600;
+
+        transition: all .5s;
+
+        &:hover {
+            color: $color-tertiary;
+
+            text-decoration: none !important;
+            outline: none;
+            border-style: none;
+
+            // transform: rotate(180deg);
+        }
+    }
+
     &__background {
         height: 6rem;
         width: 6rem;
@@ -34,8 +65,8 @@
         position: fixed;
         top: 4rem;
         right: 4rem;
-        background-image: radial-gradient($color-tertiary-light, $color-tertiary-dark);
-        z-index: 1000;
+        background-image: radial-gradient($color-grey-dark-2, $color-grey-dark-3);
+        z-index: 100;
         transition: transform .8s cubic-bezier(0.86, 0, 0.07, 1);
 
         @include respond(tab-port) {
@@ -54,7 +85,7 @@
         position: fixed;
         top: 0;
         left: 0;
-        z-index: 1500;
+        z-index: 150;
 
         opacity: 0;
         width: 0;
@@ -98,7 +129,7 @@
         &:hover,
         &:active {
             background-position: 100%;
-            color: $color-quaternary-light;
+            color: $color-grey-dark-3;
             transform: translateX(1rem);
         }
     }

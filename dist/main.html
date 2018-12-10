@@ -23,6 +23,7 @@
 
 <body>
 
+  <!-- NAVIGATION -->
   <div class="navigation">
     <input type="checkbox" class="navigation__checkbox" id="navi-toggle">
 
@@ -30,29 +31,129 @@
       <span class="navigation__icon">&nbsp;</span>
     </label>
 
+    <label for="navi-top" class="navigation__top">
+      <a href="#top" class="navigation__top--icon">&uarr;</a>
+    </label>
+
     <div class="navigation__background">&nbsp;</div>
 
     <nav class="navigation__nav">
       <ul class="navigation__list">
         <li class="navigation__item"><a href="#" class="navigation__link"><span>01</span>my collection</a></li>
-        <li class="navigation__item"><a href="#" class="navigation__link"><span>02</span>about</a></li>
-        <li class="navigation__item"><a href="#" class="navigation__link"><span>03</span>contact us</a></li>
-        <li class="navigation__item"><a href="#" class="navigation__link"><span>04</span>settings</a></li>
-        <li class="navigation__item"><a href="#" class="navigation__link"><span>05</span>log out</a></li>
+        <li class="navigation__item" id="about"><a href="#" class="navigation__link"><span>02</span>about us</a></li>
+        <li class="navigation__item" id="contact"><a href="#" class="navigation__link"><span>03</span>contact us</a></li>
+        <li class="navigation__item" id="settings"><a href="#" class="navigation__link"><span>04</span>settings</a></li>
+        <li class="navigation__item"><a href="#" class="navigation__link" id="logout"><span>05</span>log out</a></li>
       </ul>
     </nav>
   </div>
 
+  <!-- HEADER -->
   <header class="header">
     <div class="header__logo-box">
       saturdays <span class="header__text">a</span>rt surf
     </div>
   </header>
 
+  <!-- ARTWORKS -->
   <div class="container">
-
     <div class="items"></div>
-
   </div>
+
+  <!-- POPUP ARTWORK -->
+  <div class="modal fade" id="popupItem" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-body" id="popupItem__body">
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP ABOUT -->
+  <div class="modal fade" id="popupAbout" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <h2 class="popup__title u-margin-bottom-medium">about us</h2>
+          <p class="popup__paragraph">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus tristique nisl vulputate efficitur rutrum. Morbi gravida, turpis laoreet pharetra porta, dolor sapien placerat tellus, quis sagittis sapien diam in nisi. Aenean tristique tempor urna. Duis vehicula rutrum bibendum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce fermentum, ligula at egestas ullamcorper, metus elit dictum tortor, et blandit arcu arcu sit amet tortor. Vestibulum eget nisi id quam laoreet fermentum. Sed nulla elit, interdum a tellus non, lacinia gravida mi. Nulla eu efficitur leo. Vestibulum laoreet, sem in mollis commodo, erat ipsum ultrices metus, id malesuada dui risus id justo. Nulla eget massa id augue mollis bibendum sed id lacus. Maecenas malesuada aliquam ornare.</p>
+          <p class="popup__paragraph">
+            Ut ut lacinia eros, id rhoncus nibh. Maecenas dapibus, odio ac vestibulum imperdiet, lectus orci hendrerit felis, eget pharetra dolor mauris vitae nibh. Sed turpis urna, pulvinar non eleifend vitae, pellentesque ac elit. Nullam suscipit enim vitae diam ornare hendrerit. Aenean lacinia condimentum blandit. In et ullamcorper felis. Pellentesque commodo malesuada nisi. Nunc tincidunt eros sed ex finibus fermentum. Maecenas iaculis suscipit arcu, sit amet sodales tellus fermentum at. Proin fermentum augue quis erat sollicitudin varius. Duis elit mauris, placerat id nisl id, tempus faucibus magna. Nunc rhoncus facilisis mi, vitae condimentum mi rutrum quis.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP CONTACT -->
+  <div class="modal fade" id="popupContact" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <h2 class="popup__title u-margin-bottom-medium">contact us</h2>
+
+          <form action="#">
+            <div class="form-group">
+              <input type="email" class="form-control" id="contactEmail" placeholder="Email" name="email">
+            </div>
+            <div class="contactEmailErrorMessageContainer">
+              <p class="contactEmailErrorMessage"></p>
+            </div>
+            <div class="form-group">
+              <textarea class="form-control" rows="3" name="inquiry" id="contactInquiry" placeholder="Inquiry"></textarea>
+            </div>
+            <div class="contactInquiryErrorMessageContainer">
+              <p class="contactInquiryErrorMessage"></p>
+            </div>
+            <button type="submit" class="btn btn-primary u-margin-bottom-xsmall" id="contactBtn">Submit</button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP SETTINGS -->
+  <div class="modal fade" id="popupSettings" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <h2 class="popup__title u-margin-bottom-medium">settings</h2>
+
+          <form action="#">
+            <div class="form-group">
+              <input type="email" class="form-control" id="settingsEmail" placeholder="Email" name="email">
+            </div>
+            <div class="settingsEmailErrorMessageContainer">
+              <p class="settingsEmailErrorMessage"></p>
+            </div>
+
+            <div class="form-group">
+              <input type="password" class="form-control" id="settingsCurPassword" placeholder="Current password">
+            </div>
+            <div class="settingsCurPasswordErrorMessageContainer">
+              <p class="settingsCurPasswordErrorMessage"></p>
+            </div>
+            <div class="form-group">
+              <input type="password" class="form-control" id="settingsNewPassword" placeholder="New password">
+            </div>
+            <div class="settingsNewPasswordErrorMessageContainer">
+              <p class="settingsNewPasswordErrorMessage"></p>
+            </div>
+            <div class="form-group">
+              <input type="password" class="form-control" id="settingsNewPassword2" placeholder="New password again">
+            </div>
+            <div class="settingsNewPassword2ErrorMessageContainer">
+              <p class="settingsNewPassword2ErrorMessage"></p>
+            </div>
+            <button type="submit" class="btn btn-primary u-margin-bottom-xsmall" id="settingsBtn">update</button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>

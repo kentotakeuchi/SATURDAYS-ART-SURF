@@ -1,0 +1,35 @@
+.item {
+
+    &__container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    &__primaryImage {
+        width: 80%;
+        height: 80％;
+    }
+
+    // &__additionalImages {
+    //     width: 20rem;
+    //     height: 20rem;
+    // }
+
+    &__title {
+
+    }
+
+    &__artistDisplayName {
+
+    }
+
+    &__artistDate {
+
+    }
+
+    &__artistNationality {
+
+    }
+}

@@ -50,3 +50,10 @@
     }
 
 }
+
+
+// OVERWRITE BOOTSTRAP
+.form-group {
+    display: flex;
+    margin-bottom: 1.5rem;
+}

@@ -2,7 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
-var authController = require('./controllers/authController');
+const authController = require('./controllers/authController');
+const contactController = require('./controllers/contactController');
+const userController = require('./controllers/userController');
 
 const app = express();
 
@@ -42,12 +44,12 @@ app.use((req, res, next) => {
     next();
 });
 
-// Contact us
-// app.use('/contact', contact);
 // Authentication
 app.use('/auth', authController);
-// User
-// app.use('/user', UserController);
+// Contact us
+app.use('/contact', contactController);
+// Settings
+app.use('/user', userController);
 
 
 

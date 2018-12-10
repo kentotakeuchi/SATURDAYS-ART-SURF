@@ -74,7 +74,7 @@ router.post('/login', (req, res) => {
 });
 
 
-/*
+
 router.get('/logout/:userID', verifyToken, function(req, res) {
   User.findOneAndUpdate({_id: req.params.userID}, {$set: {
     tokens: {
@@ -89,6 +89,6 @@ router.get('/logout/:userID', verifyToken, function(req, res) {
     res.status(200).send({ auth: false, token: null });
   });
 });
-*/
+
 
 module.exports = router;

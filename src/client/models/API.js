@@ -1,17 +1,9 @@
 import $ from 'jquery';
 import { proxy } from '../config';
 
-function formatDate(date) {
-
-    const day = date.getDate();
-    const month = date.getMonth();
-    const year = date.getFullYear();
-
-    return `${year}-${month + 1}-0${day-1}`;
-};
-
 
 export default class API {
+
     constructor() {
     }
 
@@ -43,7 +35,7 @@ export default class API {
 
                             if (data.primaryImage !== ``) {
                                 const markup = `
-                                    <img src="${data.primaryImage}" class="item"></img>
+                                    <img src="${data.primaryImage}" class="items__item" id="${id}"></img>
                                 `;
                                 $(`.items`).append(markup);
                             }
@@ -59,9 +51,21 @@ export default class API {
             }
         });
     }
+
+    getResult(id) {
+
+        return $.ajax({
+            method: "GET",
+            url: `https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`
+        });
+    }
 };
 
+function formatDate(date) {
 
+    const day = date.getDate();
+    const month = date.getMonth();
+    const year = date.getFullYear();
 
-
-
+    return `${year}-${month + 1}-0${day-1}`;
+};

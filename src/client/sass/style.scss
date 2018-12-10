@@ -26,10 +26,12 @@ $enable-rounded: false;
 @import "base/utilities";
 
 @import "components/form";
+@import "components/popup";
 
-@import "layout/landing";
-@import "layout/items";
 @import "layout/header";
+@import "layout/item";
+@import "layout/items";
+@import "layout/landing";
 @import "layout/navigation";
 
 

@@ -10,6 +10,7 @@ import './sass/style.scss';
 // Models
 import API from './models/API';
 import Contact from './models/Contact';
+import Likes from './models/Likes';
 import Settings from './models/Settings';
 
 // Views
@@ -17,6 +18,7 @@ import * as apiView from './view/apiView';
 import { els } from './view/base';
 import * as contactView from './view/contactView';
 import * as landingView from './view/landingView';
+import * as likesView from './view/likesView';
 import * as settingsView from './view/settingsView';
 /////////////////////////////////////////////////////
 
@@ -55,6 +57,8 @@ function setEventHandler() {
     // ARTWORKS > popup an item modal
     els.items.off(`click`, `.items__item`, popupItemModal);
     els.items.on(`click`, `.items__item`, popupItemModal);
+
+    // ARTWORK > likes
 
     // Navigation > about
     els.about.click(popupAboutModal);
@@ -310,21 +314,60 @@ function pagenationHandler() {
 
 function popupItemModal(e) {
 
+    // Prepare for rendering a new artwork.
     apiView.clearArtwork();
 
+    // Get the id of artwork user clicks.
     const id = e.target.id;
 
+    // TODO: Better to use the URL which is previously fetched.
     // Get the item data user clicks.
     state.api.getResult(id)
     .done(data => {
         // Render the item data user clicks.
         apiView.renderArtwork(data);
+
+        // MEMO: Setting event to SVG with jquery didn't work.
+        const likes = document.querySelector(`.likes`);
+        likes.addEventListener(`click`, e => {
+            console.log(`e`, e);
+
+            if (e.target.matches('.likes__field, .likes__field *')) {
+                // Like controller
+                likesHandler(e);
+            }
+        });
+
+        // els.likes.off(`click`, `.likes__field`, likesHandler);
+        // els.likes.on(`click`, `.likes__field`, likesHandler);
+        els.popupItem.modal(`toggle`);
     })
     .fail(err => {
         alert(err.responseText);
     });
+};
 
-    els.popupItem.modal(`toggle`);
+
+function likesHandler(e) {
+    console.log(`e`, e);
+
+    state.likes = new Likes();
+
+    const storage = state.likes.readStorage();
+    console.log(`storage`, storage);
+
+    // Get the id of artwork user clicks.
+    const id = e.target.id;
+    console.log(`id`, id);
+
+    console.log(`state.likes.isLiked(id)`, state.likes.isLiked(id));
+
+    if (state.likes.isLiked(id)) {
+        state.likes.deleteLike(id);
+    } else {
+        // Add id in the "this.likes[]" array.
+        state.likes.addLike(id);
+    }
 };
 
 

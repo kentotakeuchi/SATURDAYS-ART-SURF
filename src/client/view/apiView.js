@@ -11,11 +11,26 @@ export const renderArtwork = data => {
 
     const markup = `
         <div class="item__container">
+
+            <div class="likes">
+                <div class="likes__field" id="${data.objectID}">
+                    <svg class="likes__icon">
+                        <use href="./asset/img/icons.svg#icon-heart"></use>
+                    </svg>
+                </div>
+            </div>
+
             <img src="${data.primaryImage}" class="item__primaryImage">
-            <div class="item__title">Title: ${data.title}</div>
-            <div class="item__artistDisplayName item__artistDate">Artist name: ${data.artistDisplayName}(${data.artistBeginDate} - ${data.artistEndDate})</div>
-            <div class="item__artistNationality">Artist nationality: ${data.artistNationality}</div>
-            <a href="${data.objectURL}">Do you want to know more?</a>
+
+            <div class=item__container--text>
+                <div class="item__title">Title: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="item__text--strong">${data.title}</span></div>
+
+                <div class="item__artistDisplayName item__artistDate">Artist name: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="item__text--strong">${data.artistDisplayName} (${data.artistBeginDate} - ${data.artistEndDate})</span></div>
+
+                <div class="item__artistNationality">Artist nationality: &nbsp;&nbsp;<span class="item__text--strong">${data.artistNationality}</span></div>
+                <br>
+                <a href="${data.objectURL}" class="item__objectURL">Do you want to know more?</a>
+            </div>
         </div>
     `;
     els.popupItemBody.append(markup);

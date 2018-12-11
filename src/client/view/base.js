@@ -29,6 +29,10 @@ export const els = {
     popupItemBody: $(`#popupItem__body`),
     itemContainer: $(`.item__container`),
 
+    // ARTWORK > likes
+    likes: $(`.likes`),
+    likesIcon: $(`.likes__icon`),
+
     // NAVIGATION > logout
     logout: $(`#logout`),
 

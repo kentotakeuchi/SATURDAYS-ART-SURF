@@ -6,8 +6,7 @@ export const clearArtwork = () => {
     $(`.item__container`).remove();
 };
 
-export const renderArtwork = data => {
-    console.log(`data`, data);
+export const renderArtwork = (data, isLiked) => {
 
     const markup = `
         <div class="item__container">
@@ -15,7 +14,7 @@ export const renderArtwork = data => {
             <div class="likes">
                 <div class="likes__field" id="${data.objectID}">
                     <svg class="likes__icon">
-                        <use href="./asset/img/icons.svg#icon-heart"></use>
+                        <use href="./asset/img/icons.svg#icon-heart${isLiked ? '' : '-outlined'}"></use>
                     </svg>
                 </div>
             </div>

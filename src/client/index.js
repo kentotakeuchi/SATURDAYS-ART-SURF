@@ -314,6 +314,11 @@ function pagenationHandler() {
 
 function popupItemModal(e) {
 
+    state.likes = new Likes();
+
+    // Get "likes" data from local storage.
+    state.likes.readStorage();
+
     // Prepare for rendering a new artwork.
     apiView.clearArtwork();
 
@@ -325,21 +330,16 @@ function popupItemModal(e) {
     state.api.getResult(id)
     .done(data => {
         // Render the item data user clicks.
-        apiView.renderArtwork(data);
+        apiView.renderArtwork(data, state.likes.isLiked(id));
 
         // MEMO: Setting event to SVG with jquery didn't work.
         const likes = document.querySelector(`.likes`);
         likes.addEventListener(`click`, e => {
-            console.log(`e`, e);
-
             if (e.target.matches('.likes__field, .likes__field *')) {
                 // Like controller
                 likesHandler(e);
             }
         });
-
-        // els.likes.off(`click`, `.likes__field`, likesHandler);
-        // els.likes.on(`click`, `.likes__field`, likesHandler);
         els.popupItem.modal(`toggle`);
     })
     .fail(err => {
@@ -349,24 +349,29 @@ function popupItemModal(e) {
 
 
 function likesHandler(e) {
-    console.log(`e`, e);
 
     state.likes = new Likes();
 
-    const storage = state.likes.readStorage();
-    console.log(`storage`, storage);
+    // Get "likes" data from local storage.
+    state.likes.readStorage();
 
     // Get the id of artwork user clicks.
     const id = e.target.id;
-    console.log(`id`, id);
-
-    console.log(`state.likes.isLiked(id)`, state.likes.isLiked(id));
 
     if (state.likes.isLiked(id)) {
+
+        // Delete id from the "this.likes[]" array.
         state.likes.deleteLike(id);
+
+        // Toggle the like button
+        likesView.toggleLikeBtn(false);
     } else {
+
         // Add id in the "this.likes[]" array.
         state.likes.addLike(id);
+
+        // Toggle the like button
+        likesView.toggleLikeBtn(true);
     }
 };
 

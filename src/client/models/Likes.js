@@ -1,6 +1,3 @@
-import $ from 'jquery';
-
-
 export default class Likes {
 
     constructor() {
@@ -23,20 +20,7 @@ export default class Likes {
     }
 
     isLiked(id) {
-        console.log(`this.likes`, this.likes);
-        console.log(`this.likes.findIndex(el => parseInt(el) === id) === id)`, this.likes.findIndex(el => parseInt(el) === id));
-
-        this.likes.findIndex(el => {
-            console.log(`id`, id);
-            console.log(`el`, el);
-            console.log(`parseInt(el)`, parseInt(el));
-
-            if(parseInt(el) === id) {
-                return true;
-            } else {
-                return false;
-            }
-        });
+        return this.likes.findIndex(el => el === id) !== -1;
     }
 
     getNumLikes() {

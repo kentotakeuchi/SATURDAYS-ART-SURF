@@ -3,6 +3,7 @@ import { els } from './base';
 
 
 export const toggleLikeBtn = isLiked => {
+    console.log(`isLiked`, isLiked);
 
     const iconString = isLiked ? 'icon-heart' : 'icon-heart-outlined';
 

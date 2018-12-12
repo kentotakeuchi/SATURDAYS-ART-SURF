@@ -13,29 +13,27 @@ export default class API {
 
         $.ajax({
             method: "GET",
-            url: `https://collectionapi.metmuseum.org/public/collection/v1/objects?metadataDate=${date}`,
+            url: `${proxy}https://collectionapi.metmuseum.org/public/collection/v1/objects?metadataDate=${date}`,
             success: (data) => {
-                console.log('data', data);
-                console.log('data.objectIDs', data.objectIDs);
+                console.log(`data`, data);
 
                 const ids = data.objectIDs;
 
                 for(let i = 0; i < 10; i++) {
                     const index = Math.floor(Math.random() * ids.length);
-                    console.log(`index`, index);
 
                     const id = ids[index];
-                    console.log(`id`, id);
 
                     $.ajax({
                         method: "GET",
-                        url: `https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`,
+                        url: `${proxy}https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`,
                         success: (data) => {
-                            console.log('data', data);
 
                             if (data.primaryImage !== ``) {
                                 const markup = `
-                                    <img src="${data.primaryImage}" class="items__item" id="${id}"></img>
+                                    <div class="items__item" id="${id}" data-title="${data.title}">
+                                        <img src="${data.primaryImage}" class="items__img">
+                                    </div>
                                 `;
                                 $(`.items`).append(markup);
                             }
@@ -56,7 +54,29 @@ export default class API {
 
         return $.ajax({
             method: "GET",
-            url: `https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`
+            url: `${proxy}https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`
+        });
+    }
+
+    getAndRenderCollection(storage) {
+
+        storage.forEach(el => {
+
+            $.ajax({
+                method: "GET",
+                url: `${proxy}https://collectionapi.metmuseum.org/public/collection/v1/objects/${el}`,
+                success: (data) => {
+                    const markup = `
+                        <div class="items__item" id="${data.objectID}" data-title="${data.title}">
+                            <img src="${data.primaryImage}" class="items__img">
+                        </div>
+                    `;
+                    $(`.items`).append(markup);
+                },
+                error: (err) => {
+                    console.log(`err`, err);
+                }
+            });
         });
     }
 };

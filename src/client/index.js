@@ -39,17 +39,20 @@ $('document').ready(() => {
 
 function setEventHandler() {
 
-    // Register form
+    // REGISTER FORM
     els.registerEmail.blur(registerCheckHandler);
     els.registerPassword.blur(registerCheckHandler);
     els.registerPassword2.blur(registerCheckHandler);
     els.registerBtn.click(registerUserHandler);
     els.registerToLogin.click(registerToLoginHandler);
 
-    // Login form
+    // LOGIN FORM
     els.loginEmail.blur(loginCheckHandler);
     els.loginPassword.blur(loginCheckHandler);
     els.loginBtn.click(loginUserHandler);
+
+    // HEADER
+    els.brandLink.click(returnDefaultPageHandler)
 
     // ARTWORKS > display artworks infinitely
     $(window).scroll(pagenationHandler);
@@ -58,12 +61,13 @@ function setEventHandler() {
     els.items.off(`click`, `.items__item`, popupItemModal);
     els.items.on(`click`, `.items__item`, popupItemModal);
 
-    // ARTWORK > likes
+    // NAVIGATION > collection
+    els.collection.click(displayCollectionHandler);
 
-    // Navigation > about
+    // NAVIGATION > about
     els.about.click(popupAboutModal);
 
-    // Navigation > contact
+    // NAVIGATION > contact
     els.contact.click(popupContactModal);
     setTimeout(() => {
         // TODO: Fix later on.
@@ -73,7 +77,7 @@ function setEventHandler() {
     els.contactInquiry.blur(contactCheckHandler);
     els.contactBtn.click(contactSendHandler);
 
-    // Navigation > settings
+    // NAVIGATION > settings
     els.settings.click(popupSettingsModal);
     setTimeout(() => {
         // TODO: Fix later on.
@@ -85,7 +89,7 @@ function setEventHandler() {
     els.settingsNewPassword2.blur(settingsCheckHandler);
     els.settingsBtn.click(settingsUpdateHandler);
 
-    // Navigation > logout
+    // NAVIGATION > logout
     els.logout.click(logout);
 
 };
@@ -324,6 +328,7 @@ function popupItemModal(e) {
 
     // Get the id of artwork user clicks.
     const id = e.target.id;
+    console.log(`id`, id);
 
     // TODO: Better to use the URL which is previously fetched.
     // Get the item data user clicks.
@@ -335,7 +340,8 @@ function popupItemModal(e) {
         // MEMO: Setting event to SVG with jquery didn't work.
         const likes = document.querySelector(`.likes`);
         likes.addEventListener(`click`, e => {
-            if (e.target.matches('.likes__field, .likes__field *')) {
+
+            if (e.target.matches('.likes__icon, .likes__icon *')) {
                 // Like controller
                 likesHandler(e);
             }
@@ -343,22 +349,32 @@ function popupItemModal(e) {
         els.popupItem.modal(`toggle`);
     })
     .fail(err => {
-        alert(err.responseText);
+        console.log(err.responseText);
     });
 };
 
 
 function likesHandler(e) {
+    console.log(`e`, e);
 
     state.likes = new Likes();
 
-    // Get "likes" data from local storage.
-    state.likes.readStorage();
+    const storage = state.likes.readStorage();
+    console.log(`storage`, storage);
 
     // Get the id of artwork user clicks.
-    const id = e.target.id;
+    let id;
+    if (e.target.tagName === `svg`) {
+        id = e.target.id;
+        console.log(`svg id`, id);
+    } else if (e.target.tagName === `use`) {
+        id = e.target.parentElement.id;
+        console.log(`use id`, id);
+
+    }
 
     if (state.likes.isLiked(id)) {
+        console.log(`delete`);
 
         // Delete id from the "this.likes[]" array.
         state.likes.deleteLike(id);
@@ -366,6 +382,7 @@ function likesHandler(e) {
         // Toggle the like button
         likesView.toggleLikeBtn(false);
     } else {
+        console.log(`add`);
 
         // Add id in the "this.likes[]" array.
         state.likes.addLike(id);
@@ -376,8 +393,40 @@ function likesHandler(e) {
 };
 
 
+function returnDefaultPageHandler() {
+
+    // Transfer to a default page.
+    window.location.href = `/main.html`;
+
+    // Set the event calling api with scroll down again.
+    $(window).on(`scroll`, pagenationHandler);
+};
+
+
 ///////////////////////////////////////////////
 /// NAVIGATION PAGE
+
+// COLLECTION
+function displayCollectionHandler() {
+
+    state.likes = new Likes();
+
+    // Prepare for rendering my collection.
+    els.items.children().remove();
+
+    // Get data from "likes" array.
+    const storage = state.likes.readStorage();
+
+    // TODO: Use MVC model.
+    // Get data from api and render my collection.
+    state.api.getAndRenderCollection(storage);
+
+    // Disable calling api with scroll down.
+    $(window).off(`scroll`, pagenationHandler);
+
+    // Close navigation.
+    els.naviCheckbox.prop( `checked`, false );
+};
 
 // ABOUT
 function popupAboutModal() {

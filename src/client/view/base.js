@@ -2,7 +2,7 @@ import $ from 'jquery';
 
 export const els = {
 
-    // Register
+    // REGISTER
     registerErrorMessageContainer: $(`.register__errorMessageContainer`),
     registerErrorMessage: $(`.register__errorMessage`),
     registerForm: $(`#register__form`),
@@ -12,7 +12,7 @@ export const els = {
     registerBtn: $(`#register__btn`),
     registerToLogin: $(`#register__toLogin`),
 
-    // Login
+    // LOGIN
     loginErrorMessageContainer: $(`.login__errorMessageContainer`),
     loginErrorMessage: $(`.login__errorMessage`),
     loginForm: $(`#login__form`),
@@ -20,9 +20,13 @@ export const els = {
     loginPassword: $(`#login__password`),
     loginBtn: $(`#login__btn`),
 
+    // HEADER
+    brandLink: $(`#brandLink`),
+
     // ARTWORKS
     items: $(`.items`),
     item: $(`.items__item`),
+    itemImg: $(`.items__img`),
 
     // ARTWORK
     popupItem: $(`#popupItem`),
@@ -33,14 +37,15 @@ export const els = {
     likes: $(`.likes`),
     likesIcon: $(`.likes__icon`),
 
-    // NAVIGATION > logout
-    logout: $(`#logout`),
+    // NAVIGATION > my collection
+    collection: $(`#collection`),
+    naviCheckbox: $(`.navigation__checkbox`),
 
-    // Navigation > about
+    // NAVIGATION > about
     about: $(`#about`),
     popupAbout: $(`#popupAbout`),
 
-    // Navigation > contact
+    // NAVIGATION > contact
     contact: $(`#contact`),
     popupContact: $(`#popupContact`),
 
@@ -54,7 +59,7 @@ export const els = {
 
     contactBtn: $(`#contactBtn`),
 
-    // Navigation > settings
+    // NAVIGATION > settings
     settings: $(`#settings`),
     popupSettings: $(`#popupSettings`),
 
@@ -74,5 +79,8 @@ export const els = {
     settingsNewPassword2ErrorMessageContainer: $(`.settingsNewPassword2ErrorMessageContainer`),
     settingsNewPassword2ErrorMessage: $(`.settingsNewPassword2ErrorMessage`),
 
-    settingsBtn: $(`#settingsBtn`)
+    settingsBtn: $(`#settingsBtn`),
+
+    // NAVIGATION > logout
+    logout: $(`#logout`)
 };

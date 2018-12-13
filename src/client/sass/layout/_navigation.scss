@@ -38,15 +38,23 @@
         z-index: 200;
         text-align: center;
         cursor: pointer;
+
+        transition: all .3s;
+
+        &:hover {
+            text-decoration: none !important;
+            outline: none;
+            border-style: none;
+
+            transform: rotate(180deg) translateY(-150%);
+        }
     }
 
     &__top--icon {
         color: $color-grey-dark;
 
-        font-size: 2rem;
+        font-size: 3rem;
         font-weight: 600;
-
-        transition: all .5s;
 
         &:hover {
             color: $color-tertiary;
@@ -54,9 +62,8 @@
             text-decoration: none !important;
             outline: none;
             border-style: none;
-
-            // transform: rotate(180deg);
         }
+
     }
 
     &__background {

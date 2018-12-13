@@ -24,6 +24,7 @@ export const els = {
     brandLink: $(`#brandLink`),
 
     // ARTWORKS
+    container: $(`.container`),
     items: $(`.items`),
     item: $(`.items__item`),
     itemImg: $(`.items__img`),
@@ -83,4 +84,25 @@ export const els = {
 
     // NAVIGATION > logout
     logout: $(`#logout`)
+};
+
+
+export const elementStrings = {
+    loader: 'loader'
+};
+
+export const renderLoader = parent => {
+    const loader = `
+    <div class="${elementStrings.loader}">
+        <svg>
+            <use href="./asset/img/icons.svg#icon-cw"></use>
+        </svg>
+    </div>
+    `;
+    parent.after(loader);
+};
+
+export const clearLoader = () => {
+    const loader = document.querySelector(`.${elementStrings.loader}`);
+    if (loader) loader.parentElement.removeChild(loader);
 };

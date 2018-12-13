@@ -15,7 +15,7 @@ import Settings from './models/Settings';
 
 // Views
 import * as apiView from './view/apiView';
-import { els } from './view/base';
+import { els, renderLoader, clearLoader } from './view/base';
 import * as contactView from './view/contactView';
 import * as landingView from './view/landingView';
 import * as likesView from './view/likesView';
@@ -31,8 +31,20 @@ const token = localStorage.getItem('token');
 
 $('document').ready(() => {
 
+    // Prepare UI for changes
+    renderLoader(els.items);
+
+    // Create instance of API.
     state.api = new API();
+
+    // TODO: Use MVC model.
+    // Get data from api and render their images.
     state.api.getResults();
+
+    // TODO: Show a loader icon during loading images.
+    setTimeout(() => {
+        clearLoader();
+    }, 1000);
 
     setEventHandler();
 });
@@ -308,7 +320,16 @@ function resetMessages() {
 
 function pagenationHandler() {
     if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
+
+        // Prepare UI for changes
+        renderLoader(els.items);
+
         state.api.getResults();
+
+        // TODO: Show a loader icon during loading images.
+        setTimeout(() => {
+            clearLoader();
+        }, 1000);
 
         els.items.off(`click`, `.items__item`, popupItemModal);
         els.items.on(`click`, `.items__item`, popupItemModal);
@@ -334,6 +355,8 @@ function popupItemModal(e) {
     // Get the item data user clicks.
     state.api.getResult(id)
     .done(data => {
+        console.log(`index2 data`, data);
+
         // Render the item data user clicks.
         apiView.renderArtwork(data, state.likes.isLiked(id));
 

@@ -1,20 +1,20 @@
 ////////////////////////////////////////////////////
 import $ from 'jquery';
 
-// JavaScript of bootstrap.
+// BOOTSTRAP OF JAVASCRIPT
 import 'bootstrap';
 
-// Custum scss
+// CUSTOM SCSS
 import './sass/style.scss';
 
-// Models
+// MODELS
 import API from './models/API';
 import Contact from './models/Contact';
 import Likes from './models/Likes';
 import Search from './models/Search';
 import Settings from './models/Settings';
 
-// Views
+// VIEWS
 import * as apiView from './view/apiView';
 import { els, renderLoader, clearLoader } from './view/base';
 import * as contactView from './view/contactView';
@@ -22,6 +22,9 @@ import * as landingView from './view/landingView';
 import * as likesView from './view/likesView';
 import * as searchView from './view/searchView';
 import * as settingsView from './view/settingsView';
+
+// PROXY
+import { proxy } from './config';
 /////////////////////////////////////////////////////
 
 
@@ -46,13 +49,24 @@ $('document').ready(() => {
         const ids = data.objectIDs;
 
         // Get items from api.
-        for(let i = 0; i < 5; i++) {
+        for(let i = 0; i < 1; i++) {
             state.api.getItems(ids)
             .done(data => {
                 console.log(`item data`, data);
 
                 // Render search results.
-                apiView.renderItem(data);
+                // apiView.renderItem(data);
+
+                // NEXT TASK IS FROM HERE!!!!!!!!!
+                $.ajax({
+                    method: "POST",
+                    url: `http://localhost:3000/item/`,
+                    dataType: 'json',
+                    processData: false,
+                    contentType: 'application/json; charset=utf-8',
+                    data: data,
+                    headers: { 'x-access-token': token }
+                });
             })
             .fail(err => {
                 console.log(`err`, err);

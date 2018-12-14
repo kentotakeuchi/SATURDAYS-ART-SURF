@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 
 const authController = require('./controllers/authController');
 const contactController = require('./controllers/contactController');
+const itemController = require('./controllers/itemController');
 const userController = require('./controllers/userController');
 
 const app = express();
@@ -44,13 +45,14 @@ app.use((req, res, next) => {
     next();
 });
 
-// Authentication
+// AUTHENTIFICATION
 app.use('/auth', authController);
-// Contact us
+// CONTACT US
 app.use('/contact', contactController);
-// Settings
+// ITEM
+app.use('/item', itemController);
+// SETTINGS
 app.use('/user', userController);
-
 
 
 module.exports = app;

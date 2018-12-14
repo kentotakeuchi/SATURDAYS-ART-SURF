@@ -1,0 +1,19 @@
+.search {
+
+    &__icon {
+        height: 4rem;
+        width: 4rem;
+        position: fixed;
+        top: 5.8rem;
+        right: 12.5rem;
+        z-index: 200;
+
+        fill: $color-grey-dark;
+
+        transition: all .5s;
+
+        &:hover {
+            transform: scale(1.2);
+        }
+    }
+}

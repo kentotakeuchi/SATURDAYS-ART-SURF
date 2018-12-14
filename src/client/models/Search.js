@@ -2,13 +2,13 @@ import $ from 'jquery';
 import { proxy } from '../config';
 
 
-export default class API {
+export default class Search {
 
-    constructor() {
+    constructor(query) {
+        this.query = query;
     }
 
-    // Get today's id of items.
-    getIds() {
+    getSearchIds() {
 
         const date = formatDate(new Date());
 
@@ -18,17 +18,7 @@ export default class API {
         });
     }
 
-    // Get whole ids.
-    getIds2() {
-
-        return $.ajax({
-            method: "GET",
-            url: `${proxy}https://collectionapi.metmuseum.org/public/collection/v1/objects`
-        });
-    }
-
-    // Get an item's data at random.
-    getItems(ids) {
+    getSearchResults(ids) {
 
         const index = Math.floor(Math.random() * ids.length);
 
@@ -40,25 +30,8 @@ export default class API {
         });
     }
 
-    // Get an item's data.
-    getItem(id) {
-
-        return $.ajax({
-            method: "GET",
-            url: `${proxy}https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`
-        });
-    }
-
-    // TODO: probably, I can reuse "getItem(id)".
-    // Get my collection.
-    getCollection(el) {
-
-        return $.ajax({
-            method: "GET",
-            url: `${proxy}https://collectionapi.metmuseum.org/public/collection/v1/objects/${el}`
-        });
-    }
 };
+
 
 function formatDate(date) {
 

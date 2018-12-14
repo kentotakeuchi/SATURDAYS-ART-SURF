@@ -48,6 +48,32 @@
     </nav>
   </div>
 
+  <!-- SEARCH -->
+  <div class="search">
+    <svg class="search__icon">
+      <use href="./asset/img/icons.svg#icon-search"></use>
+    </svg>
+  </div>
+
+  <!-- POPUP SEARCH -->
+  <div class="modal fade" id="popupSearch" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+
+          <form action="#">
+            <div class="form-group">
+              <input type="text" class="form-control" id="searchInput" placeholder="Search" name="search">
+            </div>
+
+            <button type="submit" class="btn btn-primary u-margin-bottom-xsmall" id="searchBtn">search</button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- HEADER -->
   <header class="header">
     <div class="header__logo-box" id="brandLink">

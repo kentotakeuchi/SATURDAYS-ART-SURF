@@ -20,6 +20,12 @@ export const els = {
     loginPassword: $(`#login__password`),
     loginBtn: $(`#login__btn`),
 
+    // SEARCH
+    searchIcon: $(`.search__icon`),
+    popupSearch: $(`#popupSearch`),
+    searchInput: $(`#searchInput`),
+    searchBtn: $(`#searchBtn`),
+
     // HEADER
     brandLink: $(`#brandLink`),
 

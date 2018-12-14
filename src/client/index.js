@@ -11,6 +11,7 @@ import './sass/style.scss';
 import API from './models/API';
 import Contact from './models/Contact';
 import Likes from './models/Likes';
+import Search from './models/Search';
 import Settings from './models/Settings';
 
 // Views
@@ -19,6 +20,7 @@ import { els, renderLoader, clearLoader } from './view/base';
 import * as contactView from './view/contactView';
 import * as landingView from './view/landingView';
 import * as likesView from './view/likesView';
+import * as searchView from './view/searchView';
 import * as settingsView from './view/settingsView';
 /////////////////////////////////////////////////////
 
@@ -26,7 +28,6 @@ import * as settingsView from './view/settingsView';
 // GLOBAL VARIABLE
 const state = {};
 const userID = localStorage.getItem('user_id');
-const email = localStorage.getItem('userEmail');
 const token = localStorage.getItem('token');
 
 $('document').ready(() => {
@@ -37,14 +38,33 @@ $('document').ready(() => {
     // Create instance of API.
     state.api = new API();
 
-    // TODO: Use MVC model.
-    // Get data from api and render their images.
-    state.api.getResults();
+    // Get ids from api.
+    state.api.getIds()
+    .done(data => {
+        console.log(`ids data`, data);
 
-    // TODO: Show a loader icon during loading images.
-    setTimeout(() => {
+        const ids = data.objectIDs;
+
+        // Get items from api.
+        for(let i = 0; i < 5; i++) {
+            state.api.getItems(ids)
+            .done(data => {
+                console.log(`item data`, data);
+
+                // Render search results.
+                apiView.renderItem(data);
+            })
+            .fail(err => {
+                console.log(`err`, err);
+            });
+        }
+        // Clear loader.
         clearLoader();
-    }, 1000);
+
+    })
+    .fail(err => {
+        console.log(`err`, err);
+    });
 
     setEventHandler();
 });
@@ -63,8 +83,12 @@ function setEventHandler() {
     els.loginPassword.blur(loginCheckHandler);
     els.loginBtn.click(loginUserHandler);
 
+    // SEARCH
+    els.searchIcon.click(popupSearchModal);
+    els.searchBtn.click(searchItemsHandler);
+
     // HEADER
-    els.brandLink.click(returnDefaultPageHandler)
+    els.brandLink.click(returnDefaultPageHandler);
 
     // ARTWORKS > display artworks infinitely
     $(window).scroll(pagenationHandler);
@@ -318,22 +342,93 @@ function resetMessages() {
 ///////////////////////////////////////////////
 /// MAIN PAGE
 
+// Load new items when user scrolls down to bottom.
 function pagenationHandler() {
     if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
 
         // Prepare UI for changes
         renderLoader(els.items);
 
-        state.api.getResults();
+        state.api.getIds()
+        .done(data => {
+            console.log(`ids data`, data);
 
-        // TODO: Show a loader icon during loading images.
-        setTimeout(() => {
+            const ids = data.objectIDs;
+
+            // Get search results.
+            for(let i = 0; i < 5; i++) {
+                state.api.getItems(ids)
+                .done(data => {
+                    console.log(`item data`, data);
+
+                    // Render search results.
+                    apiView.renderItem(data);
+                })
+                .fail(err => {
+                    console.log(`err`, err);
+                });
+            }
+            // Clear loader.
             clearLoader();
-        }, 1000);
+
+        })
+        .fail(err => {
+            console.log(`err`, err);
+        });
 
         els.items.off(`click`, `.items__item`, popupItemModal);
         els.items.on(`click`, `.items__item`, popupItemModal);
      }
+};
+
+
+// Pop up a search modal when user clicks search icon.
+function popupSearchModal() {
+    els.popupSearch.modal(`toggle`);
+};
+
+
+// Display search results when user clicks search button.
+function searchItemsHandler() {
+    console.log(`search items`);
+
+    // 1) Get query from view
+    const query = searchView.getInput();
+
+    if (query) {
+        state.search = new Search(query);
+
+        // Prepare for rendering search results.
+        searchView.clearInput();
+        searchView.clearItems();
+
+        // Get search ids.
+        state.search.getSearchIds()
+        .done(data => {
+            console.log(`ids data`, data);
+
+            const ids = data.objectIDs;
+
+            // Get search results.
+            for(let i = 0; i < 10; i++) {
+                state.search.getSearchResults(ids)
+                .done(data => {
+                    console.log(`item data`, data);
+
+                    // Render search results.
+                    searchView.renderItems(data);
+                })
+                .fail(err => {
+                    console.log(`err`, err);
+                });
+            }
+        })
+        .fail(err => {
+            console.log(`err`, err);
+        });
+
+        els.popupSearch.modal(`toggle`);
+    }
 };
 
 
@@ -353,7 +448,7 @@ function popupItemModal(e) {
 
     // TODO: Better to use the URL which is previously fetched.
     // Get the item data user clicks.
-    state.api.getResult(id)
+    state.api.getItem(id)
     .done(data => {
         console.log(`index2 data`, data);
 
@@ -440,9 +535,21 @@ function displayCollectionHandler() {
     // Get data from "likes" array.
     const storage = state.likes.readStorage();
 
-    // TODO: Use MVC model.
-    // Get data from api and render my collection.
-    state.api.getAndRenderCollection(storage);
+    // Iterate "likes" array.
+    storage.forEach(el => {
+
+        // Get my collection from api.
+        state.api.getCollection(el)
+        .done(data => {
+            console.log(`item data`, data);
+
+            // Render my collection.
+            apiView.renderCollection(data);
+        })
+        .fail(err => {
+            console.log(`err`, err);
+        });
+    });
 
     // Disable calling api with scroll down.
     $(window).off(`scroll`, pagenationHandler);

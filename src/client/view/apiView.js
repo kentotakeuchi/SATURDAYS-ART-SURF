@@ -1,19 +1,31 @@
 import $ from 'jquery';
 import { els } from './base';
 
-
+// TODO: change name to item
 export const clearArtwork = () => {
     $(`.item__container`).remove();
 };
 
+export const renderItem = (data) => {
+
+    if (data.primaryImageSmall !== ``) {
+        const markup = `
+            <div class="items__item" id="${data.objectID}" data-title="${data.title}">
+                <img src="${data.primaryImageSmall}" class="items__img">
+            </div>
+        `;
+        $(`.items`).append(markup);
+    }
+};
+
+// TODO: change name to item
 export const renderArtwork = (data, isLiked) => {
-    console.log(`data`, data);
-    console.log(`isLiked`, isLiked);
 
     // Display "unknown" when there are no data.
     let artistName = data.artistDisplayName === `` ? `unknown` : data.artistDisplayName;
     let artistNationality = data.artistNationality === `` ? `unknown` : data.artistNationality;
 
+    // TODO: Fix styling of textarea.
     const markup = `
         <div class="item__container">
 
@@ -41,19 +53,14 @@ export const renderArtwork = (data, isLiked) => {
     els.popupItemBody.append(markup);
 };
 
+export const renderCollection = data => {
 
-/*
-export const renderArtworks = data => {
-
-    console.log('data', data);
-
-    const id = data.objectID;
-
-    if (data.primaryImage !== ``) {
+    if (data.primaryImageSmall !== ``) {
         const markup = `
-            <img src="${data.primaryImage}" class="item" id="${id}"></img>
+            <div class="items__item" id="${data.objectID}" data-title="${data.title}">
+                <img src="${data.primaryImageSmall}" class="items__img">
+            </div>
         `;
-        els.items.append(markup);
+        $(`.items`).append(markup);
     }
 };
-*/

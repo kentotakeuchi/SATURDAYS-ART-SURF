@@ -10,12 +10,13 @@ router.use(bodyParser.json());
 
 
 router.post('/', verifyToken, (req, res) => {
-    console.log(`req.body`, req.body);
+    // console.log(`req.body`, req.body);
 
     if (!req.body) return res.sendStatus(400);
 
     // Create an instance of model SomeModel
-    var item = new Item({
+    const item = new Item({
+        accessionNumber:req.body.accessionNumber,
         additionalImages: req.body.additionalImages,
         artistBeginDate: req.body.artistBeginDate,
         artistDisplayName: req.body.artistDisplayName,
@@ -43,7 +44,7 @@ router.post('/', verifyToken, (req, res) => {
     // Save the new item, passing a callback
     item.save(err => {
         if (err) {
-            console.log('err', err);
+            // console.log('err', err);
             res.end('error adding your item!');
             return handleError(err);
         }

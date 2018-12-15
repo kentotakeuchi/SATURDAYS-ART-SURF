@@ -2,3 +2,4 @@ node_modules
 package-lock.json
 .vscode
 src/server/config.js
+draft.js

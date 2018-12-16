@@ -52,19 +52,6 @@ $('document').ready(() => {
 
                 // Render search results.
                 apiView.renderItem(data);
-
-                // CAUTION!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                // JUST GET WHOLE DATA FROM API AND STORE THEM TO DB.
-                // $.ajax({
-                //     method: "POST",
-                //     url: 'http://localhost:3000/item',
-                //     dataType: 'json',
-                //     processData: false,
-                //     contentType: 'application/json',
-                //     data: JSON.stringify(data),
-                //     headers: { 'x-access-token': token }
-                // });
-                // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             })
             .fail(err => {
                 console.log(`err`, err);
@@ -413,33 +400,25 @@ function searchItemsHandler() {
         // Prepare for rendering search results.
         searchView.clearInput();
         searchView.clearItems();
+        renderLoader(els.items);
 
-        // Get search ids.
-        state.search.getSearchIds()
+        state.search.getSearchItems()
         .done(data => {
-            console.log(`ids data`, data);
+            console.log(`data`, data);
 
-            const ids = data.objectIDs;
-
-            // Get search results.
-            for(let i = 0; i < 10; i++) {
-                state.search.getSearchResults(ids)
-                .done(data => {
-                    console.log(`item data`, data);
-
-                    // Render search results.
-                    searchView.renderItems(data);
-                })
-                .fail(err => {
-                    console.log(`err`, err);
-                });
-            }
+            searchView.renderItems(data);
         })
         .fail(err => {
             console.log(`err`, err);
         });
 
+        // Disable calling api with scroll down.
+        $(window).off(`scroll`, pagenationHandler);
+
         els.popupSearch.modal(`toggle`);
+
+        // Clear loader.
+        clearLoader();
     }
 };
 
@@ -543,6 +522,7 @@ function displayCollectionHandler() {
 
     // Prepare for rendering my collection.
     els.items.children().remove();
+    renderLoader(els.items);
 
     // Get data from "likes" array.
     const storage = state.likes.readStorage();
@@ -568,6 +548,9 @@ function displayCollectionHandler() {
 
     // Close navigation.
     els.naviCheckbox.prop( `checked`, false );
+
+    // Clear loader.
+    clearLoader();
 };
 
 // ABOUT

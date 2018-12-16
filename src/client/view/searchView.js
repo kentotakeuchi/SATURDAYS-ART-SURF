@@ -13,13 +13,17 @@ export const clearItems = () => {
 };
 
 export const renderItems = (data) => {
+    console.log(`data`, data);
 
-    if (data.primaryImageSmall !== ``) {
-        const markup = `
-            <div class="items__item" id="${data.objectID}" data-title="${data.title}">
-                <img src="${data.primaryImageSmall}" class="items__img">
-            </div>
-        `;
-        $(`.items`).append(markup);
-    }
+    data.forEach(el => {
+        if (el.primaryImageSmall !== ``) {
+            const markup = `
+                <div class="items__item" id="${el.objectID}" data-title="${el.title}">
+                    <img src="${el.primaryImageSmall}" class="items__img">
+                </div>
+            `;
+            $(`.items`).append(markup);
+        }
+    });
+
 };

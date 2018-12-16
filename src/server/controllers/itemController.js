@@ -1,12 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const Item = require('../models/Item');
 const verifyToken = require('../verifyToken');
 
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
+
+// Get the default connection
+const db = mongoose.connection;
 
 
 router.post('/', verifyToken, (req, res) => {
@@ -52,4 +56,41 @@ router.post('/', verifyToken, (req, res) => {
     });
 });
 
+router.get('/search/:query', verifyToken, (req, res) => {
+
+    const query = req.params.query;
+    console.log(`query`, query);
+
+    Item.find({ $text: { $search: query } }, (err, items) => {
+        if (err) {
+            res.end('Error searching item.');
+        } else {
+            res.send(items);
+        }
+    });
+});
+
+
 module.exports = router;
+
+
+// app.post('/items/search', VerifyToken, (req, res) => {
+//     const searchText = req.body.searchText;
+
+//     if (!req.body) return res.sendStatus(400);
+
+//     const filter = req.body.filter == 'true' ? {
+//         name: 1,
+//         _id: 0
+//     } : {};
+
+//     Item.find({
+//         "name": { $regex: searchText, $options: 'i' }
+//     }, filter, (err, items) => {
+//         if (err) {
+//             res.end('Error searching item.');
+//         } else {
+//             res.send(items);
+//         }
+//     });
+// });

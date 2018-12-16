@@ -27,6 +27,8 @@ const ItemSchema = new Schema({
     title: String
 });
 
+ItemSchema.index({'$**': 'text'});
+
 const Item = mongoose.model('Item', ItemSchema);
 
 module.exports = Item;

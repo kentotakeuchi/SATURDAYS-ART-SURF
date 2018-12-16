@@ -1,6 +1,8 @@
 import $ from 'jquery';
 import { proxy } from '../config';
 
+const token = localStorage.getItem('token');
+
 
 export default class Search {
 
@@ -18,18 +20,14 @@ export default class Search {
         });
     }
 
-    getSearchResults(ids) {
-
-        const index = Math.floor(Math.random() * ids.length);
-
-        const id = ids[index];
+    getSearchItems() {
 
         return $.ajax({
             method: "GET",
-            url: `${proxy}https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`
+            url: `http://localhost:3000/item/search/${this.query}`,
+            headers: { 'x-access-token': token }
         });
     }
-
 };
 
 

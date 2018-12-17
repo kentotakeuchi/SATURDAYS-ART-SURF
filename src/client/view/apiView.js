@@ -6,6 +6,10 @@ export const clearArtwork = () => {
     $(`.item__container`).remove();
 };
 
+export const clearItems = () => {
+    els.items.children().remove();
+};
+
 export const renderItem = (data) => {
 
     if (data.primaryImageSmall !== ``) {

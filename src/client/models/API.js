@@ -73,6 +73,6 @@ function formatDate(date) {
     } else if (month >= 9 && day < 10) {
         return `${year}-${month + 1}-0${day}`;
     } else if (month >= 9 && day >= 10) {
-        return `${year}-${month + 1}-${day-1}`;
+        return `${year}-${month + 1}-${day-2}`;
     }
 };

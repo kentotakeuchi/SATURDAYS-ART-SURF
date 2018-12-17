@@ -45,10 +45,11 @@ $('document').ready(() => {
 
         const ids = data.objectIDs;
 
-        // Get items from api.
+        // Get items from api to display items.
         for(let i = 0; i < 5; i++) {
             state.api.getItems(ids)
             .done(data => {
+                console.log(`data`, data);
 
                 // Render search results.
                 apiView.renderItem(data);
@@ -59,7 +60,6 @@ $('document').ready(() => {
         }
         // Clear loader.
         clearLoader();
-
     })
     .fail(err => {
         console.log(`err`, err);
@@ -85,6 +85,10 @@ function setEventHandler() {
     // SEARCH
     els.searchIcon.click(popupSearchModal);
     els.searchBtn.click(searchItemsHandler);
+    els.objInput.change(searchItemsHandler);
+    els.geoInput.change(searchItemsHandler);
+    els.dateInput.change(searchItemsHandler);
+    els.deptInput.change(searchItemsHandler);
 
     // HEADER
     els.brandLink.click(returnDefaultPageHandler);
@@ -388,11 +392,16 @@ function popupSearchModal() {
 
 
 // Display search results when user clicks search button.
-function searchItemsHandler() {
-    console.log(`search items`);
+function searchItemsHandler(e) {
+    e.preventDefault();
 
-    // 1) Get query from view
-    const query = searchView.getInput();
+    let query;
+    if (e.type === `click`) {
+        // 1) Get query from view
+        query = searchView.getInput();
+    } else if (e.type === `change`) {
+        query = e.target.value;
+    }
 
     if (query) {
         state.search = new Search(query);
@@ -400,12 +409,18 @@ function searchItemsHandler() {
         // Prepare for rendering search results.
         searchView.clearInput();
         searchView.clearItems();
+        searchView.clearNumOfItems();
         renderLoader(els.items);
 
+        // Get search data.
         state.search.getSearchItems()
         .done(data => {
             console.log(`data`, data);
 
+            // Render the number of search results.
+            searchView.renderNumOfItems(data, query);
+
+            // Render search items.
             searchView.renderItems(data);
         })
         .fail(err => {
@@ -521,7 +536,8 @@ function displayCollectionHandler() {
     state.likes = new Likes();
 
     // Prepare for rendering my collection.
-    els.items.children().remove();
+    apiView.clearItems();
+    searchView.clearNumOfItems();
     renderLoader(els.items);
 
     // Get data from "likes" array.

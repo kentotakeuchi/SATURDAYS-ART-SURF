@@ -25,12 +25,17 @@ export const els = {
     popupSearch: $(`#popupSearch`),
     searchInput: $(`#searchInput`),
     searchBtn: $(`#searchBtn`),
+    objInput: $(`#objInput`),
+    geoInput: $(`#geoInput`),
+    dateInput: $(`#dateInput`),
+    deptInput: $(`#deptInput`),
 
     // HEADER
     brandLink: $(`#brandLink`),
 
     // ARTWORKS
     container: $(`.container`),
+    num: $(`.num`),
     items: $(`.items`),
     item: $(`.items__item`),
     itemImg: $(`.items__img`),

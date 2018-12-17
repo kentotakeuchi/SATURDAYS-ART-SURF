@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
+const request = require("request");
 
 const Item = require('../models/Item');
 const verifyToken = require('../verifyToken');
@@ -9,53 +9,89 @@ const verifyToken = require('../verifyToken');
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
-// Get the default connection
-const db = mongoose.connection;
 
+const date = formatDate(new Date());
 
-router.post('/', verifyToken, (req, res) => {
-    // console.log(`req.body`, req.body);
+// GET WHOLE DATA AND STORE THEM INTO DB
+request.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects?metadataDate=${date}`, (err, res, body) => {
 
-    if (!req.body) return res.sendStatus(400);
+    if(err) {
+        return console.log(err);
+    }
 
-    // Create an instance of model SomeModel
-    const item = new Item({
-        accessionNumber:req.body.accessionNumber,
-        additionalImages: req.body.additionalImages,
-        artistBeginDate: req.body.artistBeginDate,
-        artistDisplayName: req.body.artistDisplayName,
-        artistEndDate: req.body.artistEndDate,
-        artistNationality: req.body.artistNationality,
-        artistRole: req.body.artistRole,
-        city: req.body.city,
-        classification: req.body.classification,
-        brand: req.body.brand,
-        department: req.body.department,
-        dimensions: req.body.dimensions,
-        isPublicDomain: req.body.isPublicDomain,
-        medium: req.body.medium,
-        objectBeginDate: req.body.objectBeginDate,
-        objectEndDate: req.body.objectEndDate,
-        objectID: req.body.objectID,
-        objectName: req.body.objectName,
-        objectURL: req.body.objectURL,
-        primaryImage: req.body.primaryImage,
-        primaryImageSmall: req.body.primaryImageSmall,
-        repository: req.body.repository,
-        title: req.body.title
-    });
+    const ids = JSON.parse(body).objectIDs;
 
-    // Save the new item, passing a callback
-    item.save(err => {
-        if (err) {
-            // console.log('err', err);
-            res.end('error adding your item!');
-            return handleError(err);
-        }
-        res.end('You have successfully added your item!');
+    ids.forEach(el => {
+        request.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${el}`, (err, res, body) => {
+
+            if(err) {
+                return console.log(err);
+            }
+
+            // console.log(`JSON.parse(body)2`, JSON.parse(body));
+
+            const data = JSON.parse(body);
+
+            if (data.primaryImageSmall !== ``) {
+                if (!data) return res.sendStatus(400);
+
+                Item.findOne({ objectID: data.objectID }, (err, item) => {
+                    console.log(`data.objectID`, data.objectID);
+
+                    if(err) {
+                        return console.log(err);
+                    }
+
+                    if (item !== null) {
+                        console.log(`if`);
+                        return;
+                    } else {
+                        console.log(`else`);
+
+                        // Create an instance of model SomeModel
+                        const item = new Item({
+                            accessionNumber:data.accessionNumber,
+                            additionalImages: data.additionalImages,
+                            artistBeginDate: data.artistBeginDate,
+                            artistDisplayName: data.artistDisplayName,
+                            artistEndDate: data.artistEndDate,
+                            artistNationality: data.artistNationality,
+                            artistRole: data.artistRole,
+                            city: data.city,
+                            classification: data.classification,
+                            brand: data.brand,
+                            department: data.department,
+                            dimensions: data.dimensions,
+                            isPublicDomain: data.isPublicDomain,
+                            medium: data.medium,
+                            objectBeginDate: data.objectBeginDate,
+                            objectEndDate: data.objectEndDate,
+                            objectID: data.objectID,
+                            objectName: data.objectName,
+                            objectURL: data.objectURL,
+                            primaryImage: data.primaryImage,
+                            primaryImageSmall: data.primaryImageSmall,
+                            repository: data.repository,
+                            title: data.title
+                        });
+
+                        // Save the new item, passing a callback
+                        item.save(err => {
+                            if (err) {
+                                console.log('err', err);
+                                return handleError(err);
+                            }
+                            console.log('You have successfully added your item!');
+                        });
+                    }
+                });
+            }
+        });
     });
 });
 
+
+// GET ITEMS USER SEARCHED
 router.get('/search/:query', verifyToken, (req, res) => {
 
     const query = req.params.query;
@@ -71,26 +107,21 @@ router.get('/search/:query', verifyToken, (req, res) => {
 });
 
 
+function formatDate(date) {
+
+    const day = date.getDate();
+    const month = date.getMonth();
+    const year = date.getFullYear();
+
+    if (month < 9 && day < 10) {
+        return `${year}-0${month + 1}-0${day}`;
+    } else if (month < 9 && day >= 10) {
+        return `${year}-0${month + 1}-${day}`;
+    } else if (month >= 9 && day < 10) {
+        return `${year}-${month + 1}-0${day}`;
+    } else if (month >= 9 && day >= 10) {
+        return `${year}-${month + 1}-${day-1}`;
+    }
+};
+
 module.exports = router;
-
-
-// app.post('/items/search', VerifyToken, (req, res) => {
-//     const searchText = req.body.searchText;
-
-//     if (!req.body) return res.sendStatus(400);
-
-//     const filter = req.body.filter == 'true' ? {
-//         name: 1,
-//         _id: 0
-//     } : {};
-
-//     Item.find({
-//         "name": { $regex: searchText, $options: 'i' }
-//     }, filter, (err, items) => {
-//         if (err) {
-//             res.end('Error searching item.');
-//         } else {
-//             res.send(items);
-//         }
-//     });
-// });

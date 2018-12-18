@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const random = require('mongoose-simple-random');
 const Schema = mongoose.Schema;
 
 const ItemSchema = new Schema({
@@ -27,7 +28,11 @@ const ItemSchema = new Schema({
     title: String
 });
 
+// For search whole string.
 ItemSchema.index({'$**': 'text'});
+
+// For findRandom method.
+ItemSchema.plugin(random);
 
 const Item = mongoose.model('Item', ItemSchema);
 

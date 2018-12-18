@@ -10,20 +10,21 @@ export const clearItems = () => {
     els.items.children().remove();
 };
 
-export const renderItem = (data) => {
+// Render items data for "main page".
+export const renderItems = (data) => {
 
-    if (data.primaryImageSmall !== ``) {
+    data.forEach(el => {
         const markup = `
-            <div class="items__item" id="${data.objectID}" data-title="${data.title}">
-                <img src="${data.primaryImageSmall}" class="items__img">
+            <div class="items__item" id="${el.objectID}" data-title="${el.title}">
+                <img src="${el.primaryImageSmall}" class="items__img">
             </div>
         `;
         $(`.items`).append(markup);
-    }
+    });
 };
 
-// TODO: change name to item
-export const renderArtwork = (data, isLiked) => {
+// Render an item's data for "popupItemModal".
+export const renderItem = (data, isLiked) => {
 
     // Display "unknown" when there are no data.
     let artistName = data.artistDisplayName === `` ? `unknown` : data.artistDisplayName;
@@ -57,6 +58,7 @@ export const renderArtwork = (data, isLiked) => {
     els.popupItemBody.append(markup);
 };
 
+// Render collection's data for "my collection".
 export const renderCollection = data => {
 
     if (data.primaryImageSmall !== ``) {

@@ -32,38 +32,7 @@ const token = localStorage.getItem('token');
 
 $('document').ready(() => {
 
-    // Prepare UI for changes
-    renderLoader(els.items);
-
-    // Create instance of API.
-    state.api = new API();
-
-    // Get ids from api.
-    state.api.getIds()
-    .done(data => {
-        console.log(`ids data`, data);
-
-        const ids = data.objectIDs;
-
-        // Get items from api to display items.
-        for(let i = 0; i < 5; i++) {
-            state.api.getItems(ids)
-            .done(data => {
-                console.log(`data`, data);
-
-                // Render search results.
-                apiView.renderItem(data);
-            })
-            .fail(err => {
-                console.log(`err`, err);
-            });
-        }
-        // Clear loader.
-        clearLoader();
-    })
-    .fail(err => {
-        console.log(`err`, err);
-    });
+    getAndRenderItemsHandler();
 
     setEventHandler();
 });
@@ -345,39 +314,35 @@ function resetMessages() {
 ///////////////////////////////////////////////
 /// MAIN PAGE
 
+// Set loader > get items > render items > clear loader.
+function getAndRenderItemsHandler() {
+
+    // Prepare UI for changes
+    renderLoader(els.items);
+
+    // Create instance of API.
+    state.api = new API();
+
+    // Get items from api to display items.
+    state.api.getItems()
+    .done(data => {
+        console.log(`data`, data);
+
+        // Render search results.
+        apiView.renderItems(data);
+    })
+    .fail(err => {
+        console.log(`err`, err);
+    });
+    // Clear loader.
+    clearLoader();
+};
+
 // Load new items when user scrolls down to bottom.
 function pagenationHandler() {
     if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
 
-        // Prepare UI for changes
-        renderLoader(els.items);
-
-        state.api.getIds()
-        .done(data => {
-            console.log(`ids data`, data);
-
-            const ids = data.objectIDs;
-
-            // Get search results.
-            for(let i = 0; i < 5; i++) {
-                state.api.getItems(ids)
-                .done(data => {
-                    console.log(`item data`, data);
-
-                    // Render search results.
-                    apiView.renderItem(data);
-                })
-                .fail(err => {
-                    console.log(`err`, err);
-                });
-            }
-            // Clear loader.
-            clearLoader();
-
-        })
-        .fail(err => {
-            console.log(`err`, err);
-        });
+        getAndRenderItemsHandler();
 
         els.items.off(`click`, `.items__item`, popupItemModal);
         els.items.on(`click`, `.items__item`, popupItemModal);
@@ -412,7 +377,7 @@ function searchItemsHandler(e) {
         searchView.clearNumOfItems();
         renderLoader(els.items);
 
-        // Get search data.
+        // Get search data from db.
         state.search.getSearchItems()
         .done(data => {
             console.log(`data`, data);
@@ -459,7 +424,7 @@ function popupItemModal(e) {
         console.log(`index2 data`, data);
 
         // Render the item data user clicks.
-        apiView.renderArtwork(data, state.likes.isLiked(id));
+        apiView.renderItem(data, state.likes.isLiked(id));
 
         // MEMO: Setting event to SVG with jquery didn't work.
         const likes = document.querySelector(`.likes`);
@@ -479,26 +444,20 @@ function popupItemModal(e) {
 
 
 function likesHandler(e) {
-    console.log(`e`, e);
 
     state.likes = new Likes();
 
     const storage = state.likes.readStorage();
-    console.log(`storage`, storage);
 
     // Get the id of artwork user clicks.
     let id;
     if (e.target.tagName === `svg`) {
         id = e.target.id;
-        console.log(`svg id`, id);
     } else if (e.target.tagName === `use`) {
         id = e.target.parentElement.id;
-        console.log(`use id`, id);
-
     }
 
     if (state.likes.isLiked(id)) {
-        console.log(`delete`);
 
         // Delete id from the "this.likes[]" array.
         state.likes.deleteLike(id);
@@ -506,7 +465,6 @@ function likesHandler(e) {
         // Toggle the like button
         likesView.toggleLikeBtn(false);
     } else {
-        console.log(`add`);
 
         // Add id in the "this.likes[]" array.
         state.likes.addLike(id);
@@ -549,8 +507,6 @@ function displayCollectionHandler() {
         // Get my collection from api.
         state.api.getCollection(el)
         .done(data => {
-            console.log(`item data`, data);
-
             // Render my collection.
             apiView.renderCollection(data);
         })

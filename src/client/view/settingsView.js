@@ -93,6 +93,23 @@ export const checkPasswordsMatch = () => {
     return valid;
 };
 
+export const renderSuccessMsg = () => {
+    alert(`SUCCESS`);
+};
+
+export const renderErrMsg = (err) => {
+    alert(`There was a problem updating the user.`);
+};
+
+
+
+
+
+
+
+
+
+
 
 function clearEmailErrorMessages() {
 
@@ -116,8 +133,6 @@ function clearNewPasswordErrorMessages() {
 };
 
 function clearNewPassword2ErrorMessages() {
-    console.log(`here`);
-    
 
     els.settingsNewPassword2ErrorMessageContainer.removeClass('dangerColor');
     els.settingsNewPassword2ErrorMessage.html('');

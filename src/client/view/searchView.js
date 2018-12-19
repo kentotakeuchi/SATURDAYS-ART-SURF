@@ -4,7 +4,7 @@ import { els } from './base';
 
 export const getInput = () => els.searchInput.val();
 
-export const clearInput = () => {
+export const init = () => {
     els.searchInput.val(``);
     els.objInput.val($("#objInput option:first").val());
     els.geoInput.val($("#geoInput option:first").val());

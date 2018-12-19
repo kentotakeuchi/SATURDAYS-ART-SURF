@@ -9,6 +9,7 @@ import './sass/style.scss';
 
 // MODELS
 import API from './models/API';
+import Auth from './models/Auth';
 import Contact from './models/Contact';
 import Likes from './models/Likes';
 import Search from './models/Search';
@@ -16,9 +17,9 @@ import Settings from './models/Settings';
 
 // VIEWS
 import * as apiView from './view/apiView';
+import * as authView from './view/authView';
 import { els, renderLoader, clearLoader } from './view/base';
 import * as contactView from './view/contactView';
-import * as landingView from './view/landingView';
 import * as likesView from './view/likesView';
 import * as searchView from './view/searchView';
 import * as settingsView from './view/settingsView';
@@ -32,6 +33,9 @@ const token = localStorage.getItem('token');
 
 $('document').ready(() => {
 
+    // TODO: Need to separate index.html from main.html
+    authView.init();
+
     getAndRenderItemsHandler();
 
     setEventHandler();
@@ -40,16 +44,17 @@ $('document').ready(() => {
 function setEventHandler() {
 
     // REGISTER FORM
-    els.registerEmail.blur(registerCheckHandler);
-    els.registerPassword.blur(registerCheckHandler);
-    els.registerPassword2.blur(registerCheckHandler);
+    els.registerEmail.keyup(registerCheckHandler);
+    els.registerPassword.keyup(registerCheckHandler);
+    els.registerPassword2.keyup(registerCheckHandler);
     els.registerBtn.click(registerUserHandler);
     els.registerToLogin.click(registerToLoginHandler);
 
     // LOGIN FORM
-    els.loginEmail.blur(loginCheckHandler);
-    els.loginPassword.blur(loginCheckHandler);
+    els.loginEmail.keyup(loginCheckHandler);
+    els.loginPassword.keyup(loginCheckHandler);
     els.loginBtn.click(loginUserHandler);
+    els.loginToRegister.click(loginToRegisterHandler);
 
     // SEARCH
     els.searchIcon.click(popupSearchModal);
@@ -81,8 +86,8 @@ function setEventHandler() {
         // TODO: Fix later on.
         els.contactEmail.focus();
     }, 50);
-    els.contactEmail.blur(contactCheckHandler);
-    els.contactInquiry.blur(contactCheckHandler);
+    els.contactEmail.keyup(contactCheckHandler);
+    els.contactInquiry.keyup(contactCheckHandler);
     els.contactBtn.click(contactSendHandler);
 
     // NAVIGATION > settings
@@ -91,10 +96,10 @@ function setEventHandler() {
         // TODO: Fix later on.
         els.settingsEmail.focus();
     }, 50);
-    els.settingsEmail.blur(settingsCheckHandler);
+    els.settingsEmail.keyup(settingsCheckHandler);
     els.settingsCurPassword.blur(settingsCheckHandler);
-    els.settingsNewPassword.blur(settingsCheckHandler);
-    els.settingsNewPassword2.blur(settingsCheckHandler);
+    els.settingsNewPassword.keyup(settingsCheckHandler);
+    els.settingsNewPassword2.keyup(settingsCheckHandler);
     els.settingsBtn.click(settingsUpdateHandler);
 
     // NAVIGATION > logout
@@ -105,211 +110,95 @@ function setEventHandler() {
 
 ///////////////////////////////////////////////
 /// LANDING PAGE
-function registerUserHandler() {
 
-    $.ajax({
-        method: "POST",
-        url: "http://localhost:3000/auth/register",
-        data: {
-             email: els.registerEmail.val(),
-             password: els.registerPassword.val()
-        }
-    })
+function registerUserHandler(e) {
+    e.preventDefault();
+
+    const str = `register`;
+
+    state.auth.registerUser()
     .done(( msg ) => {
-        alert(`msg`, msg);
+
+        // Display success msg.
+        authView.renderSuccessMsg(str);
+
+        setTimeout(() => {
+            registerToLoginHandler();
+        }, 2000);
     })
     .fail(( err ) => {
-        alert(`err`, err);
+        authView.renderErrMsg(str, err);
     });
 };
+
 
 function registerToLoginHandler() {
 
+    // Clear all value.
+    authView.init();
+
     // Clear register form.
-    landingView.clearRegisterForm();
+    authView.clearRegisterForm();
 
     // Display login form.
-    landingView.renderLoginForm();
+    authView.renderLoginForm();
 };
 
-function loginUserHandler() {
 
-    $.ajax({
-        method: "POST",
-        url: "http://localhost:3000/auth/login",
-        data: {
-             email: els.loginEmail.val(),
-             password: els.loginPassword.val()
-        }
-    })
+function loginUserHandler(e) {
+    e.preventDefault();
+
+    const str = `login`;
+
+    state.auth = new Auth();
+
+    state.auth.loginUser()
     .done(( user ) => {
         console.log(`user`, user);
 
-        localStorage.setItem('user_id', user._id);
-        localStorage.setItem('userEmail', user.email);
-        localStorage.setItem('token', user.tokens[0].token);
+        // Store data of "user_id", "email" and "token" to local storage.
+        state.auth.persistData(user);
+
+        // Display success msg.
+        authView.renderSuccessMsg(str);
+
         setTimeout(() => {
             window.location.href = '/main.html';
-        }, 1000);
+        }, 2000);
     })
     .fail(( err ) => {
-        alert(`err`, err);
+        authView.renderErrMsg(str, err);
     });
 };
 
+
+function loginToRegisterHandler() {
+
+    // Clear all value.
+    authView.init();
+
+    // Clear login form.
+    authView.clearLoginForm();
+
+    // Display register form.
+    authView.renderRegisterForm();
+};
+
+
 function registerCheckHandler() {
 
-    const inValid =
-        !registerEmailFormatCheck(els.registerEmail.val()) ||
-        !registerPasswordFormatCheck(els.registerPassword.val()) ||
-        !registerPasswordsMatch(
-            els.registerPassword.val(),
-            els.registerPassword2.val()) ||
-        els.registerEmail.val() === '' ||
-        els.registerPassword.val() === '' ||
-        els.registerPassword2.val() === '';
+    state.auth = new Auth();
 
-    if (inValid) {
-        els.registerBtn.prop('disabled', true);
-    } else {
-        els.registerBtn.prop('disabled', false);
-    }
-    return !inValid;
+    state.auth.registerCheck();
 };
 
-function registerEmailFormatCheck(email) {
-
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    var valid = true;
-
-    if (email.length > 0) {
-        valid = re.test(String(email).toLowerCase());
-    }
-
-    if (!valid) {
-        els.registerErrorMessageContainer.addClass('dangerColor');
-        els.registerErrorMessage.html('Email format is incorrect.');
-        els.registerErrorMessageContainer.css('display', 'flex');
-    } else {
-        resetMessages();
-    }
-
-    return valid;
-};
-
-function registerPasswordFormatCheck(password) {
-
-    var lowerCaseRegex = /.*[a-z].*/;
-    var upperCaseRegex = /.*[A-Z].*/;
-    var numberRegex = /.*\d.*/;
-    var symbolRegex = /.*[!@#$%^&*+?].*/;
-    var valid = true;
-
-    if (password.length > 0) {
-        valid = password.length >= 8 &&
-        lowerCaseRegex.test(String(password)) &&
-        upperCaseRegex.test(String(password)) &&
-        numberRegex.test(String(password)) &&
-        symbolRegex.test(String(password));
-    }
-
-    if (!valid) {
-        els.registerErrorMessageContainer.addClass('dangerColor');
-        els.registerErrorMessage.html('Password must be at least 8 characters in length, and must have at least one number, one uppercase letter, one lowercase letter, and one of the following symbols: ! @ # $ % ^ & * + ?');
-        els.registerErrorMessageContainer.css('display', 'flex');
-    } else {
-        resetMessages();
-    }
-
-    return valid;
-};
-
-function registerPasswordsMatch(password1, password2) {
-    var valid = password1 === password2;
-
-    if (!valid) {
-        els.registerErrorMessageContainer.addClass('dangerColor');
-        els.registerErrorMessage.html('Password and confirm password fields do not match.');
-        els.registerErrorMessageContainer.css('display', 'flex');
-    } else {
-        resetMessages();
-    }
-
-    return valid;
-};
 
 function loginCheckHandler() {
 
-    const inValid =
-        !loginEmailFormatCheck(els.loginEmail.val()) ||
-        !loginPasswordFormatCheck(els.loginPassword.val()) ||
-        els.loginEmail.val() === '' ||
-        els.loginPassword.val() === '';
+    state.auth = new Auth();
 
-    if (inValid) {
-        els.loginBtn.prop('disabled', true);
-    } else {
-        els.loginBtn.prop('disabled', false);
-    }
-    return !inValid;
+    state.auth.loginCheck();
 };
-
-function loginEmailFormatCheck(email) {
-
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    var valid = true;
-
-    if (email.length > 0) {
-        valid = re.test(String(email).toLowerCase());
-    }
-
-    if (!valid) {
-        els.loginErrorMessageContainer.addClass('dangerColor');
-        els.loginErrorMessage.html('Email format is incorrect.');
-        els.loginErrorMessageContainer.css('display', 'flex');
-    } else {
-        resetMessages();
-    }
-
-    return valid;
-};
-
-function loginPasswordFormatCheck(password) {
-
-    var lowerCaseRegex = /.*[a-z].*/;
-    var upperCaseRegex = /.*[A-Z].*/;
-    var numberRegex = /.*\d.*/;
-    var symbolRegex = /.*[!@#$%^&*+?].*/;
-    var valid = true;
-
-    if (password.length > 0) {
-        valid = password.length >= 8 &&
-        lowerCaseRegex.test(String(password)) &&
-        upperCaseRegex.test(String(password)) &&
-        numberRegex.test(String(password)) &&
-        symbolRegex.test(String(password));
-    }
-
-    if (!valid) {
-        els.loginErrorMessageContainer.addClass('dangerColor');
-        els.loginErrorMessage.html('Password must be at least 8 characters in length, and must have at least one number, one uppercase letter, one lowercase letter, and one of the following symbols: ! @ # $ % ^ & * + ?');
-        els.loginErrorMessageContainer.css('display', 'flex');
-    } else {
-        resetMessages();
-    }
-
-    return valid;
-};
-
-function resetMessages() {
-    els.registerErrorMessageContainer.css('display', 'none');
-    els.registerErrorMessageContainer.removeClass('dangerColor');
-    els.registerErrorMessage.html('');
-    els.loginErrorMessageContainer.css('display', 'none');
-    els.loginErrorMessageContainer.removeClass('dangerColor');
-    els.loginErrorMessage.html('');
-};
-
 
 ///////////////////////////////////////////////
 /// MAIN PAGE
@@ -372,7 +261,7 @@ function searchItemsHandler(e) {
         state.search = new Search(query);
 
         // Prepare for rendering search results.
-        searchView.clearInput();
+        searchView.init();
         searchView.clearItems();
         searchView.clearNumOfItems();
         renderLoader(els.items);
@@ -412,6 +301,7 @@ function popupItemModal(e) {
 
     // Prepare for rendering a new artwork.
     apiView.clearArtwork();
+    renderLoader(els.popupItemBody);
 
     // Get the id of artwork user clicks.
     const id = e.target.id;
@@ -440,6 +330,8 @@ function popupItemModal(e) {
     .fail(err => {
         console.log(err.responseText);
     });
+    // Clear loader.
+    clearLoader();
 };
 
 
@@ -535,7 +427,11 @@ function popupAboutModal() {
 // CONTACT
 function popupContactModal() {
     els.popupContact.modal(`toggle`);
+
+    // Initialize all value.
+    contactView.init();
 };
+
 
 function contactCheckHandler() {
 
@@ -553,21 +449,12 @@ function contactCheckHandler() {
 function contactSendHandler(e) {
     e.preventDefault();
 
-    $.ajax({
-        method: 'POST',
-        url: 'http://localhost:3000/contact/',
-        data: {
-            email: els.contactEmail.val(),
-            inquiry: els.contactInquiry.val()
-        },
-        headers: { 'x-access-token': token },
-        success: ( msg ) => {
-            alert('Your message has been sent successfully.');
-            // window.location.href = '/main.html';
-        },
-        error: ( msg ) => {
-            alert('A problem has been occurred while submitting your data.')
-        }
+    state.contact.contactSend()
+    .done(msg => {
+        contactView.renderMsg(msg);
+    })
+    .fail(err => {
+        contactView.renderMsg(err);
     });
 };
 
@@ -624,23 +511,14 @@ function settingsCheckHandler() {
 function settingsUpdateHandler(e) {
     e.preventDefault();
 
-    $.ajax({
-        method: `PUT`,
-        url: `http://localhost:3000/user/${userID}`,
-        data: {
-            email: els.settingsEmail.val(),
-            curPassword: els.settingsCurPassword.val(),
-            newPassword: els.settingsNewPassword.val()
-        },
-        headers: { 'x-access-token': token },
-        success: ( user ) => {
-            localStorage.setItem('userEmail', user.email);
-            alert(`success`);
-            settingsView.init();
-        },
-        error: ( err ) => {
-            alert(`error`);
-        }
+    state.settings.updateUserData()
+    .done(user => {
+        state.settings.persistData(user);
+        settingsView.renderSuccessMsg();
+        settingsView.init();
+    })
+    .fail(err => {
+        settingsView.renderErrMsg(err);
     });
 };
 
@@ -648,17 +526,18 @@ function settingsUpdateHandler(e) {
 
 // LOGOUT
 function logout() {
-    if (confirm("Logout?")) {
-        $.ajax({
-            method: "GET",
-            url: "http://localhost:3000/auth/logout/" + userID,
-            headers: { 'x-access-token': token },
-            success: () => {
-                localStorage.removeItem('user_id');
-                localStorage.removeItem('userEmail');
-                localStorage.removeItem('token');
-                window.location.href = '/index.html';
-            }
+
+    if (confirm(`Logout?`)) {
+
+        state.auth = new Auth();
+
+        state.auth.logoutUser()
+        .done(() => {
+            state.auth.removeData();
+            window.location.href = `/index.html`;
+        })
+        .fail(err => {
+            authView.renderErrMsg2(err);
         });
     }
     return false;

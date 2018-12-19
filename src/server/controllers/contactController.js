@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const verifyToken = require('../verifyToken');
 const nodemailer = require('nodemailer');
 const config = require('../config');
 
 
 /* GET users listing. */
-router.post('/', function(req, res) {
+router.post('/', verifyToken, (req, res) => {
     const email = req.body.email;
     const inquiry = req.body.inquiry;
     const content = `email: ${email} \n inquiry: ${inquiry} `;
@@ -24,11 +25,15 @@ router.post('/', function(req, res) {
         subject: 'New Message from Contact Form', // Subject line
         text: content// plain text body
     };
-    transporter.sendMail(mailOptions, function (err, info) {
-        if(err)
+    transporter.sendMail(mailOptions, (err, info) => {
+        console.log(`info`, info);
+        console.log(`err`, err);
+
+        if(err) {
             res.send('A problem has been occurred while submitting your data.');
-        else
+        } else {
             res.send('Your message has been sent successfully.');
+        }
     });
 });
 

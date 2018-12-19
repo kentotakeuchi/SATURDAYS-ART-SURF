@@ -49,6 +49,44 @@
         transform: translateY(-2rem);
     }
 
+
+    &__loginLink {
+        color: $color-quaternary-light;
+        font-size: 1.3rem;
+
+        &:hover {
+            text-decoration: none;
+            color: $color-quaternary-dark;
+        }
+    }
+
+    &__registerLink {
+        color: $color-quaternary-light;
+        font-size: 1.3rem;
+
+        &:hover {
+            text-decoration: none;
+            color: $color-quaternary-dark;
+        }
+    }
+
+
+    &__inNav {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &__inSearch {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        margin: 5rem;
+    }
+
 }
 
 
@@ -56,4 +94,6 @@
 .form-group {
     display: flex;
     margin-bottom: 1.5rem;
+
+    width: 80%;
 }

@@ -14,10 +14,11 @@ router.use(bodyParser.json());
 const date = formatDate(new Date());
 
 // UPDATE WHOLE DATA AT 6:00 AM
-schedule.scheduleJob('0 6 * * *', () => { // min hour dom month dow
+schedule.scheduleJob('0 10 * * *', () => { // min hour dom month dow
 
     // GET WHOLE DATA AND STORE THEM INTO DB
     request.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects?metadataDate=${date}`, (err, res, body) => {
+        console.log(`data`, date);
 
         if(err) return console.log(err);
 
@@ -91,23 +92,6 @@ router.get(`/`, verifyToken, (req, res) => {
 
     Item.findRandom({}, {}, {limit: 5}, (err, items) => {
         console.log(`items`, items);
-
-        /*
-        let tempArr = [];
-        items.forEach(el => {
-            tempArr.push(el);
-        });
-
-        let itemArr = [];
-        for (let i = 0; i < 1; i++) {
-            const index = Math.floor(Math.random() * tempArr.length);
-            const item = tempArr[index];
-            // console.log(`index`, index);
-            // console.log(`item`, item);
-
-            itemArr.push(item);
-        }
-        */
 
         if (err) {
             res.end('Error getting items.');

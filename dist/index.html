@@ -25,22 +25,27 @@
 
   <div class="container">
 
+    <!-- Register message container -->
+    <div class="register__messageContainer">
+      <div class="register__message"></div>
+    </div>
+    <!-- Login message container -->
+    <div class="login__messageContainer hidden">
+      <div class="login__message"></div>
+    </div>
+
     <!-- Register/Login container -->
     <div class="register-login__form">
       <!-- Brand text container -->
       <div class="register-login__text-box">
         <h1 class="heading-primary">
             <span class="heading-primary--main">saturdays art surf</span>
-            <span class="heading-primary--sub"><br></span>
+            <span class="heading-primary--sub"></span>
         </h1>
       </div>
 
       <!-- Register form -->
       <form action="#" class="form" id="register__form">
-        <!-- Error message container -->
-        <div class="register__errorMessageContainer">
-          <div class="register__errorMessage"></div>
-        </div>
         <!-- TODO -->
         <!-- <div class="form__group">twitter</div>
         <div class="form__group">facebook</div> -->
@@ -58,19 +63,15 @@
           <label for="register__password2" class="form__label">Password again</label>
         </div>
         <div class="form__group">
-          <button class="btn" id="register__btn">Register</button>
+          <button class="btn btn--blue" id="register__btn">Register</button>
         </div>
         <div class="form__group">
-          <a href="#" id="register__toLogin">Already have an account?</a>
+          <a href="#" class="form__loginLink" id="register__toLogin">Already have an account?</a>
         </div>
       </form>
 
       <!-- Login form -->
       <form action="#" class="form hidden" id="login__form">
-        <!-- Error message container -->
-        <div class="login__errorMessageContainer">
-          <div class="login__errorMessage"></div>
-        </div>
         <!-- TODO -->
         <!-- <div class="form__group">twitter</div>
         <div class="form__group">facebook</div> -->
@@ -84,7 +85,10 @@
           <label for="login__password" class="form__label">Password</label>
         </div>
         <div class="form__group">
-          <button class="btn" id="login__btn">Login</button>
+          <button class="btn btn--blue" id="login__btn">Login</button>
+        </div>
+        <div class="form__group">
+          <a href="#" class="form__registerLink" id="login__toRegister">Not yet?</a>
         </div>
       </form>
 

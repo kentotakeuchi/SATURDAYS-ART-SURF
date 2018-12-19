@@ -1,5 +1,12 @@
 import { els } from './base';
 
+
+export const init = () => {
+    els.contactEmail.val(``);
+    els.contactInquiry.val(``);
+    els.contactBtn.prop('disabled', true);
+};
+
 export const emailValid = () => {
     const inValid = els.contactEmail.val() === ``;
 
@@ -27,6 +34,21 @@ export const inquiryValid = () => {
         clearInquiryErrorMessages();
     }
 };
+
+export const renderMsg = msg => {
+
+    const success = `Your message has been sent successfully.`;
+    const error = `A problem has been occurred while submitting your data.`;
+
+    if (msg === success) {
+        alert(success);
+    } else if (msg === error) {
+        alert(error);
+    }
+};
+
+
+
 
 function clearEmailErrorMessages() {
 

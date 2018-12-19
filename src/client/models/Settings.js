@@ -47,4 +47,22 @@ export default class Settings {
             headers: { 'x-access-token': token }
         });
     }
+
+    updateUserData() {
+
+        return $.ajax({
+            method: `PUT`,
+            url: `http://localhost:3000/user/${userID}`,
+            data: {
+                email: els.settingsEmail.val(),
+                curPassword: els.settingsCurPassword.val(),
+                newPassword: els.settingsNewPassword.val()
+            },
+            headers: { 'x-access-token': token }
+        });
+    }
+
+    persistData(user) {
+        localStorage.setItem('userEmail', user.email);
+    }
 };

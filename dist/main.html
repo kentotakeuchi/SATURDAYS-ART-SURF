@@ -61,12 +61,12 @@
       <div class="modal-content">
         <div class="modal-body">
 
-          <form action="#">
+          <form action="#" class="form__inSearch">
             <div class="form-group">
               <input type="text" class="form-control" id="searchInput" placeholder="Search" name="search">
             </div>
 
-            <button type="submit" class="btn btn-primary u-margin-bottom-xsmall" id="searchBtn">search</button>
+            <button type="submit" class="btn btn--blue u-margin-bottom-small" id="searchBtn">search</button>
 
             <div class="form-group">
               <select class="form-control" id="objInput">
@@ -99,12 +99,12 @@
             </div>
 
             <!-- TODO: LATER -->
-            <!-- <div class="form-group">
+            <div class="form-group">
               <select class="form-control" id="dateInput">
                 <option selected disabled>Date / Era</option>
                 <option></option>
               </select>
-            </div> -->
+            </div>
 
             <div class="form-group">
               <select class="form-control" id="deptInput">
@@ -167,7 +167,7 @@
         <div class="modal-body">
           <h2 class="popup__title u-margin-bottom-medium">contact us</h2>
 
-          <form action="#">
+          <form action="#" class="form__inNav">
             <div class="form-group">
               <input type="email" class="form-control" id="contactEmail" placeholder="Email" name="email">
             </div>
@@ -180,7 +180,9 @@
             <div class="contactInquiryErrorMessageContainer">
               <p class="contactInquiryErrorMessage"></p>
             </div>
-            <button type="submit" class="btn btn-primary u-margin-bottom-xsmall" id="contactBtn">Submit</button>
+            <div class="form__group">
+              <button type="submit" class="btn btn--blue u-margin-bottom-small" id="contactBtn">Submit</button>
+            </div>
           </form>
 
         </div>
@@ -195,7 +197,7 @@
         <div class="modal-body">
           <h2 class="popup__title u-margin-bottom-medium">settings</h2>
 
-          <form action="#">
+          <form action="#" class="form__inNav">
             <div class="form-group">
               <input type="email" class="form-control" id="settingsEmail" placeholder="Email" name="email">
             </div>
@@ -221,7 +223,7 @@
             <div class="settingsNewPassword2ErrorMessageContainer">
               <p class="settingsNewPassword2ErrorMessage"></p>
             </div>
-            <button type="submit" class="btn btn-primary u-margin-bottom-xsmall" id="settingsBtn">update</button>
+            <button type="submit" class="btn btn--blue u-margin-bottom-small" id="settingsBtn">update</button>
           </form>
 
         </div>

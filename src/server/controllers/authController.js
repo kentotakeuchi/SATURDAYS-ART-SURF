@@ -13,6 +13,7 @@ const verifyToken = require('../verifyToken');
 
 
 router.post('/register', (req, res) => {
+  console.log(`req.body`, req.body);
 
     // Check if the user's email has already existed or not.
     User.findOne({ email: req.body.email }, (err, email) => {
@@ -32,6 +33,7 @@ router.post('/register', (req, res) => {
         const token = jwt.sign({ id: user._id }, config.secret, {
             expiresIn: 86400 // expires in 24 hours
         });
+        console.log(`user`, user);
 
         res.status(200).send({ auth: true, token: token });
         });
@@ -83,7 +85,7 @@ router.get('/logout/:userID', verifyToken, function(req, res) {
     }
   }
   }, {new: true}, (err, user) => {
-    if (err) return res.status(500).send("There was a problem updating the user.");
+    if (err) return res.status(500).send("There was a problem during logout.");
 
     var token = req.headers['x-access-token'];
     res.status(200).send({ auth: false, token: null });

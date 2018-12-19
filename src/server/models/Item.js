@@ -29,6 +29,7 @@ const ItemSchema = new Schema({
 });
 
 // For search whole string.
+// Case insensitive, multiple fields, but not allowing with partial string like "sur" for "surfin".
 ItemSchema.index({'$**': 'text'});
 
 // For findRandom method.

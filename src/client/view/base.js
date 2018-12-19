@@ -3,8 +3,8 @@ import $ from 'jquery';
 export const els = {
 
     // REGISTER
-    registerErrorMessageContainer: $(`.register__errorMessageContainer`),
-    registerErrorMessage: $(`.register__errorMessage`),
+    registerMessageContainer: $(`.register__messageContainer`),
+    registerMessage: $(`.register__message`),
     registerForm: $(`#register__form`),
     registerEmail: $(`#register__email`),
     registerPassword: $(`#register__password`),
@@ -13,12 +13,13 @@ export const els = {
     registerToLogin: $(`#register__toLogin`),
 
     // LOGIN
-    loginErrorMessageContainer: $(`.login__errorMessageContainer`),
-    loginErrorMessage: $(`.login__errorMessage`),
+    loginMessageContainer: $(`.login__messageContainer`),
+    loginMessage: $(`.login__message`),
     loginForm: $(`#login__form`),
     loginEmail: $(`#login__email`),
     loginPassword: $(`#login__password`),
     loginBtn: $(`#login__btn`),
+    loginToRegister: $(`#login__toRegister`),
 
     // SEARCH
     searchIcon: $(`.search__icon`),

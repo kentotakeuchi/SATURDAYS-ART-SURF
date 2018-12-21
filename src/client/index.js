@@ -111,6 +111,7 @@ function setEventHandler() {
 ///////////////////////////////////////////////
 /// LANDING PAGE
 
+// Register an user.
 function registerUserHandler(e) {
     e.preventDefault();
 
@@ -132,6 +133,7 @@ function registerUserHandler(e) {
 };
 
 
+// REGISTER > LOGIN
 function registerToLoginHandler() {
 
     // Clear all value.
@@ -145,6 +147,7 @@ function registerToLoginHandler() {
 };
 
 
+// Login an user.
 function loginUserHandler(e) {
     e.preventDefault();
 
@@ -172,6 +175,7 @@ function loginUserHandler(e) {
 };
 
 
+// LOGIN > REGISTER
 function loginToRegisterHandler() {
 
     // Clear all value.
@@ -184,7 +188,7 @@ function loginToRegisterHandler() {
     authView.renderRegisterForm();
 };
 
-
+// Validation of register. (no mvc)
 function registerCheckHandler() {
 
     state.auth = new Auth();
@@ -193,6 +197,7 @@ function registerCheckHandler() {
 };
 
 
+// Validation of login. (no mvc)
 function loginCheckHandler() {
 
     state.auth = new Auth();
@@ -227,6 +232,7 @@ function getAndRenderItemsHandler() {
     clearLoader();
 };
 
+
 // Load new items when user scrolls down to bottom.
 function pagenationHandler() {
     if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
@@ -241,6 +247,17 @@ function pagenationHandler() {
 
 // Pop up a search modal when user clicks search icon.
 function popupSearchModal() {
+
+    state.search = new Search();
+
+    state.search.getList()
+    .done(data => {
+        searchView.renderQueries(data);
+    })
+    .fail(err => {
+        console.log(`err`, err);
+    });
+
     els.popupSearch.modal(`toggle`);
 };
 
@@ -292,6 +309,7 @@ function searchItemsHandler(e) {
 };
 
 
+// Pop up an item modal when user clicks each image.
 function popupItemModal(e) {
 
     state.likes = new Likes();
@@ -307,14 +325,16 @@ function popupItemModal(e) {
     const id = e.target.id;
     console.log(`id`, id);
 
-    // TODO: Better to use the URL which is previously fetched.
     // Get the item data user clicks.
-    state.api.getItem(id)
+    state.api.getItemDB(id)
     .done(data => {
         console.log(`index2 data`, data);
 
         // Render the item data user clicks.
         apiView.renderItem(data, state.likes.isLiked(id));
+
+        // Render additional images if there are.
+        apiView.renderAddImg(data);
 
         // MEMO: Setting event to SVG with jquery didn't work.
         const likes = document.querySelector(`.likes`);
@@ -332,9 +352,21 @@ function popupItemModal(e) {
     });
     // Clear loader.
     clearLoader();
+
+    // Set click event for additional image.
+    els.popupItemBody.off(`click`, `.item__additionalImages`, itemAddImgHandler);
+    els.popupItemBody.on(`click`, `.item__additionalImages`, itemAddImgHandler);
 };
 
 
+// Change a main image user clicks.
+function itemAddImgHandler(e) {
+    // Change current image into the image user clicks.
+    apiView.changeMainImg(e);
+};
+
+
+// LIKES CONTROLLER
 function likesHandler(e) {
 
     state.likes = new Likes();
@@ -367,6 +399,7 @@ function likesHandler(e) {
 };
 
 
+// Move to default page.
 function returnDefaultPageHandler() {
 
     // Transfer to a default page.
@@ -376,11 +409,10 @@ function returnDefaultPageHandler() {
     $(window).on(`scroll`, pagenationHandler);
 };
 
-
 ///////////////////////////////////////////////
 /// NAVIGATION PAGE
 
-// COLLECTION
+// COLLECTION CONTROLLER
 function displayCollectionHandler() {
 
     state.likes = new Likes();
@@ -417,11 +449,11 @@ function displayCollectionHandler() {
     clearLoader();
 };
 
+
 // ABOUT
 function popupAboutModal() {
     els.popupAbout.modal(`toggle`);
 };
-
 
 
 // CONTACT
@@ -433,6 +465,7 @@ function popupContactModal() {
 };
 
 
+// Validation of contact form.
 function contactCheckHandler() {
 
     state.contact = new Contact();
@@ -446,6 +479,7 @@ function contactCheckHandler() {
 };
 
 
+// Submit contact form.
 function contactSendHandler(e) {
     e.preventDefault();
 
@@ -483,6 +517,7 @@ function popupSettingsModal() {
 };
 
 
+// Validation of settings form.
 function settingsCheckHandler() {
 
     // Check email format.
@@ -508,6 +543,7 @@ function settingsCheckHandler() {
 };
 
 
+// Submit updated info.
 function settingsUpdateHandler(e) {
     e.preventDefault();
 
@@ -521,7 +557,6 @@ function settingsUpdateHandler(e) {
         settingsView.renderErrMsg(err);
     });
 };
-
 
 
 // LOGOUT

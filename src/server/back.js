@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const authController = require('./controllers/authController');
 const contactController = require('./controllers/contactController');
 const itemController = require('./controllers/itemController');
+const queryController = require('./controllers/queryController');
 const userController = require('./controllers/userController');
 
 const app = express();
@@ -55,6 +56,8 @@ app.use('/auth', authController);
 app.use('/contact', contactController);
 // ITEM
 app.use('/item', itemController);
+// QUERY
+app.use('/query', queryController);
 // SETTINGS
 app.use('/user', userController);
 

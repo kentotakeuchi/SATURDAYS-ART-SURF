@@ -14,7 +14,7 @@ router.use(bodyParser.json());
 const date = formatDate(new Date());
 
 // UPDATE WHOLE DATA AT 6:00 AM
-schedule.scheduleJob('0 10 * * *', () => { // min hour dom month dow
+schedule.scheduleJob('8 11 * * *', () => { // min hour dom month dow
 
     // GET WHOLE DATA AND STORE THEM INTO DB
     request.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects?metadataDate=${date}`, (err, res, body) => {
@@ -97,6 +97,23 @@ router.get(`/`, verifyToken, (req, res) => {
             res.end('Error getting items.');
         } else {
             res.send(items);
+        }
+    });
+});
+
+
+// GET AN ITEM USER CLICKS
+router.get(`/:id`, verifyToken, (req, res) => {
+
+    const id = req.params.id;
+
+    Item.findOne({ objectID: id }, (err, item) => {
+        console.log(`item`, item);
+
+        if (err) {
+            res.end(`Error getting item.`);
+        } else {
+            res.send(item);
         }
     });
 });

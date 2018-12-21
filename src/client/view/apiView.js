@@ -19,7 +19,7 @@ export const renderItems = (data) => {
                 <img src="${el.primaryImageSmall}" class="items__img">
             </div>
         `;
-        $(`.items`).append(markup);
+        els.items.append(markup);
     });
 };
 
@@ -44,6 +44,8 @@ export const renderItem = (data, isLiked) => {
 
             <img src="${data.primaryImage}" class="item__primaryImage">
 
+            <div class="item__addImg--container u-margin-bottom-small"></div>
+
             <div class=item__container--text>
                 <div class="item__title">Title: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="item__text--strong">${data.title}</span></div>
 
@@ -56,6 +58,33 @@ export const renderItem = (data, isLiked) => {
         </div>
     `;
     els.popupItemBody.append(markup);
+};
+
+// Render additional images if there are.
+export const renderAddImg = data => {
+
+    const imgArr = data.additionalImages;
+
+    // Include a primary image.
+    const mainImg = data.primaryImage;
+    imgArr.unshift(mainImg);
+
+    imgArr.forEach(el => {
+
+        if (el === ``) return;
+
+        const markup = `
+            <img src="${el}" class="item__additionalImages">
+        `;
+        $(`.item__addImg--container`).append(markup);
+    });
+};
+
+// Change current image into the image user clicks.
+export const changeMainImg = e => {
+    const curSrc = e.target.src;
+
+    $(`.item__primaryImage`).attr(`src`, curSrc);
 };
 
 // Render collection's data for "my collection".

@@ -4,6 +4,7 @@ import { els } from './base';
 
 export const getInput = () => els.searchInput.val();
 
+
 export const init = () => {
     els.searchInput.val(``);
     els.objInput.val($("#objInput option:first").val());
@@ -12,9 +13,11 @@ export const init = () => {
     els.deptInput.val($("#deptInput option:first").val());
 };
 
+
 export const clearItems = () => {
     els.items.children().remove();
 };
+
 
 export const clearNumOfItems = () => {
     const prevResult = els.container.has(`.num`);
@@ -22,6 +25,7 @@ export const clearNumOfItems = () => {
         $(`.num`).remove();
     }
 };
+
 
 export const renderNumOfItems = (data, query) => {
 
@@ -34,6 +38,44 @@ export const renderNumOfItems = (data, query) => {
     `;
     els.container.prepend(markup);
 };
+
+
+export const renderQueries = data => {
+
+    const objArr = data[0].objQueries;
+    const geoArr = data[0].geoQueries;
+    const dateArr = data[0].dateQueries;
+    const deptArr = data[0].deptQueries;
+
+    objArr.forEach(el => {
+        const markup = `
+            <option>${el}</option>
+        `;
+        els.objInput.append(markup);
+    });
+
+    geoArr.forEach(el => {
+        const markup = `
+            <option>${el}</option>
+        `;
+        els.geoInput.append(markup);
+    });
+
+    dateArr.forEach(el => {
+        const markup = `
+            <option>${el}</option>
+        `;
+        els.dateInput.append(markup);
+    });
+
+    deptArr.forEach(el => {
+        const markup = `
+            <option>${el}</option>
+        `;
+        els.deptInput.append(markup);
+    });
+};
+
 
 export const renderItems = (data) => {
     console.log(`data`, data);
@@ -50,3 +92,7 @@ export const renderItems = (data) => {
     });
 
 };
+
+
+
+

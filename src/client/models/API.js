@@ -5,11 +5,22 @@ const token = localStorage.getItem(`token`);
 
 export default class API {
 
-    constructor() {
+    constructor() {}
+
+    // MEMO: Can access only data I have.
+    // Get an item's data from "db" for "popupItemModal".
+    getItemDB(id) {
+
+        return $.ajax({
+            method: "GET",
+            url: `http://localhost:3000/item/${id}`,
+            headers: { 'x-access-token': token }
+        });
     }
 
-    // Get an item's data from api for "popupItemModal".
-    getItem(id) {
+    // MEMO: Can access whole data.
+    // Get an item's data from "api" for "popupItemModal".
+    getItemAPI(id) {
 
         return $.ajax({
             method: "GET",

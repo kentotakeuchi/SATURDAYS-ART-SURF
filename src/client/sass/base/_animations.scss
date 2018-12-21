@@ -42,3 +42,22 @@
     }
 }
 
+@keyframes moveToLeft {
+    0% {
+        transform: translateX(45rem);
+    }
+
+    100% {
+        transform: translate(0);
+    }
+}
+
+@keyframes moveToRight {
+    0% {
+        transform: translateX(-45rem);
+    }
+
+    100% {
+        transform: translate(0);
+    }
+}

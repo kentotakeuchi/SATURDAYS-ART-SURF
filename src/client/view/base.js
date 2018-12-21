@@ -39,7 +39,6 @@ export const els = {
     num: $(`.num`),
     items: $(`.items`),
     item: $(`.items__item`),
-    itemImg: $(`.items__img`),
 
     // ARTWORK
     popupItem: $(`#popupItem`),

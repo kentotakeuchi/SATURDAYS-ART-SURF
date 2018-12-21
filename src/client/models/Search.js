@@ -10,6 +10,15 @@ export default class Search {
         this.query = query;
     }
 
+    getList() {
+
+        return $.ajax({
+            method: "GET",
+            url: `http://localhost:3000/query/list`,
+            headers: { 'x-access-token': token }
+        });
+    }
+
     getSearchItems() {
 
         return $.ajax({

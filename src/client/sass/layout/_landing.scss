@@ -1,4 +1,57 @@
-.container {
+.bg {
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh;
+
+    overflow: hidden;
+
+    &__img--ctn {
+        display: grid;
+        grid-template-columns: repeat(15, 20rem);
+        grid-gap: 5rem;
+        justify-content: start;
+
+        height: 33.3%;
+        opacity: .3;
+
+        animation: moveToLeft 25s linear infinite;
+    }
+
+    &__img--ctn2 {
+        display: grid;
+        grid-template-columns: repeat(15, 20rem);
+        grid-gap: 5rem;
+        justify-content: start;
+
+        height: 33.3%;
+        opacity: .3;
+
+        animation: moveToRight 25s linear infinite;
+    }
+
+    &__img--ctn3 {
+        display: grid;
+        grid-template-columns: repeat(15, 20rem);
+        grid-gap: 5rem;
+        justify-content: start;
+
+        height: 33.3%;
+        opacity: .3;
+
+        animation: moveToLeft 25s linear infinite;
+    }
+
+    &__img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+
+        transform: translate(-200rem, 0);
+    }
+}
+
+.ctn {
     position: relative;
     height: 100vh;
     width: 100%;
@@ -18,13 +71,19 @@
 .register {
 
     &__messageContainer {
+        position: absolute;
+        top: 10%;
+        left: 50%;
+        transform: translate(-52.5%, -50%);
+
         align-items: center;
         justify-content: center;
         text-align: center;
 
         margin: 2rem;
         font-size: 2rem;
-        height: 18rem
+
+        width: 80%;
     }
 
     &__message {}
@@ -34,13 +93,19 @@
 .login {
 
     &__messageContainer {
+        position: absolute;
+        top: 10%;
+        left: 50%;
+        transform: translate(-52.5%, -50%);
+
         align-items: center;
         justify-content: center;
         text-align: center;
 
         margin: 2rem;
         font-size: 2rem;
-        height: 18rem
+
+        width: 80%;
     }
 
     &__message {}

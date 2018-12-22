@@ -2,10 +2,16 @@ import $ from 'jquery';
 
 export const els = {
 
+    // BACKGROUND
+    bgImgCtn: $(`.bg__img--ctn`),
+    bgImgCtn2: $(`.bg__img--ctn2`),
+    bgImgCtn3: $(`.bg__img--ctn3`),
+
     // REGISTER
     registerMessageContainer: $(`.register__messageContainer`),
     registerMessage: $(`.register__message`),
     registerForm: $(`#register__form`),
+    registerTw: $(`#register__tw`),
     registerEmail: $(`#register__email`),
     registerPassword: $(`#register__password`),
     registerPassword2: $(`#register__password2`),

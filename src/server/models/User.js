@@ -15,7 +15,13 @@ const UserSchema = new Schema({
             type: String,
             required: true
         }
-    }]
+    }],
+
+    requestToken: String,
+    requestTokenSecret: String,
+
+    accessToken: String,
+    accessTokenSecret: String
 });
 
 const User = mongoose.model('User', UserSchema);

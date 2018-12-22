@@ -11,6 +11,44 @@ const bcrypt = require('bcryptjs');
 const config = require('../config');
 const verifyToken = require('../verifyToken');
 
+const twitterAPI = require('node-twitter-api');
+const twitter = new twitterAPI({
+    consumerKey: config.twitter.consumer_key,
+    consumerSecret: config.twitter.consumer_secret,
+    callback: config.twitter.callbackURL
+});
+
+
+router.get(`/register/twitter`, (req, res) => {
+
+    twitter.getRequestToken((err, requestToken, requestTokenSecret, results) => {
+      if (err) {
+        console.log(`err getting OAuth request token : ${err}`);
+      } else {
+
+        const reqToken = new User({
+          requestToken: requestToken,
+          requestTokenSecret: requestTokenSecret
+        });
+
+        reqToken.save(err => {
+          if (err) return handleError(err);
+          console.log(`save reqToken`);
+        });
+
+        // res.send(reqToken);
+
+        res.redirect(`${config.proxy}https://twitter.com/oauth/authenticate?oauth_token=${requestToken}`);
+      }
+  });
+});
+
+
+router.post(`/register/twitter`, (req, res) => {
+  console.log(`req.body`, req.body);
+  const requestToken = req.body.requestToken;
+});
+
 
 router.post('/register', (req, res) => {
   console.log(`req.body`, req.body);

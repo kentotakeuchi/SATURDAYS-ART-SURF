@@ -33,7 +33,7 @@ export default class API {
 
         return $.ajax({
             method: "GET",
-            url: `http://localhost:3000/item`,
+            url: `http://localhost:3000/item/main`,
             headers: { 'x-access-token': token }
         });
     }

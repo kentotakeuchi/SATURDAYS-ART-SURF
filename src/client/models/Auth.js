@@ -8,6 +8,23 @@ export default class Auth {
 
     constructor() {}
 
+    getReqTokenTw() {
+
+        return $.ajax({
+            method: "GET",
+            url: "http://localhost:3000/auth/register/twitter"
+        });
+    }
+
+    getAccessTokenTw(data) {
+
+        return $.ajax({
+            method: "POST",
+            url: "http://localhost:3000/auth/register/twitter",
+            data: data
+        });
+    }
+
     registerUser() {
 
         return $.ajax({

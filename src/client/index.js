@@ -10,6 +10,7 @@ import './sass/style.scss';
 // MODELS
 import API from './models/API';
 import Auth from './models/Auth';
+import Bg from './models/Bg';
 import Contact from './models/Contact';
 import Likes from './models/Likes';
 import Search from './models/Search';
@@ -19,10 +20,13 @@ import Settings from './models/Settings';
 import * as apiView from './view/apiView';
 import * as authView from './view/authView';
 import { els, renderLoader, clearLoader } from './view/base';
+import * as bgView from './view/bgView';
 import * as contactView from './view/contactView';
 import * as likesView from './view/likesView';
 import * as searchView from './view/searchView';
 import * as settingsView from './view/settingsView';
+
+import { proxy } from './config';
 /////////////////////////////////////////////////////
 
 
@@ -33,17 +37,33 @@ const token = localStorage.getItem('token');
 
 $('document').ready(() => {
 
-    // TODO: Need to separate index.html from main.html
-    authView.init();
+    // LANDING PAGE
+    if(window.location.href === `http://localhost:8080/index.html#` ||
+       window.location.href === `http://localhost:8080/index.html` ||
+       window.location.href === `http://localhost:8080/`)
+    {
+        // Initialize form.
+        authView.init();
 
-    getAndRenderItemsHandler();
+        // Get images from db and render them on the background.
+        getAndRenderBgImgHandler();
+    }
+    // MAIN PAGE
+    else if (window.location.href === `http://localhost:8080/main.html`) {
+        // Set loader > get items > render items > clear loader.
+        getAndRenderItemsHandler();
+    }
 
+    // Set events.
     setEventHandler();
 });
 
+
+// Set events.
 function setEventHandler() {
 
     // REGISTER FORM
+    els.registerTw.click(registerWithTwHandler);
     els.registerEmail.keyup(registerCheckHandler);
     els.registerPassword.keyup(registerCheckHandler);
     els.registerPassword2.keyup(registerCheckHandler);
@@ -104,12 +124,28 @@ function setEventHandler() {
 
     // NAVIGATION > logout
     els.logout.click(logout);
-
 };
 
 
 ///////////////////////////////////////////////
 /// LANDING PAGE
+
+// Get images from db and render them on the background.
+function getAndRenderBgImgHandler() {
+
+    state.bg = new Bg();
+
+    state.bg.getImg()
+    .done(data => {
+        console.log(`data`, data);
+        bgView.renderImg(data);
+    })
+    .fail(err => {
+        console.log(`err`, err);
+        bgView.renderErrMsg(err);
+    });
+};
+
 
 // Register an user.
 function registerUserHandler(e) {
@@ -205,6 +241,32 @@ function loginCheckHandler() {
     state.auth.loginCheck();
 };
 
+
+function registerWithTwHandler() {
+    console.log(`twitter`);
+
+    state.auth = new Auth();
+
+    state.auth.getReqTokenTw()
+    .done(data => {
+
+        console.log(`data`, data);
+        // window.location.href = `https://twitter.com/oauth/authenticate?oauth_token=${data.requestToken}`;
+
+        state.auth.getAccessTokenTw(data)
+        .done(data => {
+
+            console.log(`data`, data);
+        })
+        .fail(err => {
+            console.log(`err`, err);
+        });
+    })
+    .fail(err => {
+        console.log(`err`, err);
+    });
+};
+
 ///////////////////////////////////////////////
 /// MAIN PAGE
 
@@ -237,6 +299,7 @@ function getAndRenderItemsHandler() {
 function pagenationHandler() {
     if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
 
+        // Set loader > get items > render items > clear loader.
         getAndRenderItemsHandler();
 
         els.items.off(`click`, `.items__item`, popupItemModal);

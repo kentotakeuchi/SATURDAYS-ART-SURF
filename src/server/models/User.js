@@ -17,9 +17,13 @@ const UserSchema = new Schema({
         }
     }],
 
+    // TODO: probably, no need.
     requestToken: String,
     requestTokenSecret: String,
 
+    // TWITTER
+    id: Number,
+    name: String,
     accessToken: String,
     accessTokenSecret: String
 });

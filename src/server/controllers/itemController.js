@@ -14,7 +14,7 @@ router.use(bodyParser.json());
 const date = formatDate(new Date());
 
 // UPDATE WHOLE DATA AT 6:00 AM
-schedule.scheduleJob('45 11 * * *', () => { // min hour dom month dow
+schedule.scheduleJob('58 9 * * *', () => { // min hour dom month dow
 
     // GET WHOLE DATA AND STORE THEM INTO DB
     request.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects?metadataDate=${date}`, (err, res, body) => {

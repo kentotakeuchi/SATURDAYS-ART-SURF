@@ -12,6 +12,10 @@ body {
 
     text-align: center;
 
+    @include respond(tab-port) {
+        margin: 4rem 0 3rem;
+    }
+
     &--main {
         color: $color-grey-dark-3;
         font-size: 5rem;

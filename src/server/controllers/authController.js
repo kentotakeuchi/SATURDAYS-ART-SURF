@@ -19,34 +19,80 @@ const twitter = new twitterAPI({
 });
 
 
-router.get(`/register/twitter`, (req, res) => {
+let reqTokenSecret;
+
+router.get(`/login/twitter`, (req, res) => {
 
     twitter.getRequestToken((err, requestToken, requestTokenSecret, results) => {
+
       if (err) {
         console.log(`err getting OAuth request token : ${err}`);
       } else {
 
-        const reqToken = new User({
-          requestToken: requestToken,
-          requestTokenSecret: requestTokenSecret
-        });
+        reqTokenSecret = requestTokenSecret;
 
-        reqToken.save(err => {
-          if (err) return handleError(err);
-          console.log(`save reqToken`);
-        });
+        // const reqToken = new User({
+        //   requestToken: requestToken,
+        //   requestTokenSecret: requestTokenSecret
+        // });
+
+        // reqToken.save(err => {
+        //     if (err) return handleError(err);
+        //     console.log(`save reqToken`);
+        // });
 
         // res.send(reqToken);
 
-        res.redirect(`${config.proxy}https://twitter.com/oauth/authenticate?oauth_token=${requestToken}`);
+        console.log(`requestToken req`, requestToken);
       }
+      res.redirect(`${config.proxy}https://twitter.com/oauth/authenticate?oauth_token=${requestToken}`);
+
+      res.send({url: `https://twitter.com/oauth/authenticate?oauth_token=${requestToken}`});
   });
 });
 
 
-router.post(`/register/twitter`, (req, res) => {
-  console.log(`req.body`, req.body);
-  const requestToken = req.body.requestToken;
+router.get(`/login/twitter/callback`, (req, res) => {
+  console.log(`req.query.oauth_token`, req.query.oauth_token);
+  console.log(`req.query`, req.query);
+
+  const reqToken = req.query.oauth_token,
+        verifier = req.query.oauth_verifier;
+
+  twitter.getAccessToken(reqToken, reqTokenSecret, verifier, (err, accessToken, accessTokenSecret, results) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(`accessToken`, accessToken);
+      console.log(`accessTokenSecret`, accessTokenSecret);
+
+      twitter.verifyCredentials(accessToken, accessTokenSecret, (err, user) => {
+        console.log(`user`, user);
+
+        const userObj = new User({
+          id: user.id,
+          name: user.name,
+          accessToken: accessToken,
+          accessTokenSecret: accessTokenSecret
+        });
+
+        if (err) {
+          res.status(500).send(err);
+        }
+        else {
+          userObj.save(err => {
+              if (err) return handleError(err);
+              console.log(`save user`);
+          });
+          res.redirect(`http://localhost:8080/main.html`);
+          // res.send(userObj);
+        }
+      });
+
+      //store accessToken and accessTokenSecret somewhere (associated to the user)
+      //Step 4: Verify Credentials belongs here
+    }
+  });
 });
 
 
@@ -95,6 +141,7 @@ router.post('/login', (req, res) => {
     // Password validation.
     const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
     if (!passwordIsValid) return res.status(401).send('Password is incorrect.');
+
     const token = jwt.sign({ id: user._id }, config.secret, {
       expiresIn: 86400 // expires in 24 hours
     });

@@ -14,11 +14,11 @@
         color: inherit;
         padding: .5rem .5rem;
         border: 1px solid $color-black;
-        width: 90%;
+        width: 80%;
         transition: all .3s;
 
         @include respond(tab-port) {
-            width: 80%;
+            width: 75%;
         }
 
         &:focus {
@@ -84,7 +84,7 @@
         justify-content: center;
         align-items: center;
 
-        margin: 5rem;
+        margin: 3rem;
     }
 
 }

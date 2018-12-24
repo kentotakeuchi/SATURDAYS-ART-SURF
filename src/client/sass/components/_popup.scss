@@ -14,7 +14,18 @@
     &__paragraph {
         color: $color-grey-dark;
         font-size: 1.4rem;
+        text-align: start;
+        letter-spacing: .1rem;
+        margin: 0 auto 2rem;
+        width: 80%;
+    }
+
+    &__author {
+        color: $color-grey-dark;
+        font-weight: 600;
         text-align: center;
+        letter-spacing: .1rem;
+        margin-top: 3rem;
     }
 }
 

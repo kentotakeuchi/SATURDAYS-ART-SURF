@@ -74,6 +74,31 @@
         animation: moveInBottom .5s ease-out .75s;
         animation-fill-mode: backwards;
     }
+
+    &__ctn--sns {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    &--tw {
+        background-color: #55acee;
+        color: #fff;
+        margin-right: 2rem;
+
+        &:hover {
+            background-color: darken(#55acee, 15%);
+        }
+    }
+
+    &--fb {
+        background-color: #3b5998;
+        color: #fff;
+
+        &:hover {
+            background-color: darken(#3b5998, 15%);
+        }
+    }
 }
 
 .btn-text {

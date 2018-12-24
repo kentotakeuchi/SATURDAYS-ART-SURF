@@ -8,19 +8,19 @@ export default class Auth {
 
     constructor() {}
 
-    getReqTokenTw() {
+    getReqTokenTW() {
 
         return $.ajax({
             method: "GET",
-            url: "http://localhost:3000/auth/register/twitter"
+            url: "http://localhost:3000/auth/login/twitter"
         });
     }
 
-    getAccessTokenTw(data) {
+    getAccessTokenTW(data) {
 
         return $.ajax({
-            method: "POST",
-            url: "http://localhost:3000/auth/register/twitter",
+            method: "GET",
+            url: "http://localhost:3000/auth/login/twitter/callback",
             data: data
         });
     }

@@ -40,6 +40,7 @@ $('document').ready(() => {
     // LANDING PAGE
     if(window.location.href === `http://localhost:8080/index.html#` ||
        window.location.href === `http://localhost:8080/index.html` ||
+       window.location.href === `http://localhost:8080/#` ||
        window.location.href === `http://localhost:8080/`)
     {
         // Initialize form.
@@ -49,7 +50,9 @@ $('document').ready(() => {
         getAndRenderBgImgHandler();
     }
     // MAIN PAGE
-    else if (window.location.href === `http://localhost:8080/main.html`) {
+    else if (window.location.href === `http://localhost:8080/main.html#` ||
+             window.location.href === `http://localhost:8080/main.html`)
+    {
         // Set loader > get items > render items > clear loader.
         getAndRenderItemsHandler();
     }
@@ -63,7 +66,6 @@ $('document').ready(() => {
 function setEventHandler() {
 
     // REGISTER FORM
-    els.registerTw.click(registerWithTwHandler);
     els.registerEmail.keyup(registerCheckHandler);
     els.registerPassword.keyup(registerCheckHandler);
     els.registerPassword2.keyup(registerCheckHandler);
@@ -71,6 +73,8 @@ function setEventHandler() {
     els.registerToLogin.click(registerToLoginHandler);
 
     // LOGIN FORM
+    els.loginTW.click(loginWithTWHandler);
+    els.loginFB.click(loginWithFBHandler);
     els.loginEmail.keyup(loginCheckHandler);
     els.loginPassword.keyup(loginCheckHandler);
     els.loginBtn.click(loginUserHandler);
@@ -242,29 +246,35 @@ function loginCheckHandler() {
 };
 
 
-function registerWithTwHandler() {
+function loginWithTWHandler() {
     console.log(`twitter`);
 
     state.auth = new Auth();
 
-    state.auth.getReqTokenTw()
+    state.auth.getReqTokenTW()
     .done(data => {
 
         console.log(`data`, data);
         // window.location.href = `https://twitter.com/oauth/authenticate?oauth_token=${data.requestToken}`;
+        // $(`body`).html(data);
+        window.location.href = data.url;
 
-        state.auth.getAccessTokenTw(data)
-        .done(data => {
-
-            console.log(`data`, data);
-        })
-        .fail(err => {
-            console.log(`err`, err);
-        });
+        // state.auth.getAccessTokenTW(data)
+        // .done(data => {
+        //     console.log(`data2`, data);
+        // })
+        // .fail(err => {
+        //     console.log(`err2`, err);
+        // });
     })
     .fail(err => {
         console.log(`err`, err);
     });
+};
+
+
+function loginWithFBHandler() {
+    console.log(`facebook`);
 };
 
 ///////////////////////////////////////////////
@@ -286,12 +296,16 @@ function getAndRenderItemsHandler() {
 
         // Render search results.
         apiView.renderItems(data);
+
+        // Clear loader.
+        clearLoader();
     })
     .fail(err => {
         console.log(`err`, err);
+
+        // Clear loader.
+        clearLoader();
     });
-    // Clear loader.
-    clearLoader();
 };
 
 
@@ -356,18 +370,21 @@ function searchItemsHandler(e) {
 
             // Render search items.
             searchView.renderItems(data);
+
+            // Clear loader.
+            clearLoader();
         })
         .fail(err => {
             console.log(`err`, err);
+
+            // Clear loader.
+            clearLoader();
         });
 
         // Disable calling api with scroll down.
         $(window).off(`scroll`, pagenationHandler);
 
         els.popupSearch.modal(`toggle`);
-
-        // Clear loader.
-        clearLoader();
     }
 };
 
@@ -409,12 +426,16 @@ function popupItemModal(e) {
             }
         });
         els.popupItem.modal(`toggle`);
+
+        // Clear loader.
+        clearLoader();
     })
     .fail(err => {
         console.log(err.responseText);
+
+        // Clear loader.
+        clearLoader();
     });
-    // Clear loader.
-    clearLoader();
 
     // Set click event for additional image.
     els.popupItemBody.off(`click`, `.item__additionalImages`, itemAddImgHandler);
@@ -496,9 +517,15 @@ function displayCollectionHandler() {
         .done(data => {
             // Render my collection.
             apiView.renderCollection(data);
+
+            // Clear loader.
+            clearLoader();
         })
         .fail(err => {
             console.log(`err`, err);
+
+            // Clear loader.
+            clearLoader();
         });
     });
 
@@ -507,9 +534,6 @@ function displayCollectionHandler() {
 
     // Close navigation.
     els.naviCheckbox.prop( `checked`, false );
-
-    // Clear loader.
-    clearLoader();
 };
 
 

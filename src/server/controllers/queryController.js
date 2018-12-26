@@ -13,7 +13,6 @@ router.use(bodyParser.json());
 router.get('/list', verifyToken, (req, res) => {
 
     Query.find({}, (err, queries) => {
-        console.log(`queries`, queries);
 
         if (err) {
             res.end(`Error getting query list.`);

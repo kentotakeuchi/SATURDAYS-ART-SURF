@@ -16,6 +16,10 @@
         //Change for the <button> element
         border: none;
         cursor: pointer;
+
+        @include respond(phone) {
+            width: 50%;
+        }
     }
 
     &:hover {
@@ -79,12 +83,22 @@
         display: flex;
         justify-content: center;
         align-items: flex-start;
+
+        @include respond(phone) {
+            align-items: center;
+            flex-direction: column;
+        }
     }
 
     &--tw {
         background-color: #55acee;
         color: #fff;
         margin-right: 2rem;
+        font-weight: 600;
+
+        @include respond(phone) {
+            margin-right: 0rem;
+        }
 
         &:hover {
             background-color: darken(#55acee, 15%);
@@ -94,6 +108,7 @@
     &--fb {
         background-color: #3b5998;
         color: #fff;
+        font-weight: 600;
 
         &:hover {
             background-color: darken(#3b5998, 15%);

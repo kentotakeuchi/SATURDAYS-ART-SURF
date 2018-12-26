@@ -1,13 +1,14 @@
 import $ from 'jquery';
 import { els } from '../view/base';
 
-const userID = localStorage.getItem('user_id');
-const token = localStorage.getItem('token');
+let userID = localStorage.getItem('user_id');
+let token = localStorage.getItem('token');
 
 export default class Auth {
 
     constructor() {}
 
+    // TWITTER
     getReqTokenTW() {
 
         return $.ajax({
@@ -16,12 +17,22 @@ export default class Auth {
         });
     }
 
-    getAccessTokenTW(data) {
+    getAccessTokenTW() {
 
         return $.ajax({
             method: "GET",
-            url: "http://localhost:3000/auth/login/twitter/callback",
-            data: data
+            url: "http://localhost:3000/auth/login/twitter/accessToken"
+        });
+    }
+
+    // FACEBOOK
+    getTokenFB() {
+
+        console.log(`getTokenFB`);
+
+        return $.ajax({
+            method: "GET",
+            url: "http://localhost:3000/auth/login/facebook"
         });
     }
 
@@ -54,6 +65,12 @@ export default class Auth {
         localStorage.setItem('user_id', user._id);
         localStorage.setItem('userEmail', user.email);
         localStorage.setItem('token', user.tokens[0].token);
+    }
+
+    persistDataTW(data) {
+
+        localStorage.setItem('user_id', data[0]);
+        localStorage.setItem('token', data[1]);
     }
 
     registerCheck() {
@@ -98,6 +115,9 @@ export default class Auth {
     }
 
     logoutUser() {
+
+        userID = localStorage.getItem('user_id');
+        token = localStorage.getItem('token');
 
         return $.ajax({
             method: "GET",

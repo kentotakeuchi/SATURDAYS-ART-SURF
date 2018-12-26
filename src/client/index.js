@@ -32,8 +32,8 @@ import { proxy } from './config';
 
 // GLOBAL VARIABLE
 const state = {};
-const userID = localStorage.getItem('user_id');
-const token = localStorage.getItem('token');
+let userID = localStorage.getItem('user_id');
+let token = localStorage.getItem('token');
 
 $('document').ready(() => {
 
@@ -53,8 +53,26 @@ $('document').ready(() => {
     else if (window.location.href === `http://localhost:8080/main.html#` ||
              window.location.href === `http://localhost:8080/main.html`)
     {
-        // Set loader > get items > render items > clear loader.
-        getAndRenderItemsHandler();
+        // If user signs in with Twitter.
+        if (userID === null) {
+
+            state.auth = new Auth();
+
+            state.auth.getAccessTokenTW()
+            .done(data => {
+
+                state.auth.persistDataTW(data);
+
+                // Set loader > get items > render items > clear loader.
+                getAndRenderItemsHandler();
+            })
+            .fail(err => {
+                console.log(`err`, err);
+            });
+        } else {
+            // Set loader > get items > render items > clear loader.
+            getAndRenderItemsHandler();
+        }
     }
 
     // Set events.
@@ -247,25 +265,12 @@ function loginCheckHandler() {
 
 
 function loginWithTWHandler() {
-    console.log(`twitter`);
 
     state.auth = new Auth();
 
     state.auth.getReqTokenTW()
     .done(data => {
-
-        console.log(`data`, data);
-        // window.location.href = `https://twitter.com/oauth/authenticate?oauth_token=${data.requestToken}`;
-        // $(`body`).html(data);
         window.location.href = data.url;
-
-        // state.auth.getAccessTokenTW(data)
-        // .done(data => {
-        //     console.log(`data2`, data);
-        // })
-        // .fail(err => {
-        //     console.log(`err2`, err);
-        // });
     })
     .fail(err => {
         console.log(`err`, err);
@@ -275,6 +280,15 @@ function loginWithTWHandler() {
 
 function loginWithFBHandler() {
     console.log(`facebook`);
+    state.auth = new Auth();
+
+    state.auth.getTokenFB()
+    .done(data => {
+        console.log(`data`, data);
+    })
+    .fail(err => {
+        console.log(`err`, err);
+    });
 };
 
 ///////////////////////////////////////////////
@@ -593,7 +607,7 @@ function popupSettingsModal() {
     state.settings.getUserData()
     .done(user => {
         // Render current email to input.
-        settingsView.renderUserData(user.email);
+        settingsView.renderUserData(user);
     })
     .fail(err => {
         alert(err.responseText);

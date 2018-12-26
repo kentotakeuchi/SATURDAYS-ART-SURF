@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import { proxy } from '../config';
 
-const token = localStorage.getItem(`token`);
+let token = localStorage.getItem(`token`);
 
 export default class API {
 
@@ -10,6 +10,8 @@ export default class API {
     // MEMO: Can access only data I have.
     // Get an item's data from "db" for "popupItemModal".
     getItemDB(id) {
+
+        console.log(`token`, token);
 
         return $.ajax({
             method: "GET",
@@ -30,6 +32,8 @@ export default class API {
 
     // Get items data from db for "main page".
     getItems() {
+
+        token = localStorage.getItem(`token`);
 
         return $.ajax({
             method: "GET",

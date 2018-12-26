@@ -14,7 +14,7 @@ router.use(bodyParser.json());
 const date = formatDate(new Date());
 
 // UPDATE WHOLE DATA AT 6:00 AM
-schedule.scheduleJob('58 9 * * *', () => { // min hour dom month dow
+schedule.scheduleJob('39 9 * * *', () => { // min hour dom month dow
 
     // GET WHOLE DATA AND STORE THEM INTO DB
     request.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects?metadataDate=${date}`, (err, res, body) => {
@@ -105,7 +105,6 @@ router.get(`/`, (req, res) => {
 router.get(`/main`, verifyToken, (req, res) => {
 
     Item.findRandom({}, {}, {limit: 5}, (err, items) => {
-        console.log(`items`, items);
 
         if (err) {
             res.end('Error getting items.');
@@ -122,7 +121,6 @@ router.get(`/:id`, verifyToken, (req, res) => {
     const id = req.params.id;
 
     Item.findOne({ objectID: id }, (err, item) => {
-        console.log(`item`, item);
 
         if (err) {
             res.end(`Error getting item.`);
@@ -137,7 +135,6 @@ router.get(`/:id`, verifyToken, (req, res) => {
 router.get('/search/:query', verifyToken, (req, res) => {
 
     const query = req.params.query;
-    console.log(`query`, query);
 
     Item.find({ $text: { $search: query } }, (err, items) => {
         if (err) {

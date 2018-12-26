@@ -2,8 +2,8 @@ import $ from 'jquery';
 
 import { els } from '../view/base';
 
-const userID = localStorage.getItem('user_id');
-const token = localStorage.getItem('token');
+let userID = localStorage.getItem('user_id');
+let token = localStorage.getItem('token');
 
 
 export default class Settings {
@@ -12,6 +12,10 @@ export default class Settings {
     }
 
     getUserData() {
+
+        userID = localStorage.getItem('user_id');
+        token = localStorage.getItem('token');
+
         return $.ajax({
             method: "GET",
             url: `http://localhost:3000/user/${userID}`,

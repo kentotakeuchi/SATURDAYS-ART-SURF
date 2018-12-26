@@ -21,14 +21,9 @@
 .u-margin-top-big { margin-top: 8rem !important; }
 .u-margin-top-huge { margin-top: 10rem !important; }
 
-.hidden {
-    display: none;
-}
+.u-margin-left-xsmall { margin-left: .5rem !important; }
 
-.dangerColor {
-    color: $color-danger;
-}
+.hidden { display: none; }
 
-.successColor {
-    color: $color-success;
-}
+.dangerColor { color: $color-danger; }
+.successColor { color: $color-success; }

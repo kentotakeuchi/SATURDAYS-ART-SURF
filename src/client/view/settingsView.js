@@ -2,8 +2,25 @@ import { els } from './base';
 
 
 // Render current email on an input field settings modal popups.
-export const renderUserData = email => {
+export const renderUserData = user => {
+
+    const email = user.email;
+    const password = user.password;
+
     els.settingsEmail.val(email);
+
+    // If user signs in with Twitter.
+    if (email === `We don't have your email address and password.`) {
+        els.settingsEmail.val(email);
+        els.settingsCurPassword.val(password);
+        els.settingsNewPassword.val(password);
+        els.settingsNewPassword2.val(password);
+
+        els.settingsEmail.prop(`disabled`, true);
+        els.settingsCurPassword.prop(`disabled`, true);
+        els.settingsNewPassword.prop(`disabled`, true);
+        els.settingsNewPassword2.prop(`disabled`, true);
+    }
 };
 
 // Initialize input fields & button.

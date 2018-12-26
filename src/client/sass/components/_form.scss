@@ -6,6 +6,10 @@
         display: flex;
         align-items: center;
         flex-direction: column;
+
+        @include respond(phone) {
+            margin-bottom: .5rem;
+        }
     }
 
     &__input {
@@ -54,6 +58,10 @@
         color: $color-quaternary-light;
         font-size: 1.3rem;
 
+        @include respond(phone) {
+            margin-top: 1rem;
+        }
+
         &:hover {
             text-decoration: none;
             color: $color-quaternary-dark;
@@ -63,6 +71,10 @@
     &__registerLink {
         color: $color-quaternary-light;
         font-size: 1.3rem;
+
+        @include respond(phone) {
+            margin-top: 1rem;
+        }
 
         &:hover {
             text-decoration: none;

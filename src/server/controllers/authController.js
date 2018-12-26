@@ -11,13 +11,45 @@ const bcrypt = require('bcryptjs');
 const config = require('../config');
 const verifyToken = require('../verifyToken');
 
+// TWITTER
 const twitterAPI = require('node-twitter-api');
 const twitter = new twitterAPI({
     consumerKey: config.twitter.consumer_key,
     consumerSecret: config.twitter.consumer_secret,
     callback: config.twitter.callbackURL
 });
+if (typeof localStorage === "undefined" || localStorage === null) {
+  let LocalStorage = require('node-localstorage').LocalStorage;
+  localStorage = new LocalStorage('./scratch');
+}
 
+// FACEBOOK
+let passport = require('passport');
+// const FacebookTokenStrategy = require('passport-facebook-token');
+const FacebookStrategy = require('passport-facebook').Strategy;
+
+router.use(passport.initialize());
+
+passport.use(new FacebookStrategy({
+  clientID: config.facebook.app_id,
+  clientSecret: config.facebook.app_secret,
+  callbackURL: config.facebook.callbackURL
+},
+(accessToken, refreshToken, profile, cb) => {
+  console.log(`accessToken`, accessToken);
+  console.log(`refreshToken`, refreshToken);
+  console.log(`profile`, profile);
+
+  User.findOrCreate({ facebookId: profile.id }, (err, user) => {
+
+    return cb(err, user); // the user object we just made gets passed to the route's controller as `req.user`
+  });
+  }
+));
+
+
+///////////////////////////////////////////////
+/// TWITTER
 
 let reqTokenSecret;
 
@@ -30,71 +62,115 @@ router.get(`/login/twitter`, (req, res) => {
       } else {
 
         reqTokenSecret = requestTokenSecret;
-
-        // const reqToken = new User({
-        //   requestToken: requestToken,
-        //   requestTokenSecret: requestTokenSecret
-        // });
-
-        // reqToken.save(err => {
-        //     if (err) return handleError(err);
-        //     console.log(`save reqToken`);
-        // });
-
-        // res.send(reqToken);
-
-        console.log(`requestToken req`, requestToken);
       }
-      res.redirect(`${config.proxy}https://twitter.com/oauth/authenticate?oauth_token=${requestToken}`);
 
       res.send({url: `https://twitter.com/oauth/authenticate?oauth_token=${requestToken}`});
   });
 });
 
+// twitter page > veryfied > redirect to the below router.
+// ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
 router.get(`/login/twitter/callback`, (req, res) => {
-  console.log(`req.query.oauth_token`, req.query.oauth_token);
-  console.log(`req.query`, req.query);
 
   const reqToken = req.query.oauth_token,
         verifier = req.query.oauth_verifier;
 
   twitter.getAccessToken(reqToken, reqTokenSecret, verifier, (err, accessToken, accessTokenSecret, results) => {
+
     if (err) {
       console.log(err);
     } else {
-      console.log(`accessToken`, accessToken);
-      console.log(`accessTokenSecret`, accessTokenSecret);
 
-      twitter.verifyCredentials(accessToken, accessTokenSecret, (err, user) => {
-        console.log(`user`, user);
+      twitter.verifyCredentials(accessToken, accessTokenSecret, (err, userTW) => {
 
-        const userObj = new User({
-          id: user.id,
-          name: user.name,
-          accessToken: accessToken,
-          accessTokenSecret: accessTokenSecret
+        if (err) return handleDBError(err, res);
+
+        // MEMO: From here, my custom code(JWT x TWITTER).↓↓↓↓↓↓↓
+        // create a token
+        const token = jwt.sign({ id: userTW._id }, config.secret, {
+          expiresIn: 86400 // expires in 24 hours
         });
 
-        if (err) {
-          res.status(500).send(err);
-        }
-        else {
-          userObj.save(err => {
-              if (err) return handleError(err);
-              console.log(`save user`);
-          });
-          res.redirect(`http://localhost:8080/main.html`);
-          // res.send(userObj);
-        }
-      });
+        User.findOneAndUpdate(
+        { id: userTW.id },
+        { tokens: { access: `auth`, token: token }},
+        (err, user) => {
 
-      //store accessToken and accessTokenSecret somewhere (associated to the user)
-      //Step 4: Verify Credentials belongs here
+          if (err) return handleDBError(err, res);
+
+          // If twitter id has NOT existed in db yet.
+          if (!user) {
+            console.log(`id NOT exist`);
+
+            User.create({
+              id: userTW.id,
+              name: userTW.screen_name,
+              email: `We don't have your email address and password.`,
+              password: `We don't have your password`,
+              tokens: {
+                access: `auth`,
+                token: token
+              },
+              accessToken: accessToken,
+              accessTokenSecret: accessTokenSecret
+            },
+            (err, userNew) => {
+              if (err) return res.status(500).send("There was a problem registering the user.");
+              console.log(`userNew`, userNew);
+
+              localStorage.setItem('token', token);
+              localStorage.setItem('user_id', userNew._id);
+            });
+
+          // If twitter id has already existed in db.
+          } else {
+            console.log(`id exist`);
+
+            localStorage.setItem('token', token);
+            localStorage.setItem('user_id', user._id);
+          }
+
+          res.redirect(`http://localhost:8080/main.html`);
+        });
+      });
     }
   });
 });
 
+
+// Trigger when main page is loaded.
+router.get(`/login/twitter/accessToken`, (req, res) => {
+
+  const userID = localStorage.getItem(`user_id`);
+  const token = localStorage.getItem(`token`);
+  const dataArr = [userID, token];
+  res.send(dataArr);
+});
+
+
+///////////////////////////////////////////////
+/// FACEBOOK
+
+router.get(`/login/facebook`, (req, res) => {
+  console.log(`here`);
+
+  passport.authenticate(`facebook`);
+});
+
+router.get(`/login/facebook/callback`, (req, res) => {
+  console.log(`cb`);
+
+  passport.authenticate(`facebook`, { failureRedirect: `http://localhost:8080` }),
+  (req, res) => {
+    // Successful authentication, redirect home.
+    res.redirect(`http://localhost:8080/main.html`);
+  };
+});
+
+
+///////////////////////////////////////////////
+/// REGISTER
 
 router.post('/register', (req, res) => {
   console.log(`req.body`, req.body);
@@ -107,8 +183,8 @@ router.post('/register', (req, res) => {
 
         const hashedPassword = bcrypt.hashSync(req.body.password, 8);
         User.create({
-        email : req.body.email,
-        password : hashedPassword,
+          email : req.body.email,
+          password : hashedPassword,
         },
         (err, user) => {
         if (err) return res.status(500).send("There was a problem registering the user.");
@@ -124,13 +200,9 @@ router.post('/register', (req, res) => {
     });
 });
 
-/*
-// add the middleware function
-router.use(function (user, req, res, next) {
-  res.status(200).send(user);
-});
-*/
 
+///////////////////////////////////////////////
+/// LOGIN
 
 router.post('/login', (req, res) => {
   // Email validation.
@@ -161,6 +233,8 @@ router.post('/login', (req, res) => {
 });
 
 
+///////////////////////////////////////////////
+/// LOGOUT
 
 router.get('/logout/:userID', verifyToken, function(req, res) {
   User.findOneAndUpdate({_id: req.params.userID}, {$set: {

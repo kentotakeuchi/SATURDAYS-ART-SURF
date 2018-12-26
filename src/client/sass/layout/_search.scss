@@ -12,6 +12,13 @@
 
         transition: all .5s;
 
+        @include respond(phone) {
+            height: 4rem;
+            width: 3rem;
+            top: 5rem;
+            right: 10.8rem;
+        }
+
         &:hover {
             transform: scale(1.2);
         }

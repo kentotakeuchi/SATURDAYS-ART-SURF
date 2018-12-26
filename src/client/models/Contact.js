@@ -2,7 +2,7 @@ import $ from 'jquery';
 import { els } from '../view/base';
 
 
-const token = localStorage.getItem('token');
+let token = localStorage.getItem('token');
 
 export default class Contact {
 
@@ -10,6 +10,8 @@ export default class Contact {
     }
 
     contactSend() {
+
+        token = localStorage.getItem('token');
 
         return $.ajax({
             method: 'POST',

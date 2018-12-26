@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import { proxy } from '../config';
 
-const token = localStorage.getItem('token');
+let token = localStorage.getItem('token');
 
 
 export default class Search {
@@ -11,6 +11,8 @@ export default class Search {
     }
 
     getList() {
+
+        token = localStorage.getItem('token');
 
         return $.ajax({
             method: "GET",

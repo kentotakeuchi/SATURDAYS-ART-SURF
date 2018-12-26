@@ -64,6 +64,11 @@
     height: 45rem;
     border: .4rem solid $color-red;
     background-color: $color-white-transparent;
+
+    @include respond(phone) {
+        width: 35rem;
+        height: 50rem;
+    }
 }
 
 .register-login__text-box {}
@@ -84,6 +89,11 @@
         font-size: 2rem;
 
         width: 80%;
+
+        @include respond(phone) {
+            margin: 1rem;
+            font-size: 1.2rem;
+        }
     }
 
     &__message {}
@@ -106,6 +116,11 @@
         font-size: 2rem;
 
         width: 80%;
+
+        @include respond(phone) {
+            margin: 1rem;
+            font-size: 1.2rem;
+        }
     }
 
     &__message {}

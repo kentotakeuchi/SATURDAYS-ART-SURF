@@ -71,8 +71,6 @@ export const renderAddImg = data => {
 
     imgArr.forEach(el => {
 
-        if (el === ``) return;
-
         const markup = `
             <img src="${el}" class="item__additionalImages">
         `;

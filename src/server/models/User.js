@@ -28,6 +28,8 @@ const UserSchema = new Schema({
     accessTokenSecret: String
 });
 
+UserSchema.statics.findOrCreate = require("find-or-create");
+
 const User = mongoose.model('User', UserSchema);
 
 module.exports = User;

@@ -24,16 +24,23 @@ if (typeof localStorage === "undefined" || localStorage === null) {
 }
 
 // FACEBOOK
-let passport = require('passport');
+const passport = require('passport');
+const session = require('express-session');
 // const FacebookTokenStrategy = require('passport-facebook-token');
 const FacebookStrategy = require('passport-facebook').Strategy;
 
+router.use(session({
+  secret: 's3cr3t',
+  resave: true,
+  saveUninitialized: true
+}));
 router.use(passport.initialize());
+router.use(passport.session());
 
 passport.use(new FacebookStrategy({
   clientID: config.facebook.app_id,
   clientSecret: config.facebook.app_secret,
-  callbackURL: config.facebook.callbackURL
+  callbackURL: config.facebook.callbackURL,
 },
 (accessToken, refreshToken, profile, cb) => {
   console.log(`accessToken`, accessToken);
@@ -152,10 +159,15 @@ router.get(`/login/twitter/accessToken`, (req, res) => {
 ///////////////////////////////////////////////
 /// FACEBOOK
 
-router.get(`/login/facebook`, (req, res) => {
+router.get(`/login/facebook`, (req, res, next) => {
   console.log(`here`);
+  // console.log(`req.user`, req.user);
 
-  passport.authenticate(`facebook`);
+  passport.authenticate(`facebook`, (err, user, info) => {
+    console.log(`err`, err);
+    console.log(`user`, user);
+    console.log(`info`, info);
+  })(req, res, next);
 });
 
 router.get(`/login/facebook/callback`, (req, res) => {
@@ -165,7 +177,7 @@ router.get(`/login/facebook/callback`, (req, res) => {
   (req, res) => {
     // Successful authentication, redirect home.
     res.redirect(`http://localhost:8080/main.html`);
-  };
+  }
 });
 
 

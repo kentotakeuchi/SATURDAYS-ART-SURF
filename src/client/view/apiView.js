@@ -47,11 +47,32 @@ export const renderItem = (data, isLiked) => {
             <div class="item__addImg--container u-margin-bottom-small"></div>
 
             <div class=item__container--text>
-                <div class="item__title">Title: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="item__text--strong">${data.title}</span></div>
+                <div class="item__text--key">
+                    <div class="item__title">Title:</div>
+                    </div>
+                <div class="item__text--val">
+                    <div class="item__text--strong">${data.title}</div>
+                </div>
+            </div>
 
-                <div class="item__artistDisplayName item__artistDate">Artist name: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="item__text--strong">${artistName} (${data.artistBeginDate} - ${data.artistEndDate})</span></div>
+            <div class=item__container--text>
+                <div class="item__text--key">
+                    <div class="item__artistDisplayName item__artistDate">Artist name:</div>
+                    </div>
+                <div class="item__text--val">
+                    <div class="item__text--strong">${artistName} (${data.artistBeginDate} - ${data.artistEndDate})</div>
+                </div>
+            </div>
 
-                <div class="item__artistNationality">Artist nationality: &nbsp;&nbsp;<span class="item__text--strong">${artistNationality}</span></div>
+            <div class=item__container--text>
+                <div class="item__text--key">
+                    <div class="item__artistNationality">Artist nationality:</div>
+                    </div>
+                <div class="item__text--val">
+                    <div class="item__text--strong">${artistNationality}</div>
+                </div>
+            </div>
+
                 <br>
                 <a href="${data.objectURL}" class="item__objectURL">Do you want to know more?</a>
             </div>

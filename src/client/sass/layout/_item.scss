@@ -50,13 +50,20 @@
     &__container--text {
         display: flex;
         justify-content: flex-start;
-        flex-direction: column;
 
         font-size: 1.1rem;
         color: $color-grey-dark-3;
         letter-spacing: .1rem;
 
         width: 90%;
+    }
+
+    &__text--key {
+        width: 30%;
+    }
+
+    &__text--val {
+        width: 70%;
     }
 
     &__text--strong {
@@ -81,13 +88,18 @@
 
     &__objectURL {
 
-        color: $color-quaternary-light;
+        color: $color-quaternary;
+        letter-spacing: .1rem;
+
+        transition: all .3s;
 
         &:hover {
-            color: $color-quaternary-dark;
+            color: $color-tertiary;
             text-decoration: none !important;
             outline: none;
             border-style: none;
+
+            letter-spacing: .2rem;
         }
 
     }

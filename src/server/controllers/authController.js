@@ -51,8 +51,7 @@ passport.use(new FacebookStrategy({
 
     return cb(err, user); // the user object we just made gets passed to the route's controller as `req.user`
   });
-  }
-));
+}));
 
 
 ///////////////////////////////////////////////

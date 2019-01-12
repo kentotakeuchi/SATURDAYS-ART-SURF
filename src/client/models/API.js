@@ -11,7 +11,7 @@ export default class API {
     // Get an item's data from "db" for "popupItemModal".
     getItemDB(id) {
 
-        console.log(`token`, token);
+        // console.log(`token`, token);
 
         return $.ajax({
             method: "GET",

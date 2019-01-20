@@ -15842,26 +15842,38 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _sass_style_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./sass/style.scss */ "./src/client/sass/style.scss");
 /* harmony import */ var _sass_style_scss__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_sass_style_scss__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _models_API__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./models/API */ "./src/client/models/API.js");
-/* harmony import */ var _models_Contact__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./models/Contact */ "./src/client/models/Contact.js");
-/* harmony import */ var _models_Likes__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./models/Likes */ "./src/client/models/Likes.js");
-/* harmony import */ var _models_Settings__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./models/Settings */ "./src/client/models/Settings.js");
-/* harmony import */ var _view_apiView__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./view/apiView */ "./src/client/view/apiView.js");
-/* harmony import */ var _view_base__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./view/base */ "./src/client/view/base.js");
-/* harmony import */ var _view_contactView__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./view/contactView */ "./src/client/view/contactView.js");
-/* harmony import */ var _view_landingView__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./view/landingView */ "./src/client/view/landingView.js");
-/* harmony import */ var _view_likesView__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./view/likesView */ "./src/client/view/likesView.js");
-/* harmony import */ var _view_settingsView__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./view/settingsView */ "./src/client/view/settingsView.js");
+/* harmony import */ var _models_Auth__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./models/Auth */ "./src/client/models/Auth.js");
+/* harmony import */ var _models_Bg__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./models/Bg */ "./src/client/models/Bg.js");
+/* harmony import */ var _models_Contact__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./models/Contact */ "./src/client/models/Contact.js");
+/* harmony import */ var _models_Likes__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./models/Likes */ "./src/client/models/Likes.js");
+/* harmony import */ var _models_Search__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./models/Search */ "./src/client/models/Search.js");
+/* harmony import */ var _models_Settings__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./models/Settings */ "./src/client/models/Settings.js");
+/* harmony import */ var _view_apiView__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./view/apiView */ "./src/client/view/apiView.js");
+/* harmony import */ var _view_authView__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./view/authView */ "./src/client/view/authView.js");
+/* harmony import */ var _view_base__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./view/base */ "./src/client/view/base.js");
+/* harmony import */ var _view_bgView__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./view/bgView */ "./src/client/view/bgView.js");
+/* harmony import */ var _view_contactView__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./view/contactView */ "./src/client/view/contactView.js");
+/* harmony import */ var _view_likesView__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./view/likesView */ "./src/client/view/likesView.js");
+/* harmony import */ var _view_searchView__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./view/searchView */ "./src/client/view/searchView.js");
+/* harmony import */ var _view_settingsView__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./view/settingsView */ "./src/client/view/settingsView.js");
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./config */ "./src/client/config.js");
 ////////////////////////////////////////////////////
- // JavaScript of bootstrap.
+ // BOOTSTRAP OF JAVASCRIPT
 
- // Custum scss
+ // CUSTOM SCSS
 
- // Models
-
-
+ // MODELS
 
 
- // Views
+
+
+
+
+
+ // VIEWS
+
+
+
 
 
 
@@ -15873,426 +15885,485 @@ __webpack_require__.r(__webpack_exports__);
 
 var state = {};
 var userID = localStorage.getItem('user_id');
-var email = localStorage.getItem('userEmail');
 var token = localStorage.getItem('token');
 jquery__WEBPACK_IMPORTED_MODULE_0___default()('document').ready(function () {
-  state.api = new _models_API__WEBPACK_IMPORTED_MODULE_3__["default"]();
-  state.api.getResults();
+  // LANDING PAGE
+  if (window.location.href === "http://localhost:8080/index.html#" || window.location.href === "http://localhost:8080/index.html" || window.location.href === "http://localhost:8080/#" || window.location.href === "http://localhost:8080/") {
+    // Initialize form.
+    _view_authView__WEBPACK_IMPORTED_MODULE_11__["init"](); // Get images from db and render them on the background.
+
+    getAndRenderBgImgHandler();
+  } // MAIN PAGE
+  else if (window.location.href === "http://localhost:8080/main.html#" || window.location.href === "http://localhost:8080/main.html") {
+      // If user signs in with Twitter.
+      if (userID === null) {
+        state.auth = new _models_Auth__WEBPACK_IMPORTED_MODULE_4__["default"]();
+        state.auth.getAccessTokenTW().done(function (data) {
+          state.auth.persistDataTW(data); // Set loader > get items > render items > clear loader.
+
+          getAndRenderItemsHandler();
+        }).fail(function (err) {
+          console.log("err", err);
+        });
+      } else {
+        // Set loader > get items > render items > clear loader.
+        getAndRenderItemsHandler();
+      }
+    } // Set events.
+
+
   setEventHandler();
-});
+}); // Set events.
 
 function setEventHandler() {
-  // Register form
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].registerEmail.blur(registerCheckHandler);
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].registerPassword.blur(registerCheckHandler);
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].registerPassword2.blur(registerCheckHandler);
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].registerBtn.click(registerUserHandler);
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].registerToLogin.click(registerToLoginHandler); // Login form
+  // REGISTER FORM
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].registerEmail.keyup(registerCheckHandler);
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].registerPassword.keyup(registerCheckHandler);
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].registerPassword2.keyup(registerCheckHandler);
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].registerBtn.click(registerUserHandler);
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].registerToLogin.click(registerToLoginHandler); // LOGIN FORM
 
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].loginEmail.blur(loginCheckHandler);
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].loginPassword.blur(loginCheckHandler);
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].loginBtn.click(loginUserHandler); // ARTWORKS > display artworks infinitely
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].loginTW.click(loginWithTWHandler);
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].loginFB.click(loginWithFBHandler);
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].loginEmail.keyup(loginCheckHandler);
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].loginPassword.keyup(loginCheckHandler);
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].loginBtn.click(loginUserHandler);
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].loginToRegister.click(loginToRegisterHandler); // SEARCH
+
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].searchIcon.click(popupSearchModal);
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].searchBtn.click(searchItemsHandler);
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].objInput.change(searchItemsHandler);
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].geoInput.change(searchItemsHandler);
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].dateInput.change(searchItemsHandler);
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].deptInput.change(searchItemsHandler); // HEADER
+
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].brandLink.click(returnDefaultPageHandler); // ARTWORKS > display artworks infinitely
 
   jquery__WEBPACK_IMPORTED_MODULE_0___default()(window).scroll(pagenationHandler); // ARTWORKS > popup an item modal
 
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].items.off("click", ".items__item", popupItemModal);
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].items.on("click", ".items__item", popupItemModal); // ARTWORK > likes
-  // Navigation > about
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].items.off("click", ".items__item", popupItemModal);
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].items.on("click", ".items__item", popupItemModal); // NAVIGATION > collection
 
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].about.click(popupAboutModal); // Navigation > contact
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].collection.click(displayCollectionHandler); // NAVIGATION > about
 
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].contact.click(popupContactModal);
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].about.click(popupAboutModal); // NAVIGATION > contact
+
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].contact.click(popupContactModal);
   setTimeout(function () {
     // TODO: Fix later on.
-    _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].contactEmail.focus();
+    _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].contactEmail.focus();
   }, 50);
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].contactEmail.blur(contactCheckHandler);
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].contactInquiry.blur(contactCheckHandler);
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].contactBtn.click(contactSendHandler); // Navigation > settings
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].contactEmail.keyup(contactCheckHandler);
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].contactInquiry.keyup(contactCheckHandler);
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].contactBtn.click(contactSendHandler); // NAVIGATION > settings
 
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].settings.click(popupSettingsModal);
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].settings.click(popupSettingsModal);
   setTimeout(function () {
     // TODO: Fix later on.
-    _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].settingsEmail.focus();
+    _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].settingsEmail.focus();
   }, 50);
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].settingsEmail.blur(settingsCheckHandler);
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].settingsCurPassword.blur(settingsCheckHandler);
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].settingsNewPassword.blur(settingsCheckHandler);
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].settingsNewPassword2.blur(settingsCheckHandler);
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].settingsBtn.click(settingsUpdateHandler); // Navigation > logout
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].settingsEmail.keyup(settingsCheckHandler);
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].settingsCurPassword.blur(settingsCheckHandler);
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].settingsNewPassword.keyup(settingsCheckHandler);
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].settingsNewPassword2.keyup(settingsCheckHandler);
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].settingsBtn.click(settingsUpdateHandler); // NAVIGATION > logout
 
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].logout.click(logout);
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].logout.click(logout);
 }
 
 ; ///////////////////////////////////////////////
 /// LANDING PAGE
+// Get images from db and render them on the background.
 
-function registerUserHandler() {
-  jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
-    method: "POST",
-    url: "http://localhost:3000/auth/register",
-    data: {
-      email: _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].registerEmail.val(),
-      password: _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].registerPassword.val()
-    }
-  }).done(function (msg) {
-    alert("msg", msg);
+function getAndRenderBgImgHandler() {
+  state.bg = new _models_Bg__WEBPACK_IMPORTED_MODULE_5__["default"]();
+  state.bg.getImg().done(function (data) {
+    console.log("data", data);
+    _view_bgView__WEBPACK_IMPORTED_MODULE_13__["renderImg"](data);
   }).fail(function (err) {
-    alert("err", err);
+    console.log("err", err);
+    _view_bgView__WEBPACK_IMPORTED_MODULE_13__["renderErrMsg"](err);
   });
 }
 
-;
+; // Register an user.
+
+function registerUserHandler(e) {
+  e.preventDefault();
+  var str = "register";
+  state.auth.registerUser().done(function (msg) {
+    // Display success msg.
+    _view_authView__WEBPACK_IMPORTED_MODULE_11__["renderSuccessMsg"](str);
+    setTimeout(function () {
+      registerToLoginHandler();
+    }, 2000);
+  }).fail(function (err) {
+    _view_authView__WEBPACK_IMPORTED_MODULE_11__["renderErrMsg"](str, err);
+  });
+}
+
+; // REGISTER > LOGIN
 
 function registerToLoginHandler() {
-  // Clear register form.
-  _view_landingView__WEBPACK_IMPORTED_MODULE_10__["clearRegisterForm"](); // Display login form.
+  // Clear all value.
+  _view_authView__WEBPACK_IMPORTED_MODULE_11__["init"](); // Clear register form.
 
-  _view_landingView__WEBPACK_IMPORTED_MODULE_10__["renderLoginForm"]();
+  _view_authView__WEBPACK_IMPORTED_MODULE_11__["clearRegisterForm"](); // Display login form.
+
+  _view_authView__WEBPACK_IMPORTED_MODULE_11__["renderLoginForm"]();
+}
+
+; // Login an user.
+
+function loginUserHandler(e) {
+  e.preventDefault();
+  var str = "login";
+  state.auth = new _models_Auth__WEBPACK_IMPORTED_MODULE_4__["default"]();
+  state.auth.loginUser().done(function (user) {
+    console.log("user", user); // Store data of "user_id", "email" and "token" to local storage.
+
+    state.auth.persistData(user); // Display success msg.
+
+    _view_authView__WEBPACK_IMPORTED_MODULE_11__["renderSuccessMsg"](str);
+    setTimeout(function () {
+      window.location.href = '/main.html';
+    }, 2000);
+  }).fail(function (err) {
+    _view_authView__WEBPACK_IMPORTED_MODULE_11__["renderErrMsg"](str, err);
+  });
+}
+
+; // LOGIN > REGISTER
+
+function loginToRegisterHandler() {
+  // Clear all value.
+  _view_authView__WEBPACK_IMPORTED_MODULE_11__["init"](); // Clear login form.
+
+  _view_authView__WEBPACK_IMPORTED_MODULE_11__["clearLoginForm"](); // Display register form.
+
+  _view_authView__WEBPACK_IMPORTED_MODULE_11__["renderRegisterForm"]();
+}
+
+; // Validation of register. (no mvc)
+
+function registerCheckHandler() {
+  state.auth = new _models_Auth__WEBPACK_IMPORTED_MODULE_4__["default"]();
+  state.auth.registerCheck();
+}
+
+; // Validation of login. (no mvc)
+
+function loginCheckHandler() {
+  state.auth = new _models_Auth__WEBPACK_IMPORTED_MODULE_4__["default"]();
+  state.auth.loginCheck();
 }
 
 ;
 
-function loginUserHandler() {
-  jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
-    method: "POST",
-    url: "http://localhost:3000/auth/login",
-    data: {
-      email: _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].loginEmail.val(),
-      password: _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].loginPassword.val()
-    }
-  }).done(function (user) {
-    console.log("user", user);
-    localStorage.setItem('user_id', user._id);
-    localStorage.setItem('userEmail', user.email);
-    localStorage.setItem('token', user.tokens[0].token);
-    setTimeout(function () {
-      window.location.href = '/main.html';
-    }, 1000);
+function loginWithTWHandler() {
+  state.auth = new _models_Auth__WEBPACK_IMPORTED_MODULE_4__["default"]();
+  state.auth.getReqTokenTW().done(function (data) {
+    window.location.href = data.url;
   }).fail(function (err) {
-    alert("err", err);
+    console.log("err", err);
   });
 }
 
 ;
 
-function registerCheckHandler() {
-  var inValid = !registerEmailFormatCheck(_view_base__WEBPACK_IMPORTED_MODULE_8__["els"].registerEmail.val()) || !registerPasswordFormatCheck(_view_base__WEBPACK_IMPORTED_MODULE_8__["els"].registerPassword.val()) || !registerPasswordsMatch(_view_base__WEBPACK_IMPORTED_MODULE_8__["els"].registerPassword.val(), _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].registerPassword2.val()) || _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].registerEmail.val() === '' || _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].registerPassword.val() === '' || _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].registerPassword2.val() === '';
-
-  if (inValid) {
-    _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].registerBtn.prop('disabled', true);
-  } else {
-    _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].registerBtn.prop('disabled', false);
-  }
-
-  return !inValid;
-}
-
-;
-
-function registerEmailFormatCheck(email) {
-  var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  var valid = true;
-
-  if (email.length > 0) {
-    valid = re.test(String(email).toLowerCase());
-  }
-
-  if (!valid) {
-    _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].registerErrorMessageContainer.addClass('dangerColor');
-    _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].registerErrorMessage.html('Email format is incorrect.');
-    _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].registerErrorMessageContainer.css('display', 'flex');
-  } else {
-    resetMessages();
-  }
-
-  return valid;
-}
-
-;
-
-function registerPasswordFormatCheck(password) {
-  var lowerCaseRegex = /.*[a-z].*/;
-  var upperCaseRegex = /.*[A-Z].*/;
-  var numberRegex = /.*\d.*/;
-  var symbolRegex = /.*[!@#$%^&*+?].*/;
-  var valid = true;
-
-  if (password.length > 0) {
-    valid = password.length >= 8 && lowerCaseRegex.test(String(password)) && upperCaseRegex.test(String(password)) && numberRegex.test(String(password)) && symbolRegex.test(String(password));
-  }
-
-  if (!valid) {
-    _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].registerErrorMessageContainer.addClass('dangerColor');
-    _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].registerErrorMessage.html('Password must be at least 8 characters in length, and must have at least one number, one uppercase letter, one lowercase letter, and one of the following symbols: ! @ # $ % ^ & * + ?');
-    _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].registerErrorMessageContainer.css('display', 'flex');
-  } else {
-    resetMessages();
-  }
-
-  return valid;
-}
-
-;
-
-function registerPasswordsMatch(password1, password2) {
-  var valid = password1 === password2;
-
-  if (!valid) {
-    _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].registerErrorMessageContainer.addClass('dangerColor');
-    _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].registerErrorMessage.html('Password and confirm password fields do not match.');
-    _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].registerErrorMessageContainer.css('display', 'flex');
-  } else {
-    resetMessages();
-  }
-
-  return valid;
-}
-
-;
-
-function loginCheckHandler() {
-  var inValid = !loginEmailFormatCheck(_view_base__WEBPACK_IMPORTED_MODULE_8__["els"].loginEmail.val()) || !loginPasswordFormatCheck(_view_base__WEBPACK_IMPORTED_MODULE_8__["els"].loginPassword.val()) || _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].loginEmail.val() === '' || _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].loginPassword.val() === '';
-
-  if (inValid) {
-    _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].loginBtn.prop('disabled', true);
-  } else {
-    _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].loginBtn.prop('disabled', false);
-  }
-
-  return !inValid;
-}
-
-;
-
-function loginEmailFormatCheck(email) {
-  var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  var valid = true;
-
-  if (email.length > 0) {
-    valid = re.test(String(email).toLowerCase());
-  }
-
-  if (!valid) {
-    _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].loginErrorMessageContainer.addClass('dangerColor');
-    _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].loginErrorMessage.html('Email format is incorrect.');
-    _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].loginErrorMessageContainer.css('display', 'flex');
-  } else {
-    resetMessages();
-  }
-
-  return valid;
-}
-
-;
-
-function loginPasswordFormatCheck(password) {
-  var lowerCaseRegex = /.*[a-z].*/;
-  var upperCaseRegex = /.*[A-Z].*/;
-  var numberRegex = /.*\d.*/;
-  var symbolRegex = /.*[!@#$%^&*+?].*/;
-  var valid = true;
-
-  if (password.length > 0) {
-    valid = password.length >= 8 && lowerCaseRegex.test(String(password)) && upperCaseRegex.test(String(password)) && numberRegex.test(String(password)) && symbolRegex.test(String(password));
-  }
-
-  if (!valid) {
-    _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].loginErrorMessageContainer.addClass('dangerColor');
-    _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].loginErrorMessage.html('Password must be at least 8 characters in length, and must have at least one number, one uppercase letter, one lowercase letter, and one of the following symbols: ! @ # $ % ^ & * + ?');
-    _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].loginErrorMessageContainer.css('display', 'flex');
-  } else {
-    resetMessages();
-  }
-
-  return valid;
-}
-
-;
-
-function resetMessages() {
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].registerErrorMessageContainer.css('display', 'none');
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].registerErrorMessageContainer.removeClass('dangerColor');
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].registerErrorMessage.html('');
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].loginErrorMessageContainer.css('display', 'none');
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].loginErrorMessageContainer.removeClass('dangerColor');
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].loginErrorMessage.html('');
+function loginWithFBHandler() {
+  console.log("facebook");
+  state.auth = new _models_Auth__WEBPACK_IMPORTED_MODULE_4__["default"]();
+  state.auth.getTokenFB().done(function (data) {
+    console.log("data", data);
+  }).fail(function (err) {
+    console.log("err", err);
+  });
 }
 
 ; ///////////////////////////////////////////////
 /// MAIN PAGE
+// Set loader > get items > render items > clear loader.
+
+function getAndRenderItemsHandler() {
+  // Prepare UI for changes
+  Object(_view_base__WEBPACK_IMPORTED_MODULE_12__["renderLoader"])(_view_base__WEBPACK_IMPORTED_MODULE_12__["els"].items); // Create instance of API.
+
+  state.api = new _models_API__WEBPACK_IMPORTED_MODULE_3__["default"](); // Get items from api to display items.
+
+  state.api.getItems().done(function (data) {
+    console.log("data", data); // Render search results.
+
+    _view_apiView__WEBPACK_IMPORTED_MODULE_10__["renderItems"](data); // Clear loader.
+
+    Object(_view_base__WEBPACK_IMPORTED_MODULE_12__["clearLoader"])();
+  }).fail(function (err) {
+    console.log("err", err); // Clear loader.
+
+    Object(_view_base__WEBPACK_IMPORTED_MODULE_12__["clearLoader"])();
+  });
+}
+
+; // Load new items when user scrolls down to bottom.
 
 function pagenationHandler() {
   if (jquery__WEBPACK_IMPORTED_MODULE_0___default()(window).scrollTop() >= jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).height() - jquery__WEBPACK_IMPORTED_MODULE_0___default()(window).height() - 10) {
-    state.api.getResults();
-    _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].items.off("click", ".items__item", popupItemModal);
-    _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].items.on("click", ".items__item", popupItemModal);
+    // Set loader > get items > render items > clear loader.
+    getAndRenderItemsHandler();
+    _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].items.off("click", ".items__item", popupItemModal);
+    _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].items.on("click", ".items__item", popupItemModal);
   }
 }
 
-;
+; // Pop up a search modal when user clicks search icon.
+
+function popupSearchModal() {
+  state.search = new _models_Search__WEBPACK_IMPORTED_MODULE_8__["default"]();
+  state.search.getList().done(function (data) {
+    _view_searchView__WEBPACK_IMPORTED_MODULE_16__["renderQueries"](data);
+  }).fail(function (err) {
+    console.log("err", err);
+  });
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].popupSearch.modal("toggle");
+}
+
+; // Display search results when user clicks search button.
+
+function searchItemsHandler(e) {
+  e.preventDefault();
+  var query;
+
+  if (e.type === "click") {
+    // 1) Get query from view
+    query = _view_searchView__WEBPACK_IMPORTED_MODULE_16__["getInput"]();
+  } else if (e.type === "change") {
+    query = e.target.value;
+  }
+
+  if (query) {
+    state.search = new _models_Search__WEBPACK_IMPORTED_MODULE_8__["default"](query); // Prepare for rendering search results.
+
+    _view_searchView__WEBPACK_IMPORTED_MODULE_16__["init"]();
+    _view_searchView__WEBPACK_IMPORTED_MODULE_16__["clearItems"]();
+    _view_searchView__WEBPACK_IMPORTED_MODULE_16__["clearNumOfItems"]();
+    Object(_view_base__WEBPACK_IMPORTED_MODULE_12__["renderLoader"])(_view_base__WEBPACK_IMPORTED_MODULE_12__["els"].items); // Get search data from db.
+
+    state.search.getSearchItems().done(function (data) {
+      console.log("data", data); // Render the number of search results.
+
+      _view_searchView__WEBPACK_IMPORTED_MODULE_16__["renderNumOfItems"](data, query); // Render search items.
+
+      _view_searchView__WEBPACK_IMPORTED_MODULE_16__["renderItems"](data); // Clear loader.
+
+      Object(_view_base__WEBPACK_IMPORTED_MODULE_12__["clearLoader"])();
+    }).fail(function (err) {
+      console.log("err", err); // Clear loader.
+
+      Object(_view_base__WEBPACK_IMPORTED_MODULE_12__["clearLoader"])();
+    }); // Disable calling api with scroll down.
+
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(window).off("scroll", pagenationHandler);
+    _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].popupSearch.modal("toggle");
+  }
+}
+
+; // Pop up an item modal when user clicks each image.
 
 function popupItemModal(e) {
-  state.likes = new _models_Likes__WEBPACK_IMPORTED_MODULE_5__["default"](); // Get "likes" data from local storage.
+  state.likes = new _models_Likes__WEBPACK_IMPORTED_MODULE_7__["default"](); // Get "likes" data from local storage.
 
   state.likes.readStorage(); // Prepare for rendering a new artwork.
 
-  _view_apiView__WEBPACK_IMPORTED_MODULE_7__["clearArtwork"](); // Get the id of artwork user clicks.
+  _view_apiView__WEBPACK_IMPORTED_MODULE_10__["clearArtwork"]();
+  Object(_view_base__WEBPACK_IMPORTED_MODULE_12__["renderLoader"])(_view_base__WEBPACK_IMPORTED_MODULE_12__["els"].popupItemBody); // Get the id of artwork user clicks.
 
   var id = e.target.id;
-  console.log("id", id); // TODO: Better to use the URL which is previously fetched.
-  // Get the item data user clicks.
+  console.log("id", id); // Get the item data user clicks.
 
-  state.api.getResult(id).done(function (data) {
-    // Render the item data user clicks.
-    _view_apiView__WEBPACK_IMPORTED_MODULE_7__["renderArtwork"](data, state.likes.isLiked(id)); // MEMO: Setting event to SVG with jquery didn't work.
+  state.api.getItemDB(id).done(function (data) {
+    console.log("index2 data", data); // Render the item data user clicks.
+
+    _view_apiView__WEBPACK_IMPORTED_MODULE_10__["renderItem"](data, state.likes.isLiked(id)); // Render additional images if there are.
+
+    _view_apiView__WEBPACK_IMPORTED_MODULE_10__["renderAddImg"](data); // MEMO: Setting event to SVG with jquery didn't work.
 
     var likes = document.querySelector(".likes");
     likes.addEventListener("click", function (e) {
-      console.log("e", e);
-
-      if (e.target.matches('.likes__field, .likes__field *')) {
+      if (e.target.matches('.likes__icon, .likes__icon *')) {
         // Like controller
         likesHandler(e);
       }
     });
-    _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].popupItem.modal("toggle");
+    _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].popupItem.modal("toggle"); // Clear loader.
+
+    Object(_view_base__WEBPACK_IMPORTED_MODULE_12__["clearLoader"])();
   }).fail(function (err) {
-    alert(err.responseText);
-  });
+    console.log(err.responseText); // Clear loader.
+
+    Object(_view_base__WEBPACK_IMPORTED_MODULE_12__["clearLoader"])();
+  }); // Set click event for additional image.
+
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].popupItemBody.off("click", ".item__additionalImages", itemAddImgHandler);
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].popupItemBody.on("click", ".item__additionalImages", itemAddImgHandler);
 }
 
-;
+; // Change a main image user clicks.
+
+function itemAddImgHandler(e) {
+  // Change current image into the image user clicks.
+  _view_apiView__WEBPACK_IMPORTED_MODULE_10__["changeMainImg"](e);
+}
+
+; // LIKES CONTROLLER
 
 function likesHandler(e) {
-  console.log("e", e);
-  state.likes = new _models_Likes__WEBPACK_IMPORTED_MODULE_5__["default"]();
-  var storage = state.likes.readStorage();
-  console.log("storage", storage); // Get the id of artwork user clicks.
+  state.likes = new _models_Likes__WEBPACK_IMPORTED_MODULE_7__["default"]();
+  var storage = state.likes.readStorage(); // Get the id of artwork user clicks.
 
-  var id = e.target.id;
-  console.log("id", id);
+  var id;
+
+  if (e.target.tagName === "svg") {
+    id = e.target.id;
+  } else if (e.target.tagName === "use") {
+    id = e.target.parentElement.id;
+  }
 
   if (state.likes.isLiked(id)) {
     // Delete id from the "this.likes[]" array.
     state.likes.deleteLike(id); // Toggle the like button
 
-    _view_likesView__WEBPACK_IMPORTED_MODULE_11__["toggleLikeBtn"](false);
+    _view_likesView__WEBPACK_IMPORTED_MODULE_15__["toggleLikeBtn"](false);
   } else {
     // Add id in the "this.likes[]" array.
     state.likes.addLike(id); // Toggle the like button
 
-    _view_likesView__WEBPACK_IMPORTED_MODULE_11__["toggleLikeBtn"](true);
+    _view_likesView__WEBPACK_IMPORTED_MODULE_15__["toggleLikeBtn"](true);
   }
+}
+
+; // Move to default page.
+
+function returnDefaultPageHandler() {
+  // Transfer to a default page.
+  window.location.href = "/main.html"; // Set the event calling api with scroll down again.
+
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()(window).on("scroll", pagenationHandler);
 }
 
 ; ///////////////////////////////////////////////
 /// NAVIGATION PAGE
-// ABOUT
+// COLLECTION CONTROLLER
+
+function displayCollectionHandler() {
+  state.likes = new _models_Likes__WEBPACK_IMPORTED_MODULE_7__["default"](); // Prepare for rendering my collection.
+
+  _view_apiView__WEBPACK_IMPORTED_MODULE_10__["clearItems"]();
+  _view_searchView__WEBPACK_IMPORTED_MODULE_16__["clearNumOfItems"]();
+  Object(_view_base__WEBPACK_IMPORTED_MODULE_12__["renderLoader"])(_view_base__WEBPACK_IMPORTED_MODULE_12__["els"].items); // Get data from "likes" array.
+
+  var storage = state.likes.readStorage(); // Iterate "likes" array.
+
+  storage.forEach(function (el) {
+    // Get my collection from api.
+    state.api.getCollection(el).done(function (data) {
+      // Render my collection.
+      _view_apiView__WEBPACK_IMPORTED_MODULE_10__["renderCollection"](data); // Clear loader.
+
+      Object(_view_base__WEBPACK_IMPORTED_MODULE_12__["clearLoader"])();
+    }).fail(function (err) {
+      console.log("err", err); // Clear loader.
+
+      Object(_view_base__WEBPACK_IMPORTED_MODULE_12__["clearLoader"])();
+    });
+  }); // Disable calling api with scroll down.
+
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()(window).off("scroll", pagenationHandler); // Close navigation.
+
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].naviCheckbox.prop("checked", false);
+}
+
+; // ABOUT
 
 function popupAboutModal() {
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].popupAbout.modal("toggle");
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].popupAbout.modal("toggle");
 }
 
 ; // CONTACT
 
 function popupContactModal() {
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].popupContact.modal("toggle");
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].popupContact.modal("toggle"); // Initialize all value.
+
+  _view_contactView__WEBPACK_IMPORTED_MODULE_14__["init"]();
 }
 
-;
+; // Validation of contact form.
 
 function contactCheckHandler() {
-  state.contact = new _models_Contact__WEBPACK_IMPORTED_MODULE_4__["default"](); // Disable button unless user fills out all input.
+  state.contact = new _models_Contact__WEBPACK_IMPORTED_MODULE_6__["default"](); // Disable button unless user fills out all input.
 
   state.contact.inputCheck(); // Handle rendering error messages.
 
-  _view_contactView__WEBPACK_IMPORTED_MODULE_9__["emailValid"]();
-  _view_contactView__WEBPACK_IMPORTED_MODULE_9__["inquiryValid"]();
+  _view_contactView__WEBPACK_IMPORTED_MODULE_14__["emailValid"]();
+  _view_contactView__WEBPACK_IMPORTED_MODULE_14__["inquiryValid"]();
 }
 
-;
+; // Submit contact form.
 
 function contactSendHandler(e) {
   e.preventDefault();
-  jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
-    method: 'POST',
-    url: 'http://localhost:3000/contact/',
-    data: {
-      email: _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].contactEmail.val(),
-      inquiry: _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].contactInquiry.val()
-    },
-    headers: {
-      'x-access-token': token
-    },
-    success: function success(msg) {
-      alert('Your message has been sent successfully.'); // window.location.href = '/main.html';
-    },
-    error: function error(msg) {
-      alert('A problem has been occurred while submitting your data.');
-    }
+  state.contact.contactSend().done(function (msg) {
+    _view_contactView__WEBPACK_IMPORTED_MODULE_14__["renderMsg"](msg);
+  }).fail(function (err) {
+    _view_contactView__WEBPACK_IMPORTED_MODULE_14__["renderMsg"](err);
   });
 }
 
 ; // SETTINGS
 
 function popupSettingsModal() {
-  state.settings = new _models_Settings__WEBPACK_IMPORTED_MODULE_6__["default"](); // Initialize input fields & button.
+  state.settings = new _models_Settings__WEBPACK_IMPORTED_MODULE_9__["default"](); // Initialize input fields & button.
 
-  _view_settingsView__WEBPACK_IMPORTED_MODULE_12__["init"](); // Get user data from db.
+  _view_settingsView__WEBPACK_IMPORTED_MODULE_17__["init"](); // Get user data from db.
 
   state.settings.getUserData().done(function (user) {
     // Render current email to input.
-    _view_settingsView__WEBPACK_IMPORTED_MODULE_12__["renderUserData"](user.email);
+    _view_settingsView__WEBPACK_IMPORTED_MODULE_17__["renderUserData"](user);
   }).fail(function (err) {
     alert(err.responseText);
   }); // Popup settings modal.
 
-  _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].popupSettings.modal("toggle");
+  _view_base__WEBPACK_IMPORTED_MODULE_12__["els"].popupSettings.modal("toggle");
 }
 
-;
+; // Validation of settings form.
 
 function settingsCheckHandler() {
   // Check email format.
-  _view_settingsView__WEBPACK_IMPORTED_MODULE_12__["emailFormatValid"](_view_base__WEBPACK_IMPORTED_MODULE_8__["els"].settingsEmail.val()); // Compare input data with current password.
+  _view_settingsView__WEBPACK_IMPORTED_MODULE_17__["emailFormatValid"](_view_base__WEBPACK_IMPORTED_MODULE_12__["els"].settingsEmail.val()); // Compare input data with current password.
 
   state.settings.getCurPassword().done(function (res) {
-    _view_settingsView__WEBPACK_IMPORTED_MODULE_12__["compareCurPassword"](res);
+    _view_settingsView__WEBPACK_IMPORTED_MODULE_17__["compareCurPassword"](res);
   }).fail(function (err) {
-    _view_settingsView__WEBPACK_IMPORTED_MODULE_12__["compareCurPassword"](err.responseText);
+    _view_settingsView__WEBPACK_IMPORTED_MODULE_17__["compareCurPassword"](err.responseText);
   }); // Check new password format.
 
-  _view_settingsView__WEBPACK_IMPORTED_MODULE_12__["passwordFormatValid"](_view_base__WEBPACK_IMPORTED_MODULE_8__["els"].settingsNewPassword.val()); // Check matching the passwords between pwd1 and pwd2.
+  _view_settingsView__WEBPACK_IMPORTED_MODULE_17__["passwordFormatValid"](_view_base__WEBPACK_IMPORTED_MODULE_12__["els"].settingsNewPassword.val()); // Check matching the passwords between pwd1 and pwd2.
 
-  _view_settingsView__WEBPACK_IMPORTED_MODULE_12__["checkPasswordsMatch"](); // Controll the button whether it's disable or not.
+  _view_settingsView__WEBPACK_IMPORTED_MODULE_17__["checkPasswordsMatch"](); // Controll the button whether it's disable or not.
 
   state.settings.inputCheck();
 }
 
-;
+; // Submit updated info.
 
 function settingsUpdateHandler(e) {
   e.preventDefault();
-  jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
-    method: "PUT",
-    url: "http://localhost:3000/user/".concat(userID),
-    data: {
-      email: _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].settingsEmail.val(),
-      curPassword: _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].settingsCurPassword.val(),
-      newPassword: _view_base__WEBPACK_IMPORTED_MODULE_8__["els"].settingsNewPassword.val()
-    },
-    headers: {
-      'x-access-token': token
-    },
-    success: function success(user) {
-      localStorage.setItem('userEmail', user.email);
-      alert("success");
-      _view_settingsView__WEBPACK_IMPORTED_MODULE_12__["init"]();
-    },
-    error: function error(err) {
-      alert("error");
-    }
+  state.settings.updateUserData().done(function (user) {
+    state.settings.persistData(user);
+    _view_settingsView__WEBPACK_IMPORTED_MODULE_17__["renderSuccessMsg"]();
+    _view_settingsView__WEBPACK_IMPORTED_MODULE_17__["init"]();
+  }).fail(function (err) {
+    _view_settingsView__WEBPACK_IMPORTED_MODULE_17__["renderErrMsg"](err);
   });
 }
 
@@ -16300,18 +16371,12 @@ function settingsUpdateHandler(e) {
 
 function logout() {
   if (confirm("Logout?")) {
-    jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
-      method: "GET",
-      url: "http://localhost:3000/auth/logout/" + userID,
-      headers: {
-        'x-access-token': token
-      },
-      success: function success() {
-        localStorage.removeItem('user_id');
-        localStorage.removeItem('userEmail');
-        localStorage.removeItem('token');
-        window.location.href = '/index.html';
-      }
+    state.auth = new _models_Auth__WEBPACK_IMPORTED_MODULE_4__["default"]();
+    state.auth.logoutUser().done(function () {
+      state.auth.removeData();
+      window.location.href = "/index.html";
+    }).fail(function (err) {
+      _view_authView__WEBPACK_IMPORTED_MODULE_11__["renderErrMsg2"](err);
     });
   }
 
@@ -16343,59 +16408,112 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 
+var token = localStorage.getItem("token");
 
 var API =
 /*#__PURE__*/
 function () {
   function API() {
     _classCallCheck(this, API);
-  }
+  } // MEMO: Can access only data I have.
+  // Get an item's data from "db" for "popupItemModal".
+
 
   _createClass(API, [{
-    key: "getResults",
-    value: function getResults() {
-      var date = formatDate(new Date());
-      jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
+    key: "getItemDB",
+    value: function getItemDB(id) {
+      // console.log(`token`, token);
+      return jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
         method: "GET",
-        url: "".concat(_config__WEBPACK_IMPORTED_MODULE_1__["proxy"], "https://collectionapi.metmuseum.org/public/collection/v1/objects?metadataDate=").concat(date),
-        success: function success(data) {
-          var ids = data.objectIDs;
-
-          var _loop = function _loop(i) {
-            var index = Math.floor(Math.random() * ids.length);
-            var id = ids[index];
-            jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
-              method: "GET",
-              url: "".concat(_config__WEBPACK_IMPORTED_MODULE_1__["proxy"], "https://collectionapi.metmuseum.org/public/collection/v1/objects/").concat(id),
-              success: function success(data) {
-                if (data.primaryImage !== "") {
-                  var markup = "\n                                    <img src=\"".concat(data.primaryImage, "\" class=\"items__item\" id=\"").concat(id, "\"></img>\n                                ");
-                  jquery__WEBPACK_IMPORTED_MODULE_0___default()(".items").append(markup);
-                }
-              },
-              error: function error(err) {
-                console.log("err", err);
-              }
-            });
-          };
-
-          for (var i = 0; i < 10; i++) {
-            _loop(i);
-          }
-        },
-        error: function error(err) {
-          console.log(err);
+        url: "http://localhost:3000/api/item/".concat(id),
+        headers: {
+          'x-access-token': token
         }
       });
-    }
+    } // MEMO: Can access whole data.
+    // Get an item's data from "api" for "popupItemModal".
+
   }, {
-    key: "getResult",
-    value: function getResult(id) {
+    key: "getItemAPI",
+    value: function getItemAPI(id) {
       return jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
         method: "GET",
         url: "".concat(_config__WEBPACK_IMPORTED_MODULE_1__["proxy"], "https://collectionapi.metmuseum.org/public/collection/v1/objects/").concat(id)
       });
+    } // Get items data from db for "main page".
+
+  }, {
+    key: "getItems",
+    value: function getItems() {
+      token = localStorage.getItem("token");
+      return jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
+        method: "GET",
+        url: "http://localhost:3000/api/item/main",
+        headers: {
+          'x-access-token': token
+        }
+      });
+    } // MEMO: Since data is small, I call api on the client side.
+    // Get my collection.
+
+  }, {
+    key: "getCollection",
+    value: function getCollection(el) {
+      return jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
+        method: "GET",
+        url: "".concat(_config__WEBPACK_IMPORTED_MODULE_1__["proxy"], "https://collectionapi.metmuseum.org/public/collection/v1/objects/").concat(el)
+      });
+    } ///////////////////////////////////////////////
+    /// BEFORE CHANGE
+
+    /*
+    // Get today's id of items.
+    getIds() {
+         const date = formatDate(new Date());
+         return $.ajax({
+            method: "GET",
+            url: `${proxy}https://collectionapi.metmuseum.org/public/collection/v1/objects?metadataDate=${date}`
+        });
     }
+     // Get whole ids.
+    getIds2() {
+         return $.ajax({
+            method: "GET",
+            url: `${proxy}https://collectionapi.metmuseum.org/public/collection/v1/objects`
+        });
+    }
+    */
+    // Get an item's data at random.
+    // getItems(ids) {
+    //     const index = Math.floor(Math.random() * ids.length);
+    //     const id = ids[index];
+    //     return $.ajax({
+    //         method: "GET",
+    //         url: `${proxy}https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`
+    //     });
+    // }
+
+    /*
+    // Get an item's data.
+    getItem(id) {
+         return $.ajax({
+            method: "GET",
+            url: `${proxy}https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`
+        });
+    }
+    */
+
+    /*
+    // TODO: probably, I can reuse "getItem(id)".
+    // Get my collection.
+    getCollection(el) {
+         return $.ajax({
+            method: "GET",
+            url: `${proxy}https://collectionapi.metmuseum.org/public/collection/v1/objects/${el}`
+        });
+    }
+    */
+
   }]);
 
   return API;
@@ -16404,21 +16522,335 @@ function () {
 
 ;
 
-function formatDate(date) {
-  var day = date.getDate();
-  var month = date.getMonth();
-  var year = date.getFullYear();
+/***/ }),
 
-  if (month < 9 && day < 10) {
-    return "".concat(year, "-0").concat(month + 1, "-0").concat(day);
-  } else if (month < 9 && day >= 10) {
-    return "".concat(year, "-0").concat(month + 1, "-").concat(day);
-  } else if (month >= 9 && day < 10) {
-    return "".concat(year, "-").concat(month + 1, "-0").concat(day);
-  } else if (month >= 9 && day >= 10) {
-    return "".concat(year, "-").concat(month + 1, "-").concat(day - 1);
+/***/ "./src/client/models/Auth.js":
+/*!***********************************!*\
+  !*** ./src/client/models/Auth.js ***!
+  \***********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Auth; });
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _view_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../view/base */ "./src/client/view/base.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+var userID = localStorage.getItem('user_id');
+var token = localStorage.getItem('token');
+var port = location.hostname === 'localhost' ? ':3000' : '';
+var saturdays_art_baseURL = 'http://' + location.hostname + port + '/api';
+console.log("saturdays_art_baseURL", saturdays_art_baseURL);
+
+var Auth =
+/*#__PURE__*/
+function () {
+  function Auth() {
+    _classCallCheck(this, Auth);
+  } // TWITTER
+
+
+  _createClass(Auth, [{
+    key: "getReqTokenTW",
+    value: function getReqTokenTW() {
+      return jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
+        method: "GET",
+        url: "".concat(saturdays_art_baseURL, "/api/auth/login/twitter")
+      });
+    }
+  }, {
+    key: "getAccessTokenTW",
+    value: function getAccessTokenTW() {
+      return jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
+        method: "GET",
+        url: "".concat(saturdays_art_baseURL, "/api/auth/login/twitter/accessToken")
+      });
+    } // FACEBOOK
+
+  }, {
+    key: "getTokenFB",
+    value: function getTokenFB() {
+      console.log("getTokenFB");
+      return jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
+        method: "GET",
+        url: "".concat(saturdays_art_baseURL, "/api/auth/login/facebook")
+      });
+    }
+  }, {
+    key: "registerUser",
+    value: function registerUser() {
+      return jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
+        method: "POST",
+        url: "".concat(saturdays_art_baseURL, "/auth/register"),
+        data: {
+          email: _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].registerEmail.val(),
+          password: _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].registerPassword.val()
+        }
+      });
+    }
+  }, {
+    key: "loginUser",
+    value: function loginUser() {
+      return jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
+        method: "POST",
+        url: "".concat(saturdays_art_baseURL, "/api/auth/login"),
+        data: {
+          email: _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].loginEmail.val(),
+          password: _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].loginPassword.val()
+        }
+      });
+    }
+  }, {
+    key: "persistData",
+    value: function persistData(user) {
+      localStorage.setItem('user_id', user._id);
+      localStorage.setItem('userEmail', user.email);
+      localStorage.setItem('token', user.tokens[0].token);
+    }
+  }, {
+    key: "persistDataTW",
+    value: function persistDataTW(data) {
+      localStorage.setItem('user_id', data[0]);
+      localStorage.setItem('token', data[1]);
+    }
+  }, {
+    key: "registerCheck",
+    value: function registerCheck() {
+      var emailInput = _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].registerEmail.val();
+      var pwdInput = _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].registerPassword.val();
+      var pwdInput2 = _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].registerPassword2.val();
+      var inValid = !registerEmailFormatCheck(emailInput) || !registerPasswordFormatCheck(pwdInput) || !registerPasswordsMatch(pwdInput, pwdInput2) || emailInput === '' || pwdInput === '' || pwdInput2 === '';
+
+      if (inValid) {
+        _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].registerBtn.prop('disabled', true);
+      } else {
+        _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].registerBtn.prop('disabled', false);
+      }
+
+      return !inValid;
+    }
+  }, {
+    key: "loginCheck",
+    value: function loginCheck() {
+      var emailInput = _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].loginEmail.val();
+      var pwdInput = _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].loginPassword.val();
+      var inValid = !loginEmailFormatCheck(emailInput) || !loginPasswordFormatCheck(pwdInput) || emailInput === '' || pwdInput === '';
+
+      if (inValid) {
+        _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].loginBtn.prop('disabled', true);
+      } else {
+        _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].loginBtn.prop('disabled', false);
+      }
+
+      return !inValid;
+    }
+  }, {
+    key: "logoutUser",
+    value: function logoutUser() {
+      userID = localStorage.getItem('user_id');
+      token = localStorage.getItem('token');
+      return jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
+        method: "GET",
+        url: "".concat(saturdays_art_baseURL, "/api/auth/logout/") + userID,
+        headers: {
+          'x-access-token': token
+        }
+      });
+    }
+  }, {
+    key: "removeData",
+    value: function removeData() {
+      localStorage.removeItem('user_id');
+      localStorage.removeItem('userEmail');
+      localStorage.removeItem('token');
+    }
+  }]);
+
+  return Auth;
+}();
+
+
+; ///////////////////////////////////////////////
+/// REGISTER
+
+function registerEmailFormatCheck(email) {
+  var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  var valid = true;
+
+  if (email.length > 0) {
+    valid = re.test(String(email).toLowerCase());
+  } // TODO: How to move to view?
+
+
+  if (!valid) {
+    _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].registerMessageContainer.addClass('dangerColor');
+    _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].registerMessage.html('Email format is incorrect.');
+    _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].registerMessageContainer.css('display', 'flex');
+  } else {
+    resetMessages();
   }
+
+  return valid;
 }
+
+;
+
+function registerPasswordFormatCheck(password) {
+  var lowerCaseRegex = /.*[a-z].*/;
+  var upperCaseRegex = /.*[A-Z].*/;
+  var numberRegex = /.*\d.*/;
+  var symbolRegex = /.*[!@#$%^&*+?].*/;
+  var valid = true;
+
+  if (password.length > 0) {
+    valid = password.length >= 8 && lowerCaseRegex.test(String(password)) && upperCaseRegex.test(String(password)) && numberRegex.test(String(password)) && symbolRegex.test(String(password));
+  } // TODO: How to move to view?
+
+
+  if (!valid) {
+    _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].registerMessageContainer.addClass('dangerColor');
+    _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].registerMessage.html('Password must be at least 8 characters in length, and must have at least one number, one uppercase letter, one lowercase letter, and one of the following symbols: ! @ # $ % ^ & * + ?');
+    _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].registerMessageContainer.css('display', 'flex');
+  } else {
+    resetMessages();
+  }
+
+  return valid;
+}
+
+;
+
+function registerPasswordsMatch(password1, password2) {
+  var valid = password1 === password2; // TODO: How to move to view?
+
+  if (!valid) {
+    _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].registerMessageContainer.addClass('dangerColor');
+    _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].registerMessage.html('Password and confirm password fields do not match.');
+    _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].registerMessageContainer.css('display', 'flex');
+  } else {
+    resetMessages();
+  }
+
+  return valid;
+}
+
+; ///////////////////////////////////////////////
+/// LOGIN
+
+function loginEmailFormatCheck(email) {
+  var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  var valid = true;
+
+  if (email.length > 0) {
+    valid = re.test(String(email).toLowerCase());
+  } // TODO: How to move to view?
+
+
+  if (!valid) {
+    _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].loginMessageContainer.addClass('dangerColor');
+    _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].loginMessage.html('Email format is incorrect.');
+    _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].loginMessageContainer.css('display', 'flex');
+  } else {
+    resetMessages();
+  }
+
+  return valid;
+}
+
+;
+
+function loginPasswordFormatCheck(password) {
+  var lowerCaseRegex = /.*[a-z].*/;
+  var upperCaseRegex = /.*[A-Z].*/;
+  var numberRegex = /.*\d.*/;
+  var symbolRegex = /.*[!@#$%^&*+?].*/;
+  var valid = true;
+
+  if (password.length > 0) {
+    valid = password.length >= 8 && lowerCaseRegex.test(String(password)) && upperCaseRegex.test(String(password)) && numberRegex.test(String(password)) && symbolRegex.test(String(password));
+  } // TODO: How to move to view?
+
+
+  if (!valid) {
+    _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].loginMessageContainer.addClass('dangerColor');
+    _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].loginMessage.html('Password must be at least 8 characters in length, and must have at least one number, one uppercase letter, one lowercase letter, and one of the following symbols: ! @ # $ % ^ & * + ?');
+    _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].loginMessageContainer.css('display', 'flex');
+  } else {
+    resetMessages();
+  }
+
+  return valid;
+}
+
+; // TODO: How to move to view?
+
+function resetMessages() {
+  _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].registerMessageContainer.css('display', 'none');
+  _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].registerMessageContainer.removeClass('dangerColor');
+  _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].registerMessage.html('');
+  _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].loginMessageContainer.css('display', 'none');
+  _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].loginMessageContainer.removeClass('dangerColor');
+  _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].loginMessage.html('');
+}
+
+;
+
+/***/ }),
+
+/***/ "./src/client/models/Bg.js":
+/*!*********************************!*\
+  !*** ./src/client/models/Bg.js ***!
+  \*********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Bg; });
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _view_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../view/base */ "./src/client/view/base.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+var port = location.hostname === 'localhost' ? ':3000' : '';
+var saturdays_art_baseURL = 'http://' + location.hostname + port + '/api';
+console.log("saturdays_art_baseURL", saturdays_art_baseURL);
+
+var Bg =
+/*#__PURE__*/
+function () {
+  function Bg() {
+    _classCallCheck(this, Bg);
+  }
+
+  _createClass(Bg, [{
+    key: "getImg",
+    value: function getImg() {
+      return jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
+        method: "GET",
+        url: "".concat(saturdays_art_baseURL, "/item")
+      });
+    }
+  }]);
+
+  return Bg;
+}();
+
 
 ;
 
@@ -16434,7 +16866,9 @@ function formatDate(date) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Contact; });
-/* harmony import */ var _view_base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../view/base */ "./src/client/view/base.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _view_base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../view/base */ "./src/client/view/base.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -16442,6 +16876,8 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 
+
+var token = localStorage.getItem('token');
 
 var Contact =
 /*#__PURE__*/
@@ -16451,14 +16887,30 @@ function () {
   }
 
   _createClass(Contact, [{
+    key: "contactSend",
+    value: function contactSend() {
+      token = localStorage.getItem('token');
+      return jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
+        method: 'POST',
+        url: 'http://localhost:3000/api/contact/',
+        data: {
+          email: _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].contactEmail.val(),
+          inquiry: _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].contactInquiry.val()
+        },
+        headers: {
+          'x-access-token': token
+        }
+      });
+    }
+  }, {
     key: "inputCheck",
     value: function inputCheck() {
-      var inValid = _view_base__WEBPACK_IMPORTED_MODULE_0__["els"].contactEmail.val() === "" || _view_base__WEBPACK_IMPORTED_MODULE_0__["els"].contactInquiry.val() === "";
+      var inValid = _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].contactEmail.val() === "" || _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].contactInquiry.val() === "";
 
       if (inValid) {
-        _view_base__WEBPACK_IMPORTED_MODULE_0__["els"].contactBtn.prop('disabled', true);
+        _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].contactBtn.prop('disabled', true);
       } else {
-        _view_base__WEBPACK_IMPORTED_MODULE_0__["els"].contactBtn.prop('disabled', false);
+        _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].contactBtn.prop('disabled', false);
       }
     }
   }]);
@@ -16548,6 +17000,71 @@ function () {
 
 /***/ }),
 
+/***/ "./src/client/models/Search.js":
+/*!*************************************!*\
+  !*** ./src/client/models/Search.js ***!
+  \*************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Search; });
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config */ "./src/client/config.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+var token = localStorage.getItem('token');
+
+var Search =
+/*#__PURE__*/
+function () {
+  function Search(query) {
+    _classCallCheck(this, Search);
+
+    this.query = query;
+  }
+
+  _createClass(Search, [{
+    key: "getList",
+    value: function getList() {
+      token = localStorage.getItem('token');
+      return jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
+        method: "GET",
+        url: "http://localhost:3000/api/query/list",
+        headers: {
+          'x-access-token': token
+        }
+      });
+    }
+  }, {
+    key: "getSearchItems",
+    value: function getSearchItems() {
+      return jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
+        method: "GET",
+        url: "http://localhost:3000/api/item/search/".concat(this.query),
+        headers: {
+          'x-access-token': token
+        }
+      });
+    }
+  }]);
+
+  return Search;
+}();
+
+
+;
+
+/***/ }),
+
 /***/ "./src/client/models/Settings.js":
 /*!***************************************!*\
   !*** ./src/client/models/Settings.js ***!
@@ -16582,9 +17099,11 @@ function () {
   _createClass(Settings, [{
     key: "getUserData",
     value: function getUserData() {
+      userID = localStorage.getItem('user_id');
+      token = localStorage.getItem('token');
       return jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
         method: "GET",
-        url: "http://localhost:3000/user/".concat(userID),
+        url: "http://localhost:3000/api/user/".concat(userID),
         headers: {
           'x-access-token': token
         }
@@ -16609,7 +17128,7 @@ function () {
     value: function getCurPassword() {
       return jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
         method: 'POST',
-        url: "http://localhost:3000/user/".concat(userID),
+        url: "http://localhost:3000/api/user/".concat(userID),
         data: {
           password: _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].settingsCurPassword.val()
         },
@@ -16617,6 +17136,27 @@ function () {
           'x-access-token': token
         }
       });
+    }
+  }, {
+    key: "updateUserData",
+    value: function updateUserData() {
+      return jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
+        method: "PUT",
+        url: "http://localhost:3000/api/user/".concat(userID),
+        data: {
+          email: _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].settingsEmail.val(),
+          curPassword: _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].settingsCurPassword.val(),
+          newPassword: _view_base__WEBPACK_IMPORTED_MODULE_1__["els"].settingsNewPassword.val()
+        },
+        headers: {
+          'x-access-token': token
+        }
+      });
+    }
+  }, {
+    key: "persistData",
+    value: function persistData(user) {
+      localStorage.setItem('userEmail', user.email);
     }
   }]);
 
@@ -16643,42 +17183,158 @@ function () {
 /*!************************************!*\
   !*** ./src/client/view/apiView.js ***!
   \************************************/
-/*! exports provided: clearArtwork, renderArtwork */
+/*! exports provided: clearArtwork, clearItems, renderItems, renderItem, renderAddImg, changeMainImg, renderCollection */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearArtwork", function() { return clearArtwork; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderArtwork", function() { return renderArtwork; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearItems", function() { return clearItems; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderItems", function() { return renderItems; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderItem", function() { return renderItem; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderAddImg", function() { return renderAddImg; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "changeMainImg", function() { return changeMainImg; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderCollection", function() { return renderCollection; });
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./base */ "./src/client/view/base.js");
 
+ // TODO: change name to item
 
 var clearArtwork = function clearArtwork() {
   jquery__WEBPACK_IMPORTED_MODULE_0___default()(".item__container").remove();
 };
-var renderArtwork = function renderArtwork(data, isLiked) {
-  console.log("data", data);
-  console.log("isLiked", isLiked);
-  var markup = "\n        <div class=\"item__container\">\n\n            <div class=\"likes\">\n                <div class=\"likes__field\" id=\"".concat(data.objectID, "\">\n                    <svg class=\"likes__icon\">\n                        <use href=\"./asset/img/icons.svg#icon-heart").concat(isLiked ? '' : '-outlined', "\"></use>\n                    </svg>\n                </div>\n            </div>\n\n            <img src=\"").concat(data.primaryImage, "\" class=\"item__primaryImage\">\n\n            <div class=item__container--text>\n                <div class=\"item__title\">Title: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=\"item__text--strong\">").concat(data.title, "</span></div>\n\n                <div class=\"item__artistDisplayName item__artistDate\">Artist name: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=\"item__text--strong\">").concat(data.artistDisplayName, " (").concat(data.artistBeginDate, " - ").concat(data.artistEndDate, ")</span></div>\n\n                <div class=\"item__artistNationality\">Artist nationality: &nbsp;&nbsp;<span class=\"item__text--strong\">").concat(data.artistNationality, "</span></div>\n                <br>\n                <a href=\"").concat(data.objectURL, "\" class=\"item__objectURL\">Do you want to know more?</a>\n            </div>\n        </div>\n    ");
+var clearItems = function clearItems() {
+  _base__WEBPACK_IMPORTED_MODULE_1__["els"].items.children().remove();
+}; // Render items data for "main page".
+
+var renderItems = function renderItems(data) {
+  data.forEach(function (el) {
+    var markup = "\n            <div class=\"items__item\" id=\"".concat(el.objectID, "\" data-title=\"").concat(el.title, "\">\n                <img src=\"").concat(el.primaryImageSmall, "\" class=\"items__img\">\n            </div>\n        ");
+    _base__WEBPACK_IMPORTED_MODULE_1__["els"].items.append(markup);
+  });
+}; // Render an item's data for "popupItemModal".
+
+var renderItem = function renderItem(data, isLiked) {
+  // Display "unknown" when there are no data.
+  var artistName = data.artistDisplayName === "" ? "unknown" : data.artistDisplayName;
+  var artistNationality = data.artistNationality === "" ? "unknown" : data.artistNationality; // TODO: Fix styling of textarea.
+
+  var markup = "\n        <div class=\"item__container\">\n\n            <div class=\"likes\">\n                <div class=\"likes__field\">\n                    <svg class=\"likes__icon\" id=\"".concat(data.objectID, "\">\n                        <use href=\"./asset/img/icons.svg#icon-heart").concat(isLiked ? '' : '-outlined', "\"></use>\n                    </svg>\n                </div>\n            </div>\n\n            <img src=\"").concat(data.primaryImage, "\" class=\"item__primaryImage\">\n\n            <div class=\"item__addImg--container u-margin-bottom-small\"></div>\n\n            <div class=item__container--text>\n                <div class=\"item__text--key\">\n                    <div class=\"item__title\">Title:</div>\n                    </div>\n                <div class=\"item__text--val\">\n                    <div class=\"item__text--strong\">").concat(data.title, "</div>\n                </div>\n            </div>\n\n            <div class=item__container--text>\n                <div class=\"item__text--key\">\n                    <div class=\"item__artistDisplayName item__artistDate\">Artist name:</div>\n                    </div>\n                <div class=\"item__text--val\">\n                    <div class=\"item__text--strong\">").concat(artistName, " (").concat(data.artistBeginDate, " - ").concat(data.artistEndDate, ")</div>\n                </div>\n            </div>\n\n            <div class=item__container--text>\n                <div class=\"item__text--key\">\n                    <div class=\"item__artistNationality\">Artist nationality:</div>\n                    </div>\n                <div class=\"item__text--val\">\n                    <div class=\"item__text--strong\">").concat(artistNationality, "</div>\n                </div>\n            </div>\n\n                <br>\n                <a href=\"").concat(data.objectURL, "\" class=\"item__objectURL\">Do you want to know more?</a>\n            </div>\n        </div>\n    ");
   _base__WEBPACK_IMPORTED_MODULE_1__["els"].popupItemBody.append(markup);
+}; // Render additional images if there are.
+
+var renderAddImg = function renderAddImg(data) {
+  var imgArr = data.additionalImages; // Include a primary image.
+
+  var mainImg = data.primaryImage;
+  imgArr.unshift(mainImg);
+  imgArr.forEach(function (el) {
+    var markup = "\n            <img src=\"".concat(el, "\" class=\"item__additionalImages\">\n        ");
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(".item__addImg--container").append(markup);
+  });
+}; // Change current image into the image user clicks.
+
+var changeMainImg = function changeMainImg(e) {
+  var curSrc = e.target.src;
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()(".item__primaryImage").attr("src", curSrc);
+}; // Render collection's data for "my collection".
+
+var renderCollection = function renderCollection(data) {
+  if (data.primaryImageSmall !== "") {
+    var markup = "\n            <div class=\"items__item\" id=\"".concat(data.objectID, "\" data-title=\"").concat(data.title, "\">\n                <img src=\"").concat(data.primaryImageSmall, "\" class=\"items__img\">\n            </div>\n        ");
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(".items").append(markup);
+  }
 };
-/*
-export const renderArtworks = data => {
 
-    console.log('data', data);
+/***/ }),
 
-    const id = data.objectID;
+/***/ "./src/client/view/authView.js":
+/*!*************************************!*\
+  !*** ./src/client/view/authView.js ***!
+  \*************************************/
+/*! exports provided: init, clearRegisterForm, clearLoginForm, renderLoginForm, renderRegisterForm, renderSuccessMsg, renderErrMsg, renderErrMsg2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-    if (data.primaryImage !== ``) {
-        const markup = `
-            <img src="${data.primaryImage}" class="item" id="${id}"></img>
-        `;
-        els.items.append(markup);
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "init", function() { return init; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearRegisterForm", function() { return clearRegisterForm; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearLoginForm", function() { return clearLoginForm; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderLoginForm", function() { return renderLoginForm; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderRegisterForm", function() { return renderRegisterForm; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderSuccessMsg", function() { return renderSuccessMsg; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderErrMsg", function() { return renderErrMsg; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderErrMsg2", function() { return renderErrMsg2; });
+/* harmony import */ var _base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./base */ "./src/client/view/base.js");
+
+var init = function init() {
+  _base__WEBPACK_IMPORTED_MODULE_0__["els"].registerEmail.val("");
+  _base__WEBPACK_IMPORTED_MODULE_0__["els"].registerPassword.val("");
+  _base__WEBPACK_IMPORTED_MODULE_0__["els"].registerPassword2.val("");
+  _base__WEBPACK_IMPORTED_MODULE_0__["els"].loginEmail.val("");
+  _base__WEBPACK_IMPORTED_MODULE_0__["els"].loginPassword.val("");
+  _base__WEBPACK_IMPORTED_MODULE_0__["els"].registerBtn.prop("disabled", true);
+  _base__WEBPACK_IMPORTED_MODULE_0__["els"].loginBtn.prop('disabled', true);
+};
+var clearRegisterForm = function clearRegisterForm() {
+  _base__WEBPACK_IMPORTED_MODULE_0__["els"].registerMessageContainer.css("display", "none");
+  _base__WEBPACK_IMPORTED_MODULE_0__["els"].registerForm.addClass("hidden");
+};
+var clearLoginForm = function clearLoginForm() {
+  _base__WEBPACK_IMPORTED_MODULE_0__["els"].loginMessageContainer.css("display", "none");
+  _base__WEBPACK_IMPORTED_MODULE_0__["els"].loginForm.addClass("hidden");
+};
+var renderLoginForm = function renderLoginForm() {
+  _base__WEBPACK_IMPORTED_MODULE_0__["els"].loginMessageContainer.removeClass("hidden");
+  _base__WEBPACK_IMPORTED_MODULE_0__["els"].loginForm.removeClass("hidden");
+};
+var renderRegisterForm = function renderRegisterForm() {
+  _base__WEBPACK_IMPORTED_MODULE_0__["els"].registerMessageContainer.removeClass("hidden");
+  _base__WEBPACK_IMPORTED_MODULE_0__["els"].registerForm.removeClass("hidden");
+}; // Display success msg.
+
+var renderSuccessMsg = function renderSuccessMsg(str) {
+  // TODO: Error name should be removed from class name.
+  if (str === "register") {
+    _base__WEBPACK_IMPORTED_MODULE_0__["els"].registerMessageContainer.addClass('successColor');
+    _base__WEBPACK_IMPORTED_MODULE_0__["els"].registerMessage.html("SUCCESS");
+    _base__WEBPACK_IMPORTED_MODULE_0__["els"].registerMessageContainer.css('display', 'flex');
+  } else if (str === "login") {
+    _base__WEBPACK_IMPORTED_MODULE_0__["els"].loginMessageContainer.addClass('successColor');
+    _base__WEBPACK_IMPORTED_MODULE_0__["els"].loginMessage.html("SUCCESS");
+    _base__WEBPACK_IMPORTED_MODULE_0__["els"].loginMessageContainer.css('display', 'flex');
+  }
+}; // Display error msg as an alert.
+
+var renderErrMsg = function renderErrMsg(str, err) {
+  // Register
+  var emailErr = "an account with this user's email already exists";
+  var someErr = "There was a problem registering the user"; // Login
+
+  var userErr = "No user found.";
+  var pwdErr = "Password is incorrect.";
+
+  if (str === "register") {
+    if (err.responseText === emailErr) {
+      alert(emailErr);
+    } else if (err.responseText === someErr) {
+      alert(someErr);
     }
+  } else if (str === "login") {
+    if (err.responseText === userErr) {
+      alert(userErr);
+    } else if (err.responseText === pwdErr) {
+      alert(pwdErr);
+    } else if (err.responseText === someErr) {
+      alert(someErr);
+    }
+  }
+}; // LOGOUT
+
+var renderErrMsg2 = function renderErrMsg2(err) {
+  alert("There was a problem during logout.");
 };
-*/
 
 /***/ }),
 
@@ -16686,33 +17342,56 @@ export const renderArtworks = data => {
 /*!*********************************!*\
   !*** ./src/client/view/base.js ***!
   \*********************************/
-/*! exports provided: els */
+/*! exports provided: els, elementStrings, renderLoader, clearLoader */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "els", function() { return els; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "elementStrings", function() { return elementStrings; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderLoader", function() { return renderLoader; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearLoader", function() { return clearLoader; });
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
 
 var els = {
-  // Register
-  registerErrorMessageContainer: jquery__WEBPACK_IMPORTED_MODULE_0___default()(".register__errorMessageContainer"),
-  registerErrorMessage: jquery__WEBPACK_IMPORTED_MODULE_0___default()(".register__errorMessage"),
+  // BACKGROUND
+  bgImgCtn: jquery__WEBPACK_IMPORTED_MODULE_0___default()(".bg__img--ctn"),
+  bgImgCtn2: jquery__WEBPACK_IMPORTED_MODULE_0___default()(".bg__img--ctn2"),
+  bgImgCtn3: jquery__WEBPACK_IMPORTED_MODULE_0___default()(".bg__img--ctn3"),
+  // REGISTER
+  registerMessageContainer: jquery__WEBPACK_IMPORTED_MODULE_0___default()(".register__messageContainer"),
+  registerMessage: jquery__WEBPACK_IMPORTED_MODULE_0___default()(".register__message"),
   registerForm: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#register__form"),
   registerEmail: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#register__email"),
   registerPassword: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#register__password"),
   registerPassword2: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#register__password2"),
   registerBtn: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#register__btn"),
   registerToLogin: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#register__toLogin"),
-  // Login
-  loginErrorMessageContainer: jquery__WEBPACK_IMPORTED_MODULE_0___default()(".login__errorMessageContainer"),
-  loginErrorMessage: jquery__WEBPACK_IMPORTED_MODULE_0___default()(".login__errorMessage"),
+  // LOGIN
+  loginMessageContainer: jquery__WEBPACK_IMPORTED_MODULE_0___default()(".login__messageContainer"),
+  loginMessage: jquery__WEBPACK_IMPORTED_MODULE_0___default()(".login__message"),
   loginForm: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#login__form"),
+  loginTW: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#login__tw"),
+  loginFB: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#login__fb"),
   loginEmail: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#login__email"),
   loginPassword: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#login__password"),
   loginBtn: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#login__btn"),
+  loginToRegister: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#login__toRegister"),
+  // SEARCH
+  searchIcon: jquery__WEBPACK_IMPORTED_MODULE_0___default()(".search__icon"),
+  popupSearch: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#popupSearch"),
+  searchInput: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#searchInput"),
+  searchBtn: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#searchBtn"),
+  objInput: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#objInput"),
+  geoInput: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#geoInput"),
+  dateInput: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#dateInput"),
+  deptInput: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#deptInput"),
+  // HEADER
+  brandLink: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#brandLink"),
   // ARTWORKS
+  container: jquery__WEBPACK_IMPORTED_MODULE_0___default()(".container"),
+  num: jquery__WEBPACK_IMPORTED_MODULE_0___default()(".num"),
   items: jquery__WEBPACK_IMPORTED_MODULE_0___default()(".items"),
   item: jquery__WEBPACK_IMPORTED_MODULE_0___default()(".items__item"),
   // ARTWORK
@@ -16722,12 +17401,13 @@ var els = {
   // ARTWORK > likes
   likes: jquery__WEBPACK_IMPORTED_MODULE_0___default()(".likes"),
   likesIcon: jquery__WEBPACK_IMPORTED_MODULE_0___default()(".likes__icon"),
-  // NAVIGATION > logout
-  logout: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#logout"),
-  // Navigation > about
+  // NAVIGATION > my collection
+  collection: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#collection"),
+  naviCheckbox: jquery__WEBPACK_IMPORTED_MODULE_0___default()(".navigation__checkbox"),
+  // NAVIGATION > about
   about: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#about"),
   popupAbout: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#popupAbout"),
-  // Navigation > contact
+  // NAVIGATION > contact
   contact: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#contact"),
   popupContact: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#popupContact"),
   contactEmail: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#contactEmail"),
@@ -16737,7 +17417,7 @@ var els = {
   contactInquiryErrorMessageContainer: jquery__WEBPACK_IMPORTED_MODULE_0___default()(".contactInquiryErrorMessageContainer"),
   contactInquiryErrorMessage: jquery__WEBPACK_IMPORTED_MODULE_0___default()(".contactInquiryErrorMessage"),
   contactBtn: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#contactBtn"),
-  // Navigation > settings
+  // NAVIGATION > settings
   settings: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#settings"),
   popupSettings: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#popupSettings"),
   settingsEmail: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#settingsEmail"),
@@ -16752,7 +17432,57 @@ var els = {
   settingsNewPassword2: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#settingsNewPassword2"),
   settingsNewPassword2ErrorMessageContainer: jquery__WEBPACK_IMPORTED_MODULE_0___default()(".settingsNewPassword2ErrorMessageContainer"),
   settingsNewPassword2ErrorMessage: jquery__WEBPACK_IMPORTED_MODULE_0___default()(".settingsNewPassword2ErrorMessage"),
-  settingsBtn: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#settingsBtn")
+  settingsBtn: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#settingsBtn"),
+  // NAVIGATION > logout
+  logout: jquery__WEBPACK_IMPORTED_MODULE_0___default()("#logout")
+};
+var elementStrings = {
+  loader: 'loader'
+};
+var renderLoader = function renderLoader(parent) {
+  var loader = "\n    <div class=\"".concat(elementStrings.loader, "\">\n        <svg>\n            <use href=\"./asset/img/icons.svg#icon-cw\"></use>\n        </svg>\n    </div>\n    ");
+  parent.after(loader);
+};
+var clearLoader = function clearLoader() {
+  var loader = document.querySelector(".".concat(elementStrings.loader));
+  if (loader) loader.parentElement.removeChild(loader);
+};
+
+/***/ }),
+
+/***/ "./src/client/view/bgView.js":
+/*!***********************************!*\
+  !*** ./src/client/view/bgView.js ***!
+  \***********************************/
+/*! exports provided: renderImg, renderErrMsg */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderImg", function() { return renderImg; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderErrMsg", function() { return renderErrMsg; });
+/* harmony import */ var _base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./base */ "./src/client/view/base.js");
+
+var renderImg = function renderImg(data) {
+  for (var i = 0; i < 15; i++) {
+    var markup = "\n            <img src=\"".concat(data[i].primaryImageSmall, "\" class=\"bg__img\">\n        ");
+    _base__WEBPACK_IMPORTED_MODULE_0__["els"].bgImgCtn.append(markup);
+  }
+
+  for (var _i = 15; _i < 30; _i++) {
+    var _markup = "\n            <img src=\"".concat(data[_i].primaryImageSmall, "\" class=\"bg__img\">\n        ");
+
+    _base__WEBPACK_IMPORTED_MODULE_0__["els"].bgImgCtn2.append(_markup);
+  }
+
+  for (var _i2 = 30; _i2 < 45; _i2++) {
+    var _markup2 = "\n            <img src=\"".concat(data[_i2].primaryImageSmall, "\" class=\"bg__img\">\n        ");
+
+    _base__WEBPACK_IMPORTED_MODULE_0__["els"].bgImgCtn3.append(_markup2);
+  }
+};
+var renderErrMsg = function renderErrMsg(err) {
+  alert("Error getting items.");
 };
 
 /***/ }),
@@ -16761,15 +17491,22 @@ var els = {
 /*!****************************************!*\
   !*** ./src/client/view/contactView.js ***!
   \****************************************/
-/*! exports provided: emailValid, inquiryValid */
+/*! exports provided: init, emailValid, inquiryValid, renderMsg */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "init", function() { return init; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "emailValid", function() { return emailValid; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "inquiryValid", function() { return inquiryValid; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderMsg", function() { return renderMsg; });
 /* harmony import */ var _base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./base */ "./src/client/view/base.js");
 
+var init = function init() {
+  _base__WEBPACK_IMPORTED_MODULE_0__["els"].contactEmail.val("");
+  _base__WEBPACK_IMPORTED_MODULE_0__["els"].contactInquiry.val("");
+  _base__WEBPACK_IMPORTED_MODULE_0__["els"].contactBtn.prop('disabled', true);
+};
 var emailValid = function emailValid() {
   var inValid = _base__WEBPACK_IMPORTED_MODULE_0__["els"].contactEmail.val() === "";
 
@@ -16794,6 +17531,16 @@ var inquiryValid = function inquiryValid() {
     clearInquiryErrorMessages();
   }
 };
+var renderMsg = function renderMsg(msg) {
+  var success = "Your message has been sent successfully.";
+  var error = "A problem has been occurred while submitting your data.";
+
+  if (msg === success) {
+    alert(success);
+  } else if (msg === error) {
+    alert(error);
+  }
+};
 
 function clearEmailErrorMessages() {
   _base__WEBPACK_IMPORTED_MODULE_0__["els"].contactEmailErrorMessageContainer.removeClass('dangerColor');
@@ -16813,28 +17560,6 @@ function clearInquiryErrorMessages() {
 
 /***/ }),
 
-/***/ "./src/client/view/landingView.js":
-/*!****************************************!*\
-  !*** ./src/client/view/landingView.js ***!
-  \****************************************/
-/*! exports provided: clearRegisterForm, renderLoginForm */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearRegisterForm", function() { return clearRegisterForm; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderLoginForm", function() { return renderLoginForm; });
-/* harmony import */ var _base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./base */ "./src/client/view/base.js");
-
-var clearRegisterForm = function clearRegisterForm() {
-  _base__WEBPACK_IMPORTED_MODULE_0__["els"].registerForm.addClass("hidden");
-};
-var renderLoginForm = function renderLoginForm() {
-  _base__WEBPACK_IMPORTED_MODULE_0__["els"].loginForm.removeClass("hidden");
-};
-
-/***/ }),
-
 /***/ "./src/client/view/likesView.js":
 /*!**************************************!*\
   !*** ./src/client/view/likesView.js ***!
@@ -16851,8 +17576,88 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var toggleLikeBtn = function toggleLikeBtn(isLiked) {
+  console.log("isLiked", isLiked);
   var iconString = isLiked ? 'icon-heart' : 'icon-heart-outlined';
   document.querySelector('.likes__icon use').setAttribute('href', "./asset/img/icons.svg#".concat(iconString)); // icons.svg#icon-heart-outlined
+};
+
+/***/ }),
+
+/***/ "./src/client/view/searchView.js":
+/*!***************************************!*\
+  !*** ./src/client/view/searchView.js ***!
+  \***************************************/
+/*! exports provided: getInput, init, clearItems, clearNumOfItems, renderNumOfItems, renderQueries, renderItems */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getInput", function() { return getInput; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "init", function() { return init; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearItems", function() { return clearItems; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearNumOfItems", function() { return clearNumOfItems; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderNumOfItems", function() { return renderNumOfItems; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderQueries", function() { return renderQueries; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderItems", function() { return renderItems; });
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./base */ "./src/client/view/base.js");
+
+
+var getInput = function getInput() {
+  return _base__WEBPACK_IMPORTED_MODULE_1__["els"].searchInput.val();
+};
+var init = function init() {
+  _base__WEBPACK_IMPORTED_MODULE_1__["els"].searchInput.val("");
+  _base__WEBPACK_IMPORTED_MODULE_1__["els"].objInput.val(jquery__WEBPACK_IMPORTED_MODULE_0___default()("#objInput option:first").val());
+  _base__WEBPACK_IMPORTED_MODULE_1__["els"].geoInput.val(jquery__WEBPACK_IMPORTED_MODULE_0___default()("#geoInput option:first").val());
+  _base__WEBPACK_IMPORTED_MODULE_1__["els"].dateInput.val(jquery__WEBPACK_IMPORTED_MODULE_0___default()("#dateInput option:first").val());
+  _base__WEBPACK_IMPORTED_MODULE_1__["els"].deptInput.val(jquery__WEBPACK_IMPORTED_MODULE_0___default()("#deptInput option:first").val());
+};
+var clearItems = function clearItems() {
+  _base__WEBPACK_IMPORTED_MODULE_1__["els"].items.children().remove();
+};
+var clearNumOfItems = function clearNumOfItems() {
+  var prevResult = _base__WEBPACK_IMPORTED_MODULE_1__["els"].container.has(".num");
+
+  if (prevResult) {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(".num").remove();
+  }
+};
+var renderNumOfItems = function renderNumOfItems(data, query) {
+  var markup = "\n        <div class=\"num\">\n            <div>\n                ".concat(data.length, " results for \"<span class=\"item__text--strong\">").concat(query, "</span>\"\n            </div>\n        </div>\n    ");
+  _base__WEBPACK_IMPORTED_MODULE_1__["els"].container.prepend(markup);
+};
+var renderQueries = function renderQueries(data) {
+  var objArr = data[0].objQueries;
+  var geoArr = data[0].geoQueries;
+  var dateArr = data[0].dateQueries;
+  var deptArr = data[0].deptQueries;
+  objArr.forEach(function (el) {
+    var markup = "\n            <option>".concat(el, "</option>\n        ");
+    _base__WEBPACK_IMPORTED_MODULE_1__["els"].objInput.append(markup);
+  });
+  geoArr.forEach(function (el) {
+    var markup = "\n            <option>".concat(el, "</option>\n        ");
+    _base__WEBPACK_IMPORTED_MODULE_1__["els"].geoInput.append(markup);
+  });
+  dateArr.forEach(function (el) {
+    var markup = "\n            <option>".concat(el, "</option>\n        ");
+    _base__WEBPACK_IMPORTED_MODULE_1__["els"].dateInput.append(markup);
+  });
+  deptArr.forEach(function (el) {
+    var markup = "\n            <option>".concat(el, "</option>\n        ");
+    _base__WEBPACK_IMPORTED_MODULE_1__["els"].deptInput.append(markup);
+  });
+};
+var renderItems = function renderItems(data) {
+  console.log("data", data);
+  data.forEach(function (el) {
+    if (el.primaryImageSmall !== "") {
+      var markup = "\n                <div class=\"items__item\" id=\"".concat(el.objectID, "\" data-title=\"").concat(el.title, "\">\n                    <img src=\"").concat(el.primaryImageSmall, "\" class=\"items__img\">\n                </div>\n            ");
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()(".items").append(markup);
+    }
+  });
 };
 
 /***/ }),
@@ -16861,7 +17666,7 @@ var toggleLikeBtn = function toggleLikeBtn(isLiked) {
 /*!*****************************************!*\
   !*** ./src/client/view/settingsView.js ***!
   \*****************************************/
-/*! exports provided: renderUserData, init, emailFormatValid, compareCurPassword, passwordFormatValid, checkPasswordsMatch */
+/*! exports provided: renderUserData, init, emailFormatValid, compareCurPassword, passwordFormatValid, checkPasswordsMatch, renderSuccessMsg, renderErrMsg */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -16872,11 +17677,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "compareCurPassword", function() { return compareCurPassword; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "passwordFormatValid", function() { return passwordFormatValid; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "checkPasswordsMatch", function() { return checkPasswordsMatch; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderSuccessMsg", function() { return renderSuccessMsg; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderErrMsg", function() { return renderErrMsg; });
 /* harmony import */ var _base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./base */ "./src/client/view/base.js");
  // Render current email on an input field settings modal popups.
 
-var renderUserData = function renderUserData(email) {
-  _base__WEBPACK_IMPORTED_MODULE_0__["els"].settingsEmail.val(email);
+var renderUserData = function renderUserData(user) {
+  var email = user.email;
+  var password = user.password;
+  _base__WEBPACK_IMPORTED_MODULE_0__["els"].settingsEmail.val(email); // If user signs in with Twitter.
+
+  if (email === "We don't have your email address and password.") {
+    _base__WEBPACK_IMPORTED_MODULE_0__["els"].settingsEmail.val(email);
+    _base__WEBPACK_IMPORTED_MODULE_0__["els"].settingsCurPassword.val(password);
+    _base__WEBPACK_IMPORTED_MODULE_0__["els"].settingsNewPassword.val(password);
+    _base__WEBPACK_IMPORTED_MODULE_0__["els"].settingsNewPassword2.val(password);
+    _base__WEBPACK_IMPORTED_MODULE_0__["els"].settingsEmail.prop("disabled", true);
+    _base__WEBPACK_IMPORTED_MODULE_0__["els"].settingsCurPassword.prop("disabled", true);
+    _base__WEBPACK_IMPORTED_MODULE_0__["els"].settingsNewPassword.prop("disabled", true);
+    _base__WEBPACK_IMPORTED_MODULE_0__["els"].settingsNewPassword2.prop("disabled", true);
+  }
 }; // Initialize input fields & button.
 
 var init = function init() {
@@ -16953,6 +17773,12 @@ var checkPasswordsMatch = function checkPasswordsMatch() {
 
   return valid;
 };
+var renderSuccessMsg = function renderSuccessMsg() {
+  alert("SUCCESS");
+};
+var renderErrMsg = function renderErrMsg(err) {
+  alert("There was a problem updating the user.");
+};
 
 function clearEmailErrorMessages() {
   _base__WEBPACK_IMPORTED_MODULE_0__["els"].settingsEmailErrorMessageContainer.removeClass('dangerColor');
@@ -16979,7 +17805,6 @@ function clearNewPasswordErrorMessages() {
 ;
 
 function clearNewPassword2ErrorMessages() {
-  console.log("here");
   _base__WEBPACK_IMPORTED_MODULE_0__["els"].settingsNewPassword2ErrorMessageContainer.removeClass('dangerColor');
   _base__WEBPACK_IMPORTED_MODULE_0__["els"].settingsNewPassword2ErrorMessage.html('');
   _base__WEBPACK_IMPORTED_MODULE_0__["els"].settingsNewPassword2ErrorMessageContainer.css('display', 'none');

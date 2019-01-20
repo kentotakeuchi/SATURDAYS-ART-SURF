@@ -1,6 +1,10 @@
 import $ from 'jquery';
 import { els } from '../view/base';
 
+var port = location.hostname === 'localhost' ? ':3000' : '';
+var saturdays_art_baseURL = 'http://' + location.hostname + port + '/api';
+console.log(`saturdays_art_baseURL`, saturdays_art_baseURL);
+
 export default class Bg {
 
     constructor() {}
@@ -9,7 +13,7 @@ export default class Bg {
 
         return $.ajax({
             method: "GET",
-            url: `http://localhost:3000/item`
+            url: `${saturdays_art_baseURL}/item`
         });
     }
 };

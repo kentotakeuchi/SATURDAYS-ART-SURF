@@ -22,10 +22,16 @@
 
 
   <!-- CUSTOM CSS -->
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="asset/style.css"/>
 
   <!-- JS -->
-  <script defer src="bundle-front.js"></script>
+  <script>
+    var baseURL;
+    function onloadHandler() {
+      baseURL = 'http://' + location.hostname;
+    }
+  </script>
+  <script defer src="asset/bundle-front.js"></script>
 </head>
 
 <body>

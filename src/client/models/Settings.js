@@ -18,7 +18,7 @@ export default class Settings {
 
         return $.ajax({
             method: "GET",
-            url: `http://localhost:3000/user/${userID}`,
+            url: `http://localhost:3000/api/user/${userID}`,
             headers: { 'x-access-token': token }
         });
     }
@@ -44,7 +44,7 @@ export default class Settings {
 
         return $.ajax({
             method: 'POST',
-            url: `http://localhost:3000/user/${userID}`,
+            url: `http://localhost:3000/api/user/${userID}`,
             data: {
                 password: els.settingsCurPassword.val()
             },
@@ -56,7 +56,7 @@ export default class Settings {
 
         return $.ajax({
             method: `PUT`,
-            url: `http://localhost:3000/user/${userID}`,
+            url: `http://localhost:3000/api/user/${userID}`,
             data: {
                 email: els.settingsEmail.val(),
                 curPassword: els.settingsCurPassword.val(),

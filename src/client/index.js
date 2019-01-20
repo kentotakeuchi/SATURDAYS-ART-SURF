@@ -35,6 +35,7 @@ const state = {};
 let userID = localStorage.getItem('user_id');
 let token = localStorage.getItem('token');
 
+
 $('document').ready(() => {
 
     // LANDING PAGE

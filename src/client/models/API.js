@@ -15,7 +15,7 @@ export default class API {
 
         return $.ajax({
             method: "GET",
-            url: `http://localhost:3000/item/${id}`,
+            url: `http://localhost:3000/api/item/${id}`,
             headers: { 'x-access-token': token }
         });
     }
@@ -37,7 +37,7 @@ export default class API {
 
         return $.ajax({
             method: "GET",
-            url: `http://localhost:3000/item/main`,
+            url: `http://localhost:3000/api/item/main`,
             headers: { 'x-access-token': token }
         });
     }

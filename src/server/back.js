@@ -51,15 +51,15 @@ app.use((req, res, next) => {
 });
 
 // AUTHENTIFICATION
-app.use('/auth', authController);
+app.use('/api/auth', authController);
 // CONTACT US
-app.use('/contact', contactController);
+app.use('/api/contact', contactController);
 // ITEM
-app.use('/item', itemController);
+app.use('/api/item', itemController);
 // QUERY
-app.use('/query', queryController);
+app.use('/api/query', queryController);
 // SETTINGS
-app.use('/user', userController);
+app.use('/api/user', userController);
 
 
 module.exports = app;

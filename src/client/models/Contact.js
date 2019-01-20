@@ -15,7 +15,7 @@ export default class Contact {
 
         return $.ajax({
             method: 'POST',
-            url: 'http://localhost:3000/contact/',
+            url: 'http://localhost:3000/api/contact/',
             data: {
                 email: els.contactEmail.val(),
                 inquiry: els.contactInquiry.val()

@@ -16,7 +16,7 @@ export default class Search {
 
         return $.ajax({
             method: "GET",
-            url: `http://localhost:3000/query/list`,
+            url: `http://localhost:3000/api/query/list`,
             headers: { 'x-access-token': token }
         });
     }
@@ -25,7 +25,7 @@ export default class Search {
 
         return $.ajax({
             method: "GET",
-            url: `http://localhost:3000/item/search/${this.query}`,
+            url: `http://localhost:3000/api/item/search/${this.query}`,
             headers: { 'x-access-token': token }
         });
     }

@@ -3,6 +3,9 @@ import { els } from '../view/base';
 
 let userID = localStorage.getItem('user_id');
 let token = localStorage.getItem('token');
+var port = location.hostname === 'localhost' ? ':3000' : '';
+var saturdays_art_baseURL = 'http://' + location.hostname + port + '/api';
+console.log(`saturdays_art_baseURL`, saturdays_art_baseURL);
 
 export default class Auth {
 
@@ -13,7 +16,7 @@ export default class Auth {
 
         return $.ajax({
             method: "GET",
-            url: "http://localhost:3000/auth/login/twitter"
+            url: `${saturdays_art_baseURL}/api/auth/login/twitter`
         });
     }
 
@@ -21,7 +24,7 @@ export default class Auth {
 
         return $.ajax({
             method: "GET",
-            url: "http://localhost:3000/auth/login/twitter/accessToken"
+            url: `${saturdays_art_baseURL}/api/auth/login/twitter/accessToken`
         });
     }
 
@@ -32,7 +35,7 @@ export default class Auth {
 
         return $.ajax({
             method: "GET",
-            url: "http://localhost:3000/auth/login/facebook"
+            url: `${saturdays_art_baseURL}/api/auth/login/facebook`
         });
     }
 
@@ -40,7 +43,7 @@ export default class Auth {
 
         return $.ajax({
             method: "POST",
-            url: "http://localhost:3000/auth/register",
+            url: `${saturdays_art_baseURL}/auth/register`,
             data: {
                  email: els.registerEmail.val(),
                  password: els.registerPassword.val()
@@ -52,7 +55,7 @@ export default class Auth {
 
         return $.ajax({
             method: "POST",
-            url: "http://localhost:3000/auth/login",
+            url: `${saturdays_art_baseURL}/api/auth/login`,
             data: {
                  email: els.loginEmail.val(),
                  password: els.loginPassword.val()
@@ -121,7 +124,7 @@ export default class Auth {
 
         return $.ajax({
             method: "GET",
-            url: "http://localhost:3000/auth/logout/" + userID,
+            url: `${saturdays_art_baseURL}/api/auth/logout/` + userID,
             headers: { 'x-access-token': token }
         });
     }

@@ -11,8 +11,6 @@ export const emailValid = () => {
     const inValid = els.contactEmail.val() === ``;
 
     if (inValid) {
-        console.log(`here1`);
-
         els.contactEmailErrorMessageContainer.addClass('dangerColor');
         els.contactEmailErrorMessage.html('Please fill out something');
         els.contactEmailErrorMessageContainer.css('display', 'block');
@@ -25,8 +23,6 @@ export const inquiryValid = () => {
     const inValid = els.contactInquiry.val() === ``;
 
     if (inValid) {
-        console.log(`here2`);
-
         els.contactInquiryErrorMessageContainer.addClass('dangerColor');
         els.contactInquiryErrorMessage.html('Please fill out something');
         els.contactInquiryErrorMessageContainer.css('display', 'block');

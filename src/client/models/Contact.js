@@ -1,8 +1,12 @@
 import $ from 'jquery';
 import { els } from '../view/base';
 
-
 let token = localStorage.getItem('token');
+
+var port = location.hostname === 'localhost' ? ':3000' : '';
+var saturdays_art_baseURL = 'http://' + location.hostname + port + '/api';
+console.log(`saturdays_art_baseURL`, saturdays_art_baseURL);
+
 
 export default class Contact {
 
@@ -15,7 +19,7 @@ export default class Contact {
 
         return $.ajax({
             method: 'POST',
-            url: 'http://localhost:3000/api/contact/',
+            url: `${saturdays_art_baseURL}/contact/`,
             data: {
                 email: els.contactEmail.val(),
                 inquiry: els.contactInquiry.val()

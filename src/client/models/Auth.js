@@ -16,7 +16,7 @@ export default class Auth {
 
         return $.ajax({
             method: "GET",
-            url: `${saturdays_art_baseURL}/api/auth/login/twitter`
+            url: `${saturdays_art_baseURL}/auth/login/twitter`
         });
     }
 
@@ -24,7 +24,7 @@ export default class Auth {
 
         return $.ajax({
             method: "GET",
-            url: `${saturdays_art_baseURL}/api/auth/login/twitter/accessToken`
+            url: `${saturdays_art_baseURL}/auth/login/twitter/accessToken`
         });
     }
 
@@ -35,7 +35,7 @@ export default class Auth {
 
         return $.ajax({
             method: "GET",
-            url: `${saturdays_art_baseURL}/api/auth/login/facebook`
+            url: `${saturdays_art_baseURL}/auth/login/facebook`
         });
     }
 
@@ -55,7 +55,7 @@ export default class Auth {
 
         return $.ajax({
             method: "POST",
-            url: `${saturdays_art_baseURL}/api/auth/login`,
+            url: `${saturdays_art_baseURL}/auth/login`,
             data: {
                  email: els.loginEmail.val(),
                  password: els.loginPassword.val()
@@ -124,7 +124,7 @@ export default class Auth {
 
         return $.ajax({
             method: "GET",
-            url: `${saturdays_art_baseURL}/api/auth/logout/` + userID,
+            url: `${saturdays_art_baseURL}/auth/logout/` + userID,
             headers: { 'x-access-token': token }
         });
     }

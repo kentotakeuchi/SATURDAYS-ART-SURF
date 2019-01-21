@@ -3,6 +3,10 @@ import { proxy } from '../config';
 
 let token = localStorage.getItem('token');
 
+var port = location.hostname === 'localhost' ? ':3000' : '';
+var saturdays_art_baseURL = 'http://' + location.hostname + port + '/api';
+console.log(`saturdays_art_baseURL`, saturdays_art_baseURL);
+
 
 export default class Search {
 
@@ -16,7 +20,7 @@ export default class Search {
 
         return $.ajax({
             method: "GET",
-            url: `http://localhost:3000/api/query/list`,
+            url: `${saturdays_art_baseURL}/query/list`,
             headers: { 'x-access-token': token }
         });
     }
@@ -25,7 +29,7 @@ export default class Search {
 
         return $.ajax({
             method: "GET",
-            url: `http://localhost:3000/api/item/search/${this.query}`,
+            url: `${saturdays_art_baseURL}/item/search/${this.query}`,
             headers: { 'x-access-token': token }
         });
     }

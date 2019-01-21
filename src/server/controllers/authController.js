@@ -23,6 +23,7 @@ if (typeof localStorage === "undefined" || localStorage === null) {
   localStorage = new LocalStorage('./scratch');
 }
 
+/*
 // FACEBOOK
 const passport = require('passport');
 const session = require('express-session');
@@ -52,6 +53,7 @@ passport.use(new FacebookStrategy({
     return cb(err, user); // the user object we just made gets passed to the route's controller as `req.user`
   });
 }));
+*/
 
 
 ///////////////////////////////////////////////
@@ -62,6 +64,7 @@ let reqTokenSecret;
 router.get(`/login/twitter`, (req, res) => {
 
     twitter.getRequestToken((err, requestToken, requestTokenSecret, results) => {
+      console.log(`requestToken`, requestToken);
 
       if (err) {
         console.log(`err getting OAuth request token : ${err}`);
@@ -137,7 +140,7 @@ router.get(`/login/twitter/callback`, (req, res) => {
             localStorage.setItem('user_id', user._id);
           }
 
-          res.redirect(`http://localhost:8080/main.html`);
+          res.redirect(`http://www.kentotakeuchi.com/saturdays-art-surf/main.html`);
         });
       });
     }
@@ -155,6 +158,7 @@ router.get(`/login/twitter/accessToken`, (req, res) => {
 });
 
 
+/*
 ///////////////////////////////////////////////
 /// FACEBOOK
 
@@ -178,6 +182,7 @@ router.get(`/login/facebook/callback`, (req, res) => {
     res.redirect(`http://localhost:8080/main.html`);
   }
 });
+*/
 
 
 ///////////////////////////////////////////////

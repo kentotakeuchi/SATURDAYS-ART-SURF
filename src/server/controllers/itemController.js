@@ -14,7 +14,7 @@ router.use(bodyParser.json());
 const date = formatDate(new Date());
 
 // UPDATE WHOLE DATA AT 6:00 AM
-schedule.scheduleJob('55 9 * * *', () => { // min hour dom month dow
+schedule.scheduleJob('29 10 * * *', () => { // min hour dom month dow
 
     // GET WHOLE DATA AND STORE THEM INTO DB
     request.get(`https://collectionapi.metmuseum.org/public/collection/v1/objects?metadataDate=${date}`, (err, res, body) => {
@@ -89,6 +89,7 @@ schedule.scheduleJob('55 9 * * *', () => { // min hour dom month dow
 
 // GET 5 DATA FROM DB AT RANDOM FOR "BG OF LANDING PAGE"
 router.get(`/`, (req, res) => {
+    console.log(`get img for bg`);
 
     Item.findRandom({}, {}, {limit: 45}, (err, items) => {
 

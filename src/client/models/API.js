@@ -3,6 +3,10 @@ import { proxy } from '../config';
 
 let token = localStorage.getItem(`token`);
 
+var port = location.hostname === 'localhost' ? ':3000' : '';
+var saturdays_art_baseURL = 'http://' + location.hostname + port + '/api';
+console.log(`saturdays_art_baseURL`, saturdays_art_baseURL);
+
 export default class API {
 
     constructor() {}
@@ -15,7 +19,7 @@ export default class API {
 
         return $.ajax({
             method: "GET",
-            url: `http://localhost:3000/api/item/${id}`,
+            url: `${saturdays_art_baseURL}/item/${id}`,
             headers: { 'x-access-token': token }
         });
     }
@@ -37,7 +41,7 @@ export default class API {
 
         return $.ajax({
             method: "GET",
-            url: `http://localhost:3000/api/item/main`,
+            url: `${saturdays_art_baseURL}/item/main`,
             headers: { 'x-access-token': token }
         });
     }
@@ -51,67 +55,4 @@ export default class API {
             url: `${proxy}https://collectionapi.metmuseum.org/public/collection/v1/objects/${el}`
         });
     }
-
-
-
-    ///////////////////////////////////////////////
-    /// BEFORE CHANGE
-
-    /*
-    // Get today's id of items.
-    getIds() {
-
-        const date = formatDate(new Date());
-
-        return $.ajax({
-            method: "GET",
-            url: `${proxy}https://collectionapi.metmuseum.org/public/collection/v1/objects?metadataDate=${date}`
-        });
-    }
-
-    // Get whole ids.
-    getIds2() {
-
-        return $.ajax({
-            method: "GET",
-            url: `${proxy}https://collectionapi.metmuseum.org/public/collection/v1/objects`
-        });
-    }
-    */
-
-    // Get an item's data at random.
-    // getItems(ids) {
-
-    //     const index = Math.floor(Math.random() * ids.length);
-
-    //     const id = ids[index];
-
-    //     return $.ajax({
-    //         method: "GET",
-    //         url: `${proxy}https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`
-    //     });
-    // }
-
-    /*
-    // Get an item's data.
-    getItem(id) {
-
-        return $.ajax({
-            method: "GET",
-            url: `${proxy}https://collectionapi.metmuseum.org/public/collection/v1/objects/${id}`
-        });
-    }
-    */
-
-    /*
-    // TODO: probably, I can reuse "getItem(id)".
-    // Get my collection.
-    getCollection(el) {
-
-        return $.ajax({
-            method: "GET",
-            url: `${proxy}https://collectionapi.metmuseum.org/public/collection/v1/objects/${el}`
-        });
-    }
-    */
 };

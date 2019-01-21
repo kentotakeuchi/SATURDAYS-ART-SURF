@@ -35,14 +35,19 @@ const state = {};
 let userID = localStorage.getItem('user_id');
 let token = localStorage.getItem('token');
 
+const baseURL = location.hostname === `www.kentotakeuchi.com` ? `http://${location.hostname}/saturdays-art-surf` : `http://localhost:8080`;
+console.log('baseURL', baseURL);
+console.log(location.hostname);
+
+
 
 $('document').ready(() => {
 
     // LANDING PAGE
-    if(window.location.href === `http://localhost:8080/index.html#` ||
-       window.location.href === `http://localhost:8080/index.html` ||
-       window.location.href === `http://localhost:8080/#` ||
-       window.location.href === `http://localhost:8080/`)
+    if(window.location.href === `${baseURL}/index.html#` ||
+       window.location.href === `${baseURL}/index.html` ||
+       window.location.href === `${baseURL}/#` ||
+       window.location.href === `${baseURL}/`)
     {
         // Initialize form.
         authView.init();
@@ -51,8 +56,9 @@ $('document').ready(() => {
         getAndRenderBgImgHandler();
     }
     // MAIN PAGE
-    else if (window.location.href === `http://localhost:8080/main.html#` ||
-             window.location.href === `http://localhost:8080/main.html`)
+    else if (window.location.href === `${baseURL}/main.html#` ||
+             window.location.href === `${baseURL}/main.html` ||window.location.href === `${baseURL}/main.html#` ||
+             window.location.href === `${baseURL}/main.html`)
     {
         // If user signs in with Twitter.
         if (userID === null) {
@@ -225,7 +231,7 @@ function loginUserHandler(e) {
         authView.renderSuccessMsg(str);
 
         setTimeout(() => {
-            window.location.href = '/main.html';
+            window.location.href = `${baseURL}/main.html`;
         }, 2000);
     })
     .fail(( err ) => {
@@ -502,7 +508,7 @@ function likesHandler(e) {
 function returnDefaultPageHandler() {
 
     // Transfer to a default page.
-    window.location.href = `/main.html`;
+    window.location.href = `${baseURL}/main.html`;
 
     // Set the event calling api with scroll down again.
     $(window).on(`scroll`, pagenationHandler);
@@ -671,7 +677,7 @@ function logout() {
         state.auth.logoutUser()
         .done(() => {
             state.auth.removeData();
-            window.location.href = `/index.html`;
+            window.location.href = `${baseURL}/index.html`;
         })
         .fail(err => {
             authView.renderErrMsg2(err);

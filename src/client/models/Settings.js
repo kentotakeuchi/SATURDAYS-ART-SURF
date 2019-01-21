@@ -5,6 +5,10 @@ import { els } from '../view/base';
 let userID = localStorage.getItem('user_id');
 let token = localStorage.getItem('token');
 
+var port = location.hostname === 'localhost' ? ':3000' : '';
+var saturdays_art_baseURL = 'http://' + location.hostname + port + '/api';
+console.log(`saturdays_art_baseURL`, saturdays_art_baseURL);
+
 
 export default class Settings {
 
@@ -18,7 +22,7 @@ export default class Settings {
 
         return $.ajax({
             method: "GET",
-            url: `http://localhost:3000/api/user/${userID}`,
+            url: `${saturdays_art_baseURL}/user/${userID}`,
             headers: { 'x-access-token': token }
         });
     }
@@ -44,7 +48,7 @@ export default class Settings {
 
         return $.ajax({
             method: 'POST',
-            url: `http://localhost:3000/api/user/${userID}`,
+            url: `${saturdays_art_baseURL}/user/${userID}`,
             data: {
                 password: els.settingsCurPassword.val()
             },
@@ -56,7 +60,7 @@ export default class Settings {
 
         return $.ajax({
             method: `PUT`,
-            url: `http://localhost:3000/api/user/${userID}`,
+            url: `${saturdays_art_baseURL}/user/${userID}`,
             data: {
                 email: els.settingsEmail.val(),
                 curPassword: els.settingsCurPassword.val(),

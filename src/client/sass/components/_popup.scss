@@ -29,6 +29,21 @@
     }
 }
 
+.modal-header {
+    border-bottom: none;
+}
+
+@include respond(phone) {
+    .modal-header .close {
+        font-size: 3rem;
+        margin: 0rem 0rem -1rem auto;
+    }
+
+    .modal-lg {
+        margin: 2rem;
+    }
+}
+
 
 /*
 .popupAbout {

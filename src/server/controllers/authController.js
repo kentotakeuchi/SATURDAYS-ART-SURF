@@ -140,6 +140,9 @@ router.get(`/login/twitter/callback`, (req, res) => {
             localStorage.setItem('user_id', user._id);
           }
 
+          // For dev
+          // res.redirect(`http://localhost:8080/main.html`);
+          // For product
           res.redirect(`http://www.kentotakeuchi.com/saturdays-art-surf/main.html`);
         });
       });

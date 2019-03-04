@@ -67,6 +67,7 @@ $('document').ready(() => {
 
             state.auth.getAccessTokenTW()
             .done(data => {
+                console.log(`getAccessTokenTW`, data);
 
                 state.auth.persistDataTW(data);
 
@@ -530,31 +531,35 @@ function displayCollectionHandler() {
     // Get data from "likes" array.
     const storage = state.likes.readStorage();
 
-    // Iterate "likes" array.
-    storage.forEach(el => {
+    if (storage === null) {
+        alert(`Let's collect your favorite artworks.`);
+    } else {
+        // Iterate "likes" array.
+        storage.forEach(el => {
 
-        // Get my collection from api.
-        state.api.getCollection(el)
-        .done(data => {
-            // Render my collection.
-            apiView.renderCollection(data);
+            // Get my collection from api.
+            state.api.getCollection(el)
+            .done(data => {
+                // Render my collection.
+                apiView.renderCollection(data);
 
-            // Clear loader.
-            clearLoader();
-        })
-        .fail(err => {
-            console.log(`err`, err);
+                // Clear loader.
+                clearLoader();
+            })
+            .fail(err => {
+                console.log(`err`, err);
 
-            // Clear loader.
-            clearLoader();
+                // Clear loader.
+                clearLoader();
+            });
         });
-    });
 
-    // Disable calling api with scroll down.
-    $(window).off(`scroll`, pagenationHandler);
+        // Disable calling api with scroll down.
+        $(window).off(`scroll`, pagenationHandler);
 
-    // Close navigation.
-    els.naviCheckbox.prop( `checked`, false );
+        // Close navigation.
+        els.naviCheckbox.prop( `checked`, false );
+    }
 };
 
 

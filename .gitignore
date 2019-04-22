@@ -2,6 +2,8 @@ node_modules
 package-lock.json
 .vscode
 src/server/config.js
+src/server/access.log
+scratch
 draft.js
 dist/asset/bundle-front.js
 dist/asset/bundle-front.js.map

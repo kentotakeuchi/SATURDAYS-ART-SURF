@@ -6,6 +6,8 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const nodeExternals = require('webpack-node-externals');
 
+const webpack = require('webpack');
+
 // ソースマップの利用有無(productionのときはソースマップを利用しない)
 const enabledSourceMap = (MODE === 'development');
 
@@ -106,6 +108,9 @@ const frontConfig = {
     },
     plugins: [
         new ExtractTextPlugin('style.css'),
+        new webpack.DefinePlugin({
+        　　　　'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+        })
     ],
 };
 

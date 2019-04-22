@@ -1,12 +1,21 @@
+const path = require('path');
+const fs = require('fs');
+// const https = require('https');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const helmet = require('helmet');
+const compression = require('compression');
+const morgan = require('morgan');
 
 const authController = require('./controllers/authController');
 const contactController = require('./controllers/contactController');
 const itemController = require('./controllers/itemController');
 const queryController = require('./controllers/queryController');
 const userController = require('./controllers/userController');
+
+console.log(`process.env.NODE_ENV`, process.env.NODE_ENV);
 
 const app = express();
 
@@ -34,7 +43,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 // Add headers
 app.use((req, res, next) => {
     // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+    res.setHeader('Access-Control-Allow-Origin', '*');
 
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -60,6 +69,17 @@ app.use('/api/item', itemController);
 app.use('/api/query', queryController);
 // SETTINGS
 app.use('/api/user', userController);
+
+
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, 'access.log'),
+  { flags: 'a' }
+);
+
+// third party's middleware for production
+app.use(helmet());
+app.use(compression());
+app.use(morgan('combined', { stream: accessLogStream }));
 
 
 module.exports = app;

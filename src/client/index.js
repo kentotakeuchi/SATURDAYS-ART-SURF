@@ -38,6 +38,8 @@ let token = localStorage.getItem('token');
 const baseURL = location.hostname === `www.kentotakeuchi.com` ? `http://${location.hostname}/saturdays-art-surf` : `http://localhost:8080`;
 console.log('baseURL', baseURL);
 console.log(location.hostname);
+console.log(`process.env.NODE_ENV`, process.env.NODE_ENV);
+console.log(`process.env.API_URL`, process.env.API_URL);
 
 
 
